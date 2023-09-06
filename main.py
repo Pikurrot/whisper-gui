@@ -76,24 +76,32 @@ def main():
 
 	# Create Gradio Interface
 	print('Creating interface...')
-	iface = gr.Interface(
-		transcribe_audio,
-		[gr.Dropdown(['large-v2', 'large-v1', 'large', 'medium', 'small', 'base', 'tiny', 'medium.en', 'small.en', 'base.en', 'tiny.en'], value='large-v2', label='Load Model'),
-		gr.Audio(source='upload', type='filepath', label='Upload Audio File'),
-		gr.Audio(source='microphone', type='numpy', label='or Record Audio (If both are provided, only microphone audio will be used)'),
-		gr.Radio(['cuda', 'cpu'], value = 'cuda', label='Device', info='If you don\'t have a GPU, select "cpu"'),
-		gr.Slider(1, 16, value = 1, label='Batch Size', info='Larger batch sizes may be faster but require more memory'),
-		gr.Radio(['int8', 'float16', 'float32'], value = 'int8', label='Compute Type', info='int8 is fastest and requires less memory. float32 is more accurate (The model or your device may not support some data types)'),
-		gr.Dropdown(['auto', 'en', 'es', 'fr', 'de', 'it', 'ja', 'zh', 'nl', 'uk', 'pt'], value = 'auto', label='Language', info='Select the language of the audio file. Select "auto" to automatically detect it.'),
-		gr.Slider(1, 30, value = 20, label='Chunk Size', info='Larger chunk sizes may be faster but require more memory'),
-		gr.Checkbox(label='Release Memory', value=True, info='Release model from memory after every transcription')],
-		gr.outputs.Textbox(label='Transcription'),
-		allow_flagging=False,
-		title='WhisperX GUI',
-	)
+	with gr.Blocks(title='Whisper GUI') as gui:
+		gr.Markdown('''# Whisper GUI
+A simple interface to transcribe audio files using the Whisper model''')
+		with gr.Row():
+			with gr.Column():
+				model_select = gr.Dropdown(['large-v2', 'large-v1', 'large', 'medium', 'small', 'base', 'tiny', 'medium.en', 'small.en', 'base.en', 'tiny.en'], value='large-v2', label='Load Model')
+				with gr.Row():
+					audio_upload = gr.Audio(source='upload', type='filepath', label='Upload Audio File')
+					audio_record = gr.Audio(source='microphone', type='numpy', label='or Record Audio (If both are provided, only microphone audio will be used)')
+				with gr.Accordion(label='Advanced Options', open=False):
+					language_select = gr.Dropdown(['auto', 'en', 'es', 'fr', 'de', 'it', 'ja', 'zh', 'nl', 'uk', 'pt'], value = 'auto', label='Language', info='Select the language of the audio file. Select "auto" to automatically detect it.')
+					device_select = gr.Radio(['cuda', 'cpu'], value = 'cuda', label='Device', info='If you don\'t have a GPU, select "cpu"')
+					gr.Markdown('''### Optimizations''')
+					compute_type_select = gr.Radio(['int8', 'float16', 'float32'], value = 'int8', label='Compute Type', info='int8 is fastest and requires less memory. float32 is more accurate (The model or your device may not support some data types)')
+					batch_size_slider = gr.Slider(1, 128, value = 1, label='Batch Size', info='Larger batch sizes may be faster but require more memory')
+					chunk_size_slider = gr.Slider(1, 80, value = 20, label='Chunk Size', info='Larger chunk sizes may be faster but require more memory')
+					release_memory_checkbox = gr.Checkbox(label='Release Memory', value=True, info='Release model from memory after every transcription')
+				submit_button = gr.Button(value='Start Transcription')
+			transcription_output = gr.Textbox(label='Transcription')
+		
+		submit_button.click(transcribe_audio,
+					  		inputs=[model_select, audio_upload, audio_record, device_select, batch_size_slider, compute_type_select, language_select, chunk_size_slider, release_memory_checkbox],
+							outputs=transcription_output)
 
 	# Launch the interface
-	iface.launch(inbrowser=args.autolaunch, share=args.share)
+	gui.launch(inbrowser=args.autolaunch, share=args.share)
 
 if __name__ == '__main__':
 	main()
