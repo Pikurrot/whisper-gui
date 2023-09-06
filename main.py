@@ -1,6 +1,6 @@
 import gradio as gr
 import whisperx
-import subprocess, os, gc
+import subprocess, os, gc, argparse
 import soundfile as sf
 import torch, re
 
@@ -68,6 +68,12 @@ def transcribe_audio(model_name, audio_path, micro_audio, device, batch_size, co
 	return ' '.join([segment['text'] for segment in aligned_result['segments']])
 
 def main():
+	# Parse arguments
+	parser = argparse.ArgumentParser(description='Transcribe audio files using WhisperX')
+	parser.add_argument('--autolaunch', action='store_true', default=False, help='Launch the interface automatically in the default browser')
+	parser.add_argument('--share', action='store_true', default=False, help='Create a share link to access the interface from another device')
+	args = parser.parse_args()
+
 	# Create Gradio Interface
 	print('Creating interface...')
 	iface = gr.Interface(
@@ -83,10 +89,11 @@ def main():
 		gr.Checkbox(label='Release Memory', value=True, info='Release model from memory after every transcription')],
 		gr.outputs.Textbox(label='Transcription'),
 		allow_flagging=False,
+		title='WhisperX GUI',
 	)
 
 	# Launch the interface
-	iface.launch()
+	iface.launch(inbrowser=args.autolaunch, share=args.share)
 
 if __name__ == '__main__':
 	main()
