@@ -15,7 +15,7 @@ def save_audio_to_mp3(audio_tuple, save_dir='recordings', base_filename='recordi
 	# Check for base filename without counter
 	base_exists = os.path.exists(os.path.join(save_dir, f"{base_filename}.mp3"))
 	# Determine the highest counter already used in filenames
-	highest_counter = -1
+	highest_counter = 0
 	for existing_file in os.listdir(save_dir):
 		match = re.match(f"{base_filename}_(\d+)\.mp3", existing_file)
 		if match:
@@ -48,6 +48,7 @@ def transcribe_audio(model_name, audio_path, micro_audio, device, batch_size, co
 		audio_path = save_audio_to_mp3(micro_audio)
 	audio = whisperx.load_audio(audio_path)
 	print('Transcribing...')
+	if language == 'auto': language = None
 	result = model.transcribe(audio, batch_size=batch_size, language=language, chunk_size=chunk_size, print_progress=True)
 	if release_memory:
 		del model
@@ -71,7 +72,7 @@ def main():
 	print('Creating interface...')
 	iface = gr.Interface(
 		transcribe_audio,
-		[gr.Dropdown(['large-v2', 'large-v1', 'large', 'medium', 'small', 'base', 'tiny', 'medium.en', 'small.en', 'base.en', 'tiny.en'], value='large-v2'),
+		[gr.Dropdown(['large-v2', 'large-v1', 'large', 'medium', 'small', 'base', 'tiny', 'medium.en', 'small.en', 'base.en', 'tiny.en'], value='large-v2', label='Load Model'),
 		gr.Audio(source='upload', type='filepath', label='Upload Audio File'),
 		gr.Audio(source='microphone', type='numpy', label='or Record Audio (If both are provided, only microphone audio will be used)'),
 		gr.Radio(['cuda', 'cpu'], value = 'cuda', label='Device', info='If you don\'t have a GPU, select "cpu"'),
@@ -79,7 +80,7 @@ def main():
 		gr.Radio(['int8', 'float16', 'float32'], value = 'int8', label='Compute Type', info='int8 is fastest and requires less memory. float32 is more accurate (The model or your device may not support some data types)'),
 		gr.Dropdown(['auto', 'en', 'es', 'fr', 'de', 'it', 'ja', 'zh', 'nl', 'uk', 'pt'], value = 'auto', label='Language', info='Select the language of the audio file. Select "auto" to automatically detect it.'),
 		gr.Slider(1, 30, value = 20, label='Chunk Size', info='Larger chunk sizes may be faster but require more memory'),
-		gr.Checkbox(label='Release Memory', default=True, info='Release model from memory after every transcription')],
+		gr.Checkbox(label='Release Memory', value=True, info='Release model from memory after every transcription')],
 		gr.outputs.Textbox(label='Transcription'),
 		allow_flagging=False,
 	)
