@@ -1,16 +1,34 @@
 import gradio as gr
 import whisperx
-import subprocess, os, gc
+import subprocess, os
 import soundfile as sf
-# import torch
+import torch, re
 
-def save_audio_to_mp3(audio_tuple, save_path='audios/audio.mp3'):
+def save_audio_to_mp3(audio_tuple, save_dir='audios', base_filename='audio'):
 	rate, y = audio_tuple
 	if len(y.shape) == 2:
 		y = y.T[0]  # If stereo, take one channel
+	
+	# Create the directory if it doesn't exist
+	if not os.path.exists(save_dir):
+		os.makedirs(save_dir)
+	# Check for base filename without counter
+	base_exists = os.path.exists(os.path.join(save_dir, f"{base_filename}.mp3"))
+	# Determine the highest counter already used in filenames
+	highest_counter = -1
+	for existing_file in os.listdir(save_dir):
+		match = re.match(f"{base_filename}_(\d+)\.mp3", existing_file)
+		if match:
+			highest_counter = max(highest_counter, int(match.group(1)))
+	# Determine the next available save_path
+	next_counter = highest_counter + 1
+	if not base_exists:
+		save_path = os.path.join(save_dir, f"{base_filename}.mp3")
+	else:
+		save_path = os.path.join(save_dir, f"{base_filename}_{next_counter}.mp3")
 
 	# Save as WAV file first
-	wav_path = 'audios/temp_audio.wav'
+	wav_path = os.path.join(save_dir, 'temp_audio.wav')
 	sf.write(wav_path, y, rate)
 
 	# Convert WAV to MP3 using ffmpeg
