@@ -4,7 +4,7 @@ import subprocess, os, gc
 import soundfile as sf
 import torch, re
 
-def save_audio_to_mp3(audio_tuple, save_dir='audios', base_filename='audio'):
+def save_audio_to_mp3(audio_tuple, save_dir='recordings', base_filename='recording'):
 	rate, y = audio_tuple
 	if len(y.shape) == 2:
 		y = y.T[0]  # If stereo, take one channel
@@ -39,14 +39,13 @@ def save_audio_to_mp3(audio_tuple, save_dir='audios', base_filename='audio'):
 
 	return save_path
 
-def transcribe_audio(model_name, audio_tuple, device, batch_size, compute_type, language, chunk_size, release_memory):
-	# save copy of audio
-	audio_path = save_audio_to_mp3(audio_tuple)
-
+def transcribe_audio(model_name, audio_path, micro_audio, device, batch_size, compute_type, language, chunk_size, release_memory):
 	# Transcription
 	print('Loading model...')
 	model = whisperx.load_model(model_name, device, compute_type=compute_type, download_root='models')
 	print('Loading audio...')
+	if micro_audio:
+		audio_path = save_audio_to_mp3(micro_audio)
 	audio = whisperx.load_audio(audio_path)
 	print('Transcribing...')
 	result = model.transcribe(audio, batch_size=batch_size, language=language, chunk_size=chunk_size, print_progress=True)
@@ -73,7 +72,8 @@ def main():
 	iface = gr.Interface(
 		transcribe_audio,
 		[gr.Dropdown(['large-v2', 'large-v1', 'large', 'medium', 'small', 'base', 'tiny', 'medium.en', 'small.en', 'base.en', 'tiny.en'], value='large-v2'),
-		gr.Audio(source='upload', label='Upload Audio File'),
+		gr.Audio(source='upload', type='filepath', label='Upload Audio File'),
+		gr.Audio(source='microphone', type='numpy', label='or Record Audio (If both are provided, only microphone audio will be used)'),
 		gr.Radio(['cuda', 'cpu'], value = 'cuda', label='Device', info='If you don\'t have a GPU, select "cpu"'),
 		gr.Slider(1, 16, value = 1, label='Batch Size', info='Larger batch sizes may be faster but require more memory'),
 		gr.Radio(['int8', 'float16', 'float32'], value = 'int8', label='Compute Type', info='int8 is fastest and requires less memory. float32 is more accurate (The model or your device may not support some data types)'),
