@@ -1,6 +1,6 @@
 import gradio as gr
 import whisperx
-import subprocess, os
+import subprocess, os, gc
 import soundfile as sf
 import torch, re
 
@@ -39,7 +39,7 @@ def save_audio_to_mp3(audio_tuple, save_dir='audios', base_filename='audio'):
 
 	return save_path
 
-def transcribe_audio(model_name, audio_tuple, device, batch_size, compute_type, language, chunk_size):
+def transcribe_audio(model_name, audio_tuple, device, batch_size, compute_type, language, chunk_size, release_memory):
 	# save copy of audio
 	audio_path = save_audio_to_mp3(audio_tuple)
 
@@ -50,29 +50,36 @@ def transcribe_audio(model_name, audio_tuple, device, batch_size, compute_type, 
 	audio = whisperx.load_audio(audio_path)
 	print('Transcribing...')
 	result = model.transcribe(audio, batch_size=batch_size, language=language, chunk_size=chunk_size, print_progress=True)
+	if release_memory:
+		del model
+		if device == 'cuda': torch.cuda.empty_cache()
+		else: gc.collect()
 
 	# Alignment
 	print('Loading alignment model...')
 	model_a, metadata = whisperx.load_align_model(language_code=result['language'], device=device, model_dir='models/alignment')
 	print('Aligning...')
 	aligned_result = whisperx.align(result['segments'], model_a, metadata, audio, device, return_char_alignments=False)
+	if release_memory:
+		del model_a, metadata
+		if device == 'cuda': torch.cuda.empty_cache()
+		else: gc.collect()
 	print('Done!')
-	# del model, audio, result, model_a, metadata
-	# gc.collect()
-	# torch.cuda.empty_cache()
 	return ' '.join([segment['text'] for segment in aligned_result['segments']])
 
 def main():
 	# Create Gradio Interface
+	print('Creating interface...')
 	iface = gr.Interface(
 		transcribe_audio,
 		[gr.Dropdown(['large-v2', 'large-v1', 'large', 'medium', 'small', 'base', 'tiny', 'medium.en', 'small.en', 'base.en', 'tiny.en'], value='large-v2'),
 		gr.Audio(source='upload', label='Upload Audio File'),
-		gr.Radio(['cuda', 'cpu'], value = 'cuda', label='Device'),
+		gr.Radio(['cuda', 'cpu'], value = 'cuda', label='Device', info='If you don\'t have a GPU, select "cpu"'),
 		gr.Slider(1, 16, value = 1, label='Batch Size', info='Larger batch sizes may be faster but require more memory'),
 		gr.Radio(['int8', 'float16', 'float32'], value = 'int8', label='Compute Type', info='int8 is fastest and requires less memory. float32 is more accurate (The model or your device may not support some data types)'),
 		gr.Dropdown(['auto', 'en', 'es', 'fr', 'de', 'it', 'ja', 'zh', 'nl', 'uk', 'pt'], value = 'auto', label='Language', info='Select the language of the audio file. Select "auto" to automatically detect it.'),
-		gr.Slider(1, 30, value = 20, label='Chunk Size', info='Larger chunk sizes may be faster but require more memory')],
+		gr.Slider(1, 30, value = 20, label='Chunk Size', info='Larger chunk sizes may be faster but require more memory'),
+		gr.Checkbox(label='Release Memory', default=True, info='Release model from memory after every transcription')],
 		gr.outputs.Textbox(label='Transcription'),
 		allow_flagging=False,
 	)
