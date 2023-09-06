@@ -39,13 +39,13 @@ def save_audio_to_mp3(audio_tuple, save_dir='audios', base_filename='audio'):
 
 	return save_path
 
-def transcribe_audio(audio_tuple, device, batch_size, compute_type, language, chunk_size):
+def transcribe_audio(model_name, audio_tuple, device, batch_size, compute_type, language, chunk_size):
 	# save copy of audio
 	audio_path = save_audio_to_mp3(audio_tuple)
 
 	# Transcription
 	print('Loading model...')
-	model = whisperx.load_model('large-v2', device, compute_type=compute_type, download_root='models')
+	model = whisperx.load_model(model_name, device, compute_type=compute_type, download_root='models')
 	print('Loading audio...')
 	audio = whisperx.load_audio(audio_path)
 	print('Transcribing...')
@@ -66,7 +66,8 @@ def main():
 	# Create Gradio Interface
 	iface = gr.Interface(
 		transcribe_audio,
-		[gr.Audio(source='upload', label='Upload Audio File'),
+		[gr.Dropdown(['large-v2', 'large-v1', 'large', 'medium', 'small', 'base', 'tiny', 'medium.en', 'small.en', 'base.en', 'tiny.en'], value='large-v2'),
+		gr.Audio(source='upload', label='Upload Audio File'),
 		gr.Radio(['cuda', 'cpu'], value = 'cuda', label='Device'),
 		gr.Slider(1, 16, value = 1, label='Batch Size', info='Larger batch sizes may be faster but require more memory'),
 		gr.Radio(['int8', 'float16', 'float32'], value = 'int8', label='Compute Type', info='int8 is fastest and requires less memory. float32 is more accurate (The model or your device may not support some data types)'),
