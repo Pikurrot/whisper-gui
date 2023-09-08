@@ -54,10 +54,13 @@ def save_alignments_to_json(alignment_dict, save_dir):
 
 def load_and_save_audio(audio_path, micro_audio, save_audio, save_dir):
 	if micro_audio:
+		print('Saving micro audio...')
 		audio_path = save_audio_to_mp3(micro_audio, save_dir if save_audio else 'temp')
 	elif save_audio:
+		print('Making a copy of the audio...')
 		shutil.copy(audio_path, os.path.join(save_dir, 'audio.mp3'))
 
+	print('Loading audio...')
 	audio = whisperx.load_audio(audio_path)
 	
 	if micro_audio and not save_audio:
@@ -88,6 +91,7 @@ def format_alignments(alignments):
 	return '\n\n'.join(formatted_transcription)
 
 def transcribe_audio(model_name, audio_path, micro_audio, device, batch_size, compute_type, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments):
+	print('Inputs received. Starting...')
 	# Create save folder
 	if not os.path.exists('temp'):
 		os.makedirs('temp')
@@ -149,7 +153,7 @@ A simple interface to transcribe audio files using the Whisper model''')
 					language_select = gr.Dropdown(['auto', 'en', 'es', 'fr', 'de', 'it', 'ja', 'zh', 'nl', 'uk', 'pt'], value = 'auto', label='Language', info='Select the language of the audio file. Select "auto" to automatically detect it.')
 					device_select = gr.Radio(['cuda', 'cpu'], value = 'cuda', label='Device', info='If you don\'t have a GPU, select "cpu"')
 					with gr.Row():
-						save_audio = gr.Checkbox(value=True, label='Save Audio')
+						save_audio = gr.Checkbox(value=False, label='Save Audio')
 						save_transcription = gr.Checkbox(value=True, label='Save Transcription')
 						save_alignments = gr.Checkbox(value=True, label='Save Alignments')
 					save_root = gr.Textbox(label='Save Path', placeholder='outputs', lines=1)
