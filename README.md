@@ -1,6 +1,6 @@
 # Whisper-GUI
 A simple GUI made with `gradio` to use WhisperX on Windows.  
-![whisper-gui-img](images\whisper-gui.png)
+![whisper-gui-img](images/whisper-gui.png)
 
 ## Set up
 ### Create a conda environment with Python 3.10
