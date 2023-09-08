@@ -1,0 +1,3896 @@
+{
+    "segments": [
+        {
+            "start": 11.076,
+            "end": 20.468,
+            "text": " Bien, gracias por seguirnos acompa\u00f1ando, vamos a continuar a ver si consigo ir terminando con la historia de los Hopkins y toda esta pel\u00edcula que hay montada.",
+            "words": [
+                {
+                    "word": "Bien,",
+                    "start": 11.076,
+                    "end": 11.297,
+                    "score": 0.424
+                },
+                {
+                    "word": "gracias",
+                    "start": 11.337,
+                    "end": 11.537,
+                    "score": 0.651
+                },
+                {
+                    "word": "por",
+                    "start": 11.597,
+                    "end": 11.717,
+                    "score": 0.558
+                },
+                {
+                    "word": "seguirnos",
+                    "start": 11.757,
+                    "end": 12.098,
+                    "score": 0.765
+                },
+                {
+                    "word": "acompa\u00f1ando,",
+                    "start": 12.138,
+                    "end": 12.718,
+                    "score": 0.885
+                },
+                {
+                    "word": "vamos",
+                    "start": 12.999,
+                    "end": 13.179,
+                    "score": 0.923
+                },
+                {
+                    "word": "a",
+                    "start": 13.239,
+                    "end": 13.279,
+                    "score": 0.499
+                },
+                {
+                    "word": "continuar",
+                    "start": 13.359,
+                    "end": 13.96,
+                    "score": 0.879
+                },
+                {
+                    "word": "a",
+                    "start": 13.98,
+                    "end": 14.0,
+                    "score": 0.001
+                },
+                {
+                    "word": "ver",
+                    "start": 14.701,
+                    "end": 14.781,
+                    "score": 0.865
+                },
+                {
+                    "word": "si",
+                    "start": 14.841,
+                    "end": 15.081,
+                    "score": 0.907
+                },
+                {
+                    "word": "consigo",
+                    "start": 15.182,
+                    "end": 15.422,
+                    "score": 0.755
+                },
+                {
+                    "word": "ir",
+                    "start": 15.442,
+                    "end": 15.502,
+                    "score": 0.911
+                },
+                {
+                    "word": "terminando",
+                    "start": 15.562,
+                    "end": 15.903,
+                    "score": 0.96
+                },
+                {
+                    "word": "con",
+                    "start": 15.943,
+                    "end": 16.043,
+                    "score": 0.805
+                },
+                {
+                    "word": "la",
+                    "start": 16.083,
+                    "end": 16.123,
+                    "score": 1.0
+                },
+                {
+                    "word": "historia",
+                    "start": 16.163,
+                    "end": 16.403,
+                    "score": 0.932
+                },
+                {
+                    "word": "de",
+                    "start": 16.443,
+                    "end": 16.483,
+                    "score": 1.0
+                },
+                {
+                    "word": "los",
+                    "start": 16.503,
+                    "end": 16.583,
+                    "score": 0.961
+                },
+                {
+                    "word": "Hopkins",
+                    "start": 16.603,
+                    "end": 17.024,
+                    "score": 0.731
+                },
+                {
+                    "word": "y",
+                    "start": 17.845,
+                    "end": 17.905,
+                    "score": 0.653
+                },
+                {
+                    "word": "toda",
+                    "start": 17.985,
+                    "end": 18.145,
+                    "score": 0.986
+                },
+                {
+                    "word": "esta",
+                    "start": 18.186,
+                    "end": 18.366,
+                    "score": 0.868
+                },
+                {
+                    "word": "pel\u00edcula",
+                    "start": 18.446,
+                    "end": 18.746,
+                    "score": 0.927
+                },
+                {
+                    "word": "que",
+                    "start": 18.766,
+                    "end": 18.846,
+                    "score": 0.786
+                },
+                {
+                    "word": "hay",
+                    "start": 18.866,
+                    "end": 18.947,
+                    "score": 0.763
+                },
+                {
+                    "word": "montada.",
+                    "start": 18.967,
+                    "end": 19.327,
+                    "score": 0.948
+                }
+            ]
+        },
+        {
+            "start": 20.468,
+            "end": 29.24,
+            "text": "Entonces, vamos al personaje central de este episodio, de esta crisis que se ha organizado, que es este personaje David Grush.",
+            "words": [
+                {
+                    "word": "Entonces,",
+                    "start": 20.468,
+                    "end": 20.649,
+                    "score": 0.668
+                },
+                {
+                    "word": "vamos",
+                    "start": 20.669,
+                    "end": 20.769,
+                    "score": 0.556
+                },
+                {
+                    "word": "al",
+                    "start": 20.809,
+                    "end": 20.869,
+                    "score": 0.615
+                },
+                {
+                    "word": "personaje",
+                    "start": 20.909,
+                    "end": 21.209,
+                    "score": 0.922
+                },
+                {
+                    "word": "central",
+                    "start": 21.29,
+                    "end": 21.71,
+                    "score": 0.858
+                },
+                {
+                    "word": "de",
+                    "start": 22.091,
+                    "end": 22.211,
+                    "score": 0.996
+                },
+                {
+                    "word": "este",
+                    "start": 22.591,
+                    "end": 22.792,
+                    "score": 0.963
+                },
+                {
+                    "word": "episodio,",
+                    "start": 22.852,
+                    "end": 23.252,
+                    "score": 0.912
+                },
+                {
+                    "word": "de",
+                    "start": 23.292,
+                    "end": 23.352,
+                    "score": 0.752
+                },
+                {
+                    "word": "esta",
+                    "start": 23.392,
+                    "end": 23.573,
+                    "score": 0.836
+                },
+                {
+                    "word": "crisis",
+                    "start": 23.773,
+                    "end": 24.173,
+                    "score": 0.866
+                },
+                {
+                    "word": "que",
+                    "start": 26.216,
+                    "end": 26.296,
+                    "score": 0.815
+                },
+                {
+                    "word": "se",
+                    "start": 26.336,
+                    "end": 26.396,
+                    "score": 0.851
+                },
+                {
+                    "word": "ha",
+                    "start": 26.416,
+                    "end": 26.476,
+                    "score": 0.906
+                },
+                {
+                    "word": "organizado,",
+                    "start": 26.516,
+                    "end": 27.017,
+                    "score": 0.927
+                },
+                {
+                    "word": "que",
+                    "start": 27.037,
+                    "end": 27.097,
+                    "score": 0.0
+                },
+                {
+                    "word": "es",
+                    "start": 27.578,
+                    "end": 27.638,
+                    "score": 0.475
+                },
+                {
+                    "word": "este",
+                    "start": 27.758,
+                    "end": 27.938,
+                    "score": 0.926
+                },
+                {
+                    "word": "personaje",
+                    "start": 28.018,
+                    "end": 28.359,
+                    "score": 0.855
+                },
+                {
+                    "word": "David",
+                    "start": 28.639,
+                    "end": 28.94,
+                    "score": 0.757
+                },
+                {
+                    "word": "Grush.",
+                    "start": 28.98,
+                    "end": 29.24,
+                    "score": 0.588
+                }
+            ]
+        },
+        {
+            "start": 30.936,
+            "end": 47.591,
+            "text": " bromeamos antes con que en un momento dado en su declaraci\u00f3n, porque hay gente que dice que estas personas est\u00e1n declarando bajo juramento ante el Congreso de los Estados Unidos, esto es muy fuerte, digo no es muy fuerte seg\u00fan para qui\u00e9n, yo si tuviera que declarar bajo juramento ante el Congreso de Estados Unidos lo pasar\u00eda fatal",
+            "words": [
+                {
+                    "word": "bromeamos",
+                    "start": 30.936,
+                    "end": 31.436,
+                    "score": 0.933
+                },
+                {
+                    "word": "antes",
+                    "start": 31.496,
+                    "end": 31.716,
+                    "score": 0.867
+                },
+                {
+                    "word": "con",
+                    "start": 31.796,
+                    "end": 31.977,
+                    "score": 0.859
+                },
+                {
+                    "word": "que",
+                    "start": 32.077,
+                    "end": 32.337,
+                    "score": 0.921
+                },
+                {
+                    "word": "en",
+                    "start": 32.617,
+                    "end": 32.677,
+                    "score": 0.918
+                },
+                {
+                    "word": "un",
+                    "start": 32.697,
+                    "end": 32.757,
+                    "score": 0.756
+                },
+                {
+                    "word": "momento",
+                    "start": 32.777,
+                    "end": 33.018,
+                    "score": 0.847
+                },
+                {
+                    "word": "dado",
+                    "start": 33.078,
+                    "end": 33.258,
+                    "score": 0.885
+                },
+                {
+                    "word": "en",
+                    "start": 33.278,
+                    "end": 33.318,
+                    "score": 0.004
+                },
+                {
+                    "word": "su",
+                    "start": 33.658,
+                    "end": 33.738,
+                    "score": 0.992
+                },
+                {
+                    "word": "declaraci\u00f3n,",
+                    "start": 33.798,
+                    "end": 34.379,
+                    "score": 0.909
+                },
+                {
+                    "word": "porque",
+                    "start": 35.059,
+                    "end": 35.18,
+                    "score": 0.977
+                },
+                {
+                    "word": "hay",
+                    "start": 35.2,
+                    "end": 35.26,
+                    "score": 0.104
+                },
+                {
+                    "word": "gente",
+                    "start": 35.3,
+                    "end": 35.46,
+                    "score": 0.795
+                },
+                {
+                    "word": "que",
+                    "start": 35.5,
+                    "end": 35.6,
+                    "score": 0.828
+                },
+                {
+                    "word": "dice",
+                    "start": 35.64,
+                    "end": 35.96,
+                    "score": 0.831
+                },
+                {
+                    "word": "que",
+                    "start": 36.1,
+                    "end": 36.18,
+                    "score": 0.817
+                },
+                {
+                    "word": "estas",
+                    "start": 36.241,
+                    "end": 36.421,
+                    "score": 0.808
+                },
+                {
+                    "word": "personas",
+                    "start": 36.461,
+                    "end": 36.721,
+                    "score": 0.671
+                },
+                {
+                    "word": "est\u00e1n",
+                    "start": 36.761,
+                    "end": 36.921,
+                    "score": 0.8
+                },
+                {
+                    "word": "declarando",
+                    "start": 36.981,
+                    "end": 37.522,
+                    "score": 0.977
+                },
+                {
+                    "word": "bajo",
+                    "start": 37.902,
+                    "end": 38.082,
+                    "score": 0.901
+                },
+                {
+                    "word": "juramento",
+                    "start": 38.142,
+                    "end": 38.743,
+                    "score": 0.928
+                },
+                {
+                    "word": "ante",
+                    "start": 39.183,
+                    "end": 39.283,
+                    "score": 0.864
+                },
+                {
+                    "word": "el",
+                    "start": 39.303,
+                    "end": 39.363,
+                    "score": 0.748
+                },
+                {
+                    "word": "Congreso",
+                    "start": 39.403,
+                    "end": 39.644,
+                    "score": 0.888
+                },
+                {
+                    "word": "de",
+                    "start": 39.664,
+                    "end": 39.724,
+                    "score": 0.75
+                },
+                {
+                    "word": "los",
+                    "start": 39.744,
+                    "end": 39.824,
+                    "score": 0.836
+                },
+                {
+                    "word": "Estados",
+                    "start": 39.864,
+                    "end": 40.024,
+                    "score": 0.878
+                },
+                {
+                    "word": "Unidos,",
+                    "start": 40.044,
+                    "end": 40.264,
+                    "score": 0.883
+                },
+                {
+                    "word": "esto",
+                    "start": 40.404,
+                    "end": 40.504,
+                    "score": 0.918
+                },
+                {
+                    "word": "es",
+                    "start": 40.544,
+                    "end": 40.604,
+                    "score": 0.897
+                },
+                {
+                    "word": "muy",
+                    "start": 40.665,
+                    "end": 40.765,
+                    "score": 0.806
+                },
+                {
+                    "word": "fuerte,",
+                    "start": 40.825,
+                    "end": 41.125,
+                    "score": 0.897
+                },
+                {
+                    "word": "digo",
+                    "start": 42.346,
+                    "end": 42.566,
+                    "score": 0.714
+                },
+                {
+                    "word": "no",
+                    "start": 42.586,
+                    "end": 42.646,
+                    "score": 0.746
+                },
+                {
+                    "word": "es",
+                    "start": 42.686,
+                    "end": 42.726,
+                    "score": 0.976
+                },
+                {
+                    "word": "muy",
+                    "start": 42.766,
+                    "end": 42.847,
+                    "score": 0.949
+                },
+                {
+                    "word": "fuerte",
+                    "start": 42.887,
+                    "end": 43.067,
+                    "score": 0.876
+                },
+                {
+                    "word": "seg\u00fan",
+                    "start": 43.107,
+                    "end": 43.247,
+                    "score": 0.771
+                },
+                {
+                    "word": "para",
+                    "start": 43.287,
+                    "end": 43.407,
+                    "score": 0.826
+                },
+                {
+                    "word": "qui\u00e9n,",
+                    "start": 43.467,
+                    "end": 43.928,
+                    "score": 0.78
+                },
+                {
+                    "word": "yo",
+                    "start": 43.968,
+                    "end": 44.068,
+                    "score": 0.835
+                },
+                {
+                    "word": "si",
+                    "start": 44.108,
+                    "end": 44.188,
+                    "score": 0.53
+                },
+                {
+                    "word": "tuviera",
+                    "start": 44.228,
+                    "end": 44.468,
+                    "score": 0.817
+                },
+                {
+                    "word": "que",
+                    "start": 44.508,
+                    "end": 44.588,
+                    "score": 0.857
+                },
+                {
+                    "word": "declarar",
+                    "start": 44.628,
+                    "end": 45.049,
+                    "score": 0.836
+                },
+                {
+                    "word": "bajo",
+                    "start": 45.089,
+                    "end": 45.229,
+                    "score": 0.806
+                },
+                {
+                    "word": "juramento",
+                    "start": 45.289,
+                    "end": 45.609,
+                    "score": 0.804
+                },
+                {
+                    "word": "ante",
+                    "start": 45.649,
+                    "end": 45.729,
+                    "score": 0.906
+                },
+                {
+                    "word": "el",
+                    "start": 45.749,
+                    "end": 45.809,
+                    "score": 0.656
+                },
+                {
+                    "word": "Congreso",
+                    "start": 45.829,
+                    "end": 46.09,
+                    "score": 0.79
+                },
+                {
+                    "word": "de",
+                    "start": 46.11,
+                    "end": 46.17,
+                    "score": 0.711
+                },
+                {
+                    "word": "Estados",
+                    "start": 46.25,
+                    "end": 46.41,
+                    "score": 0.922
+                },
+                {
+                    "word": "Unidos",
+                    "start": 46.43,
+                    "end": 46.67,
+                    "score": 0.702
+                },
+                {
+                    "word": "lo",
+                    "start": 46.91,
+                    "end": 46.97,
+                    "score": 0.986
+                },
+                {
+                    "word": "pasar\u00eda",
+                    "start": 47.03,
+                    "end": 47.311,
+                    "score": 0.895
+                },
+                {
+                    "word": "fatal",
+                    "start": 47.351,
+                    "end": 47.591,
+                    "score": 0.92
+                }
+            ]
+        },
+        {
+            "start": 48.222,
+            "end": 55.491,
+            "text": " pero se ve que hay gente que no tiene tanto escrupulos y hay varias cosas que se pueden decir de eso.",
+            "words": [
+                {
+                    "word": "pero",
+                    "start": 48.222,
+                    "end": 48.342,
+                    "score": 0.869
+                },
+                {
+                    "word": "se",
+                    "start": 48.362,
+                    "end": 48.422,
+                    "score": 0.97
+                },
+                {
+                    "word": "ve",
+                    "start": 48.462,
+                    "end": 48.502,
+                    "score": 0.778
+                },
+                {
+                    "word": "que",
+                    "start": 48.522,
+                    "end": 48.583,
+                    "score": 0.857
+                },
+                {
+                    "word": "hay",
+                    "start": 48.603,
+                    "end": 48.683,
+                    "score": 0.81
+                },
+                {
+                    "word": "gente",
+                    "start": 48.723,
+                    "end": 48.943,
+                    "score": 0.637
+                },
+                {
+                    "word": "que",
+                    "start": 48.983,
+                    "end": 49.083,
+                    "score": 0.737
+                },
+                {
+                    "word": "no",
+                    "start": 49.143,
+                    "end": 49.203,
+                    "score": 0.831
+                },
+                {
+                    "word": "tiene",
+                    "start": 49.263,
+                    "end": 49.444,
+                    "score": 0.754
+                },
+                {
+                    "word": "tanto",
+                    "start": 49.504,
+                    "end": 50.024,
+                    "score": 0.984
+                },
+                {
+                    "word": "escrupulos",
+                    "start": 51.065,
+                    "end": 51.586,
+                    "score": 0.946
+                },
+                {
+                    "word": "y",
+                    "start": 53.028,
+                    "end": 53.088,
+                    "score": 0.706
+                },
+                {
+                    "word": "hay",
+                    "start": 53.128,
+                    "end": 53.208,
+                    "score": 0.84
+                },
+                {
+                    "word": "varias",
+                    "start": 53.248,
+                    "end": 53.448,
+                    "score": 0.886
+                },
+                {
+                    "word": "cosas",
+                    "start": 53.488,
+                    "end": 53.608,
+                    "score": 0.658
+                },
+                {
+                    "word": "que",
+                    "start": 53.628,
+                    "end": 53.708,
+                    "score": 0.6
+                },
+                {
+                    "word": "se",
+                    "start": 53.729,
+                    "end": 53.789,
+                    "score": 0.75
+                },
+                {
+                    "word": "pueden",
+                    "start": 53.809,
+                    "end": 53.949,
+                    "score": 0.861
+                },
+                {
+                    "word": "decir",
+                    "start": 53.989,
+                    "end": 54.129,
+                    "score": 0.954
+                },
+                {
+                    "word": "de",
+                    "start": 54.529,
+                    "end": 54.59,
+                    "score": 0.826
+                },
+                {
+                    "word": "eso.",
+                    "start": 54.61,
+                    "end": 54.77,
+                    "score": 0.9
+                }
+            ]
+        },
+        {
+            "start": 55.491,
+            "end": 65.762,
+            "text": "Una de ellas es muy divertida y Gaston la mencion\u00f3 antes, es que este se\u00f1or llega a mencionar una justificaci\u00f3n cient\u00edfica para las visitas de seres de otros mundos.",
+            "words": [
+                {
+                    "word": "Una",
+                    "start": 55.491,
+                    "end": 55.571,
+                    "score": 0.998
+                },
+                {
+                    "word": "de",
+                    "start": 55.611,
+                    "end": 55.671,
+                    "score": 0.75
+                },
+                {
+                    "word": "ellas",
+                    "start": 55.691,
+                    "end": 55.871,
+                    "score": 0.709
+                },
+                {
+                    "word": "es",
+                    "start": 55.971,
+                    "end": 56.031,
+                    "score": 0.779
+                },
+                {
+                    "word": "muy",
+                    "start": 56.071,
+                    "end": 56.151,
+                    "score": 0.879
+                },
+                {
+                    "word": "divertida",
+                    "start": 56.171,
+                    "end": 56.612,
+                    "score": 0.87
+                },
+                {
+                    "word": "y",
+                    "start": 56.632,
+                    "end": 56.652,
+                    "score": 0.006
+                },
+                {
+                    "word": "Gaston",
+                    "start": 56.872,
+                    "end": 57.112,
+                    "score": 0.897
+                },
+                {
+                    "word": "la",
+                    "start": 57.132,
+                    "end": 57.213,
+                    "score": 0.73
+                },
+                {
+                    "word": "mencion\u00f3",
+                    "start": 57.253,
+                    "end": 57.553,
+                    "score": 0.876
+                },
+                {
+                    "word": "antes,",
+                    "start": 57.633,
+                    "end": 57.853,
+                    "score": 0.891
+                },
+                {
+                    "word": "es",
+                    "start": 58.794,
+                    "end": 58.874,
+                    "score": 0.692
+                },
+                {
+                    "word": "que",
+                    "start": 58.915,
+                    "end": 59.075,
+                    "score": 0.818
+                },
+                {
+                    "word": "este",
+                    "start": 59.375,
+                    "end": 59.515,
+                    "score": 0.874
+                },
+                {
+                    "word": "se\u00f1or",
+                    "start": 59.575,
+                    "end": 59.856,
+                    "score": 0.889
+                },
+                {
+                    "word": "llega",
+                    "start": 60.116,
+                    "end": 60.396,
+                    "score": 0.643
+                },
+                {
+                    "word": "a",
+                    "start": 60.416,
+                    "end": 60.436,
+                    "score": 0.832
+                },
+                {
+                    "word": "mencionar",
+                    "start": 60.496,
+                    "end": 60.897,
+                    "score": 0.832
+                },
+                {
+                    "word": "una",
+                    "start": 61.157,
+                    "end": 61.257,
+                    "score": 0.817
+                },
+                {
+                    "word": "justificaci\u00f3n",
+                    "start": 61.337,
+                    "end": 61.938,
+                    "score": 0.927
+                },
+                {
+                    "word": "cient\u00edfica",
+                    "start": 62.038,
+                    "end": 62.539,
+                    "score": 0.859
+                },
+                {
+                    "word": "para",
+                    "start": 62.619,
+                    "end": 62.759,
+                    "score": 0.846
+                },
+                {
+                    "word": "las",
+                    "start": 62.799,
+                    "end": 62.899,
+                    "score": 0.831
+                },
+                {
+                    "word": "visitas",
+                    "start": 62.919,
+                    "end": 63.36,
+                    "score": 0.952
+                },
+                {
+                    "word": "de",
+                    "start": 64.06,
+                    "end": 64.121,
+                    "score": 0.962
+                },
+                {
+                    "word": "seres",
+                    "start": 64.201,
+                    "end": 64.401,
+                    "score": 0.778
+                },
+                {
+                    "word": "de",
+                    "start": 64.421,
+                    "end": 64.481,
+                    "score": 0.71
+                },
+                {
+                    "word": "otros",
+                    "start": 64.521,
+                    "end": 64.721,
+                    "score": 0.773
+                },
+                {
+                    "word": "mundos.",
+                    "start": 64.781,
+                    "end": 65.062,
+                    "score": 0.885
+                }
+            ]
+        },
+        {
+            "start": 65.762,
+            "end": 66.103,
+            "text": "Y se bueno.",
+            "words": [
+                {
+                    "word": "Y",
+                    "start": 65.762,
+                    "end": 65.782,
+                    "score": 0.873
+                },
+                {
+                    "word": "se",
+                    "start": 65.843,
+                    "end": 65.903,
+                    "score": 0.842
+                },
+                {
+                    "word": "bueno.",
+                    "start": 65.943,
+                    "end": 66.103,
+                    "score": 0.87
+                }
+            ]
+        },
+        {
+            "start": 66.925,
+            "end": 76.71,
+            "text": " el marco te\u00f3rico con el que trabaja, bueno mira, no lo voy a decir, yo vamos a escucharlo a \u00e9l porque tengo aqu\u00ed el cork, est\u00e1 en ingl\u00e9s, ahora se lo, si no habla en ingl\u00e9s no se produc\u00fapen que ahora lo vamos a traducir, pero esto es lo que dijo.",
+            "words": [
+                {
+                    "word": "el",
+                    "start": 66.925,
+                    "end": 67.025,
+                    "score": 0.828
+                },
+                {
+                    "word": "marco",
+                    "start": 67.105,
+                    "end": 67.405,
+                    "score": 0.904
+                },
+                {
+                    "word": "te\u00f3rico",
+                    "start": 67.485,
+                    "end": 67.846,
+                    "score": 0.878
+                },
+                {
+                    "word": "con",
+                    "start": 67.906,
+                    "end": 67.986,
+                    "score": 0.859
+                },
+                {
+                    "word": "el",
+                    "start": 68.006,
+                    "end": 68.066,
+                    "score": 0.748
+                },
+                {
+                    "word": "que",
+                    "start": 68.086,
+                    "end": 68.146,
+                    "score": 0.999
+                },
+                {
+                    "word": "trabaja,",
+                    "start": 68.206,
+                    "end": 68.466,
+                    "score": 0.671
+                },
+                {
+                    "word": "bueno",
+                    "start": 68.566,
+                    "end": 68.686,
+                    "score": 0.684
+                },
+                {
+                    "word": "mira,",
+                    "start": 68.706,
+                    "end": 68.926,
+                    "score": 0.904
+                },
+                {
+                    "word": "no",
+                    "start": 69.246,
+                    "end": 69.306,
+                    "score": 0.782
+                },
+                {
+                    "word": "lo",
+                    "start": 69.346,
+                    "end": 69.386,
+                    "score": 0.991
+                },
+                {
+                    "word": "voy",
+                    "start": 69.406,
+                    "end": 69.486,
+                    "score": 0.832
+                },
+                {
+                    "word": "a",
+                    "start": 69.506,
+                    "end": 69.526,
+                    "score": 0.989
+                },
+                {
+                    "word": "decir,",
+                    "start": 69.546,
+                    "end": 69.646,
+                    "score": 0.993
+                },
+                {
+                    "word": "yo",
+                    "start": 69.686,
+                    "end": 69.767,
+                    "score": 0.546
+                },
+                {
+                    "word": "vamos",
+                    "start": 69.787,
+                    "end": 69.907,
+                    "score": 0.889
+                },
+                {
+                    "word": "a",
+                    "start": 69.927,
+                    "end": 69.947,
+                    "score": 0.939
+                },
+                {
+                    "word": "escucharlo",
+                    "start": 69.987,
+                    "end": 70.307,
+                    "score": 0.881
+                },
+                {
+                    "word": "a",
+                    "start": 70.347,
+                    "end": 70.367,
+                    "score": 0.706
+                },
+                {
+                    "word": "\u00e9l",
+                    "start": 70.407,
+                    "end": 70.507,
+                    "score": 0.374
+                },
+                {
+                    "word": "porque",
+                    "start": 70.547,
+                    "end": 70.727,
+                    "score": 0.834
+                },
+                {
+                    "word": "tengo",
+                    "start": 70.767,
+                    "end": 70.907,
+                    "score": 0.812
+                },
+                {
+                    "word": "aqu\u00ed",
+                    "start": 70.927,
+                    "end": 71.047,
+                    "score": 0.914
+                },
+                {
+                    "word": "el",
+                    "start": 71.087,
+                    "end": 71.167,
+                    "score": 0.746
+                },
+                {
+                    "word": "cork,",
+                    "start": 71.227,
+                    "end": 71.487,
+                    "score": 0.856
+                },
+                {
+                    "word": "est\u00e1",
+                    "start": 71.748,
+                    "end": 71.848,
+                    "score": 0.98
+                },
+                {
+                    "word": "en",
+                    "start": 71.868,
+                    "end": 71.908,
+                    "score": 0.417
+                },
+                {
+                    "word": "ingl\u00e9s,",
+                    "start": 71.968,
+                    "end": 72.228,
+                    "score": 0.793
+                },
+                {
+                    "word": "ahora",
+                    "start": 72.288,
+                    "end": 72.408,
+                    "score": 0.906
+                },
+                {
+                    "word": "se",
+                    "start": 72.468,
+                    "end": 72.508,
+                    "score": 0.002
+                },
+                {
+                    "word": "lo,",
+                    "start": 72.548,
+                    "end": 72.888,
+                    "score": 0.716
+                },
+                {
+                    "word": "si",
+                    "start": 72.928,
+                    "end": 72.988,
+                    "score": 0.951
+                },
+                {
+                    "word": "no",
+                    "start": 73.008,
+                    "end": 73.068,
+                    "score": 0.748
+                },
+                {
+                    "word": "habla",
+                    "start": 73.088,
+                    "end": 73.188,
+                    "score": 0.851
+                },
+                {
+                    "word": "en",
+                    "start": 73.208,
+                    "end": 73.248,
+                    "score": 0.064
+                },
+                {
+                    "word": "ingl\u00e9s",
+                    "start": 73.308,
+                    "end": 73.468,
+                    "score": 0.847
+                },
+                {
+                    "word": "no",
+                    "start": 73.488,
+                    "end": 73.548,
+                    "score": 0.763
+                },
+                {
+                    "word": "se",
+                    "start": 73.568,
+                    "end": 73.648,
+                    "score": 0.795
+                },
+                {
+                    "word": "produc\u00fapen",
+                    "start": 73.688,
+                    "end": 74.089,
+                    "score": 0.771
+                },
+                {
+                    "word": "que",
+                    "start": 74.109,
+                    "end": 74.189,
+                    "score": 0.984
+                },
+                {
+                    "word": "ahora",
+                    "start": 74.389,
+                    "end": 74.529,
+                    "score": 0.899
+                },
+                {
+                    "word": "lo",
+                    "start": 74.549,
+                    "end": 74.589,
+                    "score": 0.972
+                },
+                {
+                    "word": "vamos",
+                    "start": 74.629,
+                    "end": 74.789,
+                    "score": 0.884
+                },
+                {
+                    "word": "a",
+                    "start": 74.809,
+                    "end": 74.829,
+                    "score": 0.997
+                },
+                {
+                    "word": "traducir,",
+                    "start": 74.889,
+                    "end": 75.269,
+                    "score": 0.932
+                },
+                {
+                    "word": "pero",
+                    "start": 75.729,
+                    "end": 75.87,
+                    "score": 0.907
+                },
+                {
+                    "word": "esto",
+                    "start": 76.05,
+                    "end": 76.21,
+                    "score": 0.896
+                },
+                {
+                    "word": "es",
+                    "start": 76.25,
+                    "end": 76.31,
+                    "score": 0.876
+                },
+                {
+                    "word": "lo",
+                    "start": 76.35,
+                    "end": 76.39,
+                    "score": 0.999
+                },
+                {
+                    "word": "que",
+                    "start": 76.43,
+                    "end": 76.51,
+                    "score": 0.838
+                },
+                {
+                    "word": "dijo.",
+                    "start": 76.55,
+                    "end": 76.71,
+                    "score": 0.974
+                }
+            ]
+        },
+        {
+            "start": 77.583,
+            "end": 84.207,
+            "text": " Y en t\u00e9rminos de multidimensialos, que es la forma de la frema que estoy familiar con, por ejemplo, es algo called the hologr\u00e1fico principal.",
+            "words": [
+                {
+                    "word": "Y",
+                    "start": 77.583,
+                    "end": 77.603,
+                    "score": 0.009
+                },
+                {
+                    "word": "en",
+                    "start": 77.623,
+                    "end": 77.723,
+                    "score": 0.202
+                },
+                {
+                    "word": "t\u00e9rminos",
+                    "start": 77.763,
+                    "end": 78.023,
+                    "score": 0.136
+                },
+                {
+                    "word": "de",
+                    "start": 78.063,
+                    "end": 78.143,
+                    "score": 0.23
+                },
+                {
+                    "word": "multidimensialos,",
+                    "start": 78.163,
+                    "end": 78.684,
+                    "score": 0.206
+                },
+                {
+                    "word": "que",
+                    "start": 78.724,
+                    "end": 79.284,
+                    "score": 0.533
+                },
+                {
+                    "word": "es",
+                    "start": 79.404,
+                    "end": 79.984,
+                    "score": 0.589
+                },
+                {
+                    "word": "la",
+                    "start": 80.024,
+                    "end": 80.105,
+                    "score": 0.499
+                },
+                {
+                    "word": "forma",
+                    "start": 80.125,
+                    "end": 80.365,
+                    "score": 0.356
+                },
+                {
+                    "word": "de",
+                    "start": 80.385,
+                    "end": 80.445,
+                    "score": 0.2
+                },
+                {
+                    "word": "la",
+                    "start": 80.465,
+                    "end": 80.565,
+                    "score": 0.462
+                },
+                {
+                    "word": "frema",
+                    "start": 80.585,
+                    "end": 80.745,
+                    "score": 0.205
+                },
+                {
+                    "word": "que",
+                    "start": 80.785,
+                    "end": 80.905,
+                    "score": 0.339
+                },
+                {
+                    "word": "estoy",
+                    "start": 80.965,
+                    "end": 81.205,
+                    "score": 0.373
+                },
+                {
+                    "word": "familiar",
+                    "start": 81.225,
+                    "end": 81.485,
+                    "score": 0.367
+                },
+                {
+                    "word": "con,",
+                    "start": 81.505,
+                    "end": 81.605,
+                    "score": 0.19
+                },
+                {
+                    "word": "por",
+                    "start": 81.645,
+                    "end": 81.765,
+                    "score": 0.313
+                },
+                {
+                    "word": "ejemplo,",
+                    "start": 81.806,
+                    "end": 82.226,
+                    "score": 0.435
+                },
+                {
+                    "word": "es",
+                    "start": 82.286,
+                    "end": 82.346,
+                    "score": 0.436
+                },
+                {
+                    "word": "algo",
+                    "start": 82.506,
+                    "end": 82.646,
+                    "score": 0.303
+                },
+                {
+                    "word": "called",
+                    "start": 82.686,
+                    "end": 82.946,
+                    "score": 0.314
+                },
+                {
+                    "word": "the",
+                    "start": 83.426,
+                    "end": 83.607,
+                    "score": 0.61
+                },
+                {
+                    "word": "hologr\u00e1fico",
+                    "start": 83.627,
+                    "end": 83.907,
+                    "score": 0.141
+                },
+                {
+                    "word": "principal.",
+                    "start": 83.927,
+                    "end": 84.187,
+                    "score": 0.174
+                }
+            ]
+        },
+        {
+            "start": 84.207,
+            "end": 86.829,
+            "text": "Es, es, es, es de forma de generar altos y cuantos mec\u00e1nicos, y eso es",
+            "words": [
+                {
+                    "word": "Es,",
+                    "start": 84.207,
+                    "end": 84.247,
+                    "score": 0.122
+                },
+                {
+                    "word": "es,",
+                    "start": 84.267,
+                    "end": 84.307,
+                    "score": 0.135
+                },
+                {
+                    "word": "es,",
+                    "start": 84.447,
+                    "end": 84.567,
+                    "score": 0.432
+                },
+                {
+                    "word": "es",
+                    "start": 84.587,
+                    "end": 84.627,
+                    "score": 0.172
+                },
+                {
+                    "word": "de",
+                    "start": 84.647,
+                    "end": 84.807,
+                    "score": 0.568
+                },
+                {
+                    "word": "forma",
+                    "start": 84.827,
+                    "end": 84.947,
+                    "score": 0.179
+                },
+                {
+                    "word": "de",
+                    "start": 84.967,
+                    "end": 85.027,
+                    "score": 0.248
+                },
+                {
+                    "word": "generar",
+                    "start": 85.047,
+                    "end": 85.208,
+                    "score": 0.129
+                },
+                {
+                    "word": "altos",
+                    "start": 85.268,
+                    "end": 85.548,
+                    "score": 0.488
+                },
+                {
+                    "word": "y",
+                    "start": 85.568,
+                    "end": 85.588,
+                    "score": 0.011
+                },
+                {
+                    "word": "cuantos",
+                    "start": 85.948,
+                    "end": 86.208,
+                    "score": 0.284
+                },
+                {
+                    "word": "mec\u00e1nicos,",
+                    "start": 86.228,
+                    "end": 86.548,
+                    "score": 0.262
+                },
+                {
+                    "word": "y",
+                    "start": 86.568,
+                    "end": 86.588,
+                    "score": 0.007
+                },
+                {
+                    "word": "eso",
+                    "start": 86.648,
+                    "end": 86.728,
+                    "score": 0.227
+                },
+                {
+                    "word": "es",
+                    "start": 86.788,
+                    "end": 86.829,
+                    "score": 0.105
+                }
+            ]
+        },
+        {
+            "start": 94.473,
+            "end": 102.466,
+            "text": " If you want to imagine 3D objects, such as yourself, casting a shadow onto a 2D surface, that's the whole graphic principle.",
+            "words": [
+                {
+                    "word": "If",
+                    "start": 94.473,
+                    "end": 94.694,
+                    "score": 0.379
+                },
+                {
+                    "word": "you",
+                    "start": 94.714,
+                    "end": 94.834,
+                    "score": 0.291
+                },
+                {
+                    "word": "want",
+                    "start": 94.854,
+                    "end": 95.034,
+                    "score": 0.267
+                },
+                {
+                    "word": "to",
+                    "start": 95.054,
+                    "end": 95.214,
+                    "score": 0.44
+                },
+                {
+                    "word": "imagine",
+                    "start": 95.294,
+                    "end": 95.755,
+                    "score": 0.452
+                },
+                {
+                    "word": "3D",
+                    "start": 95.775,
+                    "end": 95.795,
+                    "score": 0.007
+                },
+                {
+                    "word": "objects,",
+                    "start": 96.296,
+                    "end": 97.037,
+                    "score": 0.391
+                },
+                {
+                    "word": "such",
+                    "start": 97.057,
+                    "end": 97.378,
+                    "score": 0.426
+                },
+                {
+                    "word": "as",
+                    "start": 97.418,
+                    "end": 97.498,
+                    "score": 0.356
+                },
+                {
+                    "word": "yourself,",
+                    "start": 97.518,
+                    "end": 98.019,
+                    "score": 0.333
+                },
+                {
+                    "word": "casting",
+                    "start": 98.119,
+                    "end": 98.5,
+                    "score": 0.399
+                },
+                {
+                    "word": "a",
+                    "start": 98.54,
+                    "end": 98.6,
+                    "score": 0.412
+                },
+                {
+                    "word": "shadow",
+                    "start": 98.7,
+                    "end": 99.161,
+                    "score": 0.502
+                },
+                {
+                    "word": "onto",
+                    "start": 99.321,
+                    "end": 99.481,
+                    "score": 0.477
+                },
+                {
+                    "word": "a",
+                    "start": 99.521,
+                    "end": 99.561,
+                    "score": 0.424
+                },
+                {
+                    "word": "2D",
+                    "start": 99.581,
+                    "end": 99.601,
+                    "score": 0.011
+                },
+                {
+                    "word": "surface,",
+                    "start": 99.641,
+                    "end": 100.182,
+                    "score": 0.431
+                },
+                {
+                    "word": "that's",
+                    "start": 100.202,
+                    "end": 100.403,
+                    "score": 0.197
+                },
+                {
+                    "word": "the",
+                    "start": 101.084,
+                    "end": 101.344,
+                    "score": 0.358
+                },
+                {
+                    "word": "whole",
+                    "start": 101.384,
+                    "end": 101.685,
+                    "score": 0.35
+                },
+                {
+                    "word": "graphic",
+                    "start": 101.705,
+                    "end": 102.126,
+                    "score": 0.351
+                },
+                {
+                    "word": "principle.",
+                    "start": 102.166,
+                    "end": 102.446,
+                    "score": 0.233
+                }
+            ]
+        },
+        {
+            "start": 102.466,
+            "end": 105.771,
+            "text": "So you can be projected, quasi projected from higher dimensional space.",
+            "words": [
+                {
+                    "word": "So",
+                    "start": 102.466,
+                    "end": 102.646,
+                    "score": 0.468
+                },
+                {
+                    "word": "you",
+                    "start": 102.686,
+                    "end": 102.847,
+                    "score": 0.344
+                },
+                {
+                    "word": "can",
+                    "start": 102.867,
+                    "end": 103.007,
+                    "score": 0.407
+                },
+                {
+                    "word": "be",
+                    "start": 103.047,
+                    "end": 103.187,
+                    "score": 0.246
+                },
+                {
+                    "word": "projected,",
+                    "start": 103.207,
+                    "end": 103.888,
+                    "score": 0.416
+                },
+                {
+                    "word": "quasi",
+                    "start": 103.948,
+                    "end": 104.329,
+                    "score": 0.453
+                },
+                {
+                    "word": "projected",
+                    "start": 104.349,
+                    "end": 104.73,
+                    "score": 0.417
+                },
+                {
+                    "word": "from",
+                    "start": 104.77,
+                    "end": 104.91,
+                    "score": 0.204
+                },
+                {
+                    "word": "higher",
+                    "start": 104.93,
+                    "end": 105.09,
+                    "score": 0.206
+                },
+                {
+                    "word": "dimensional",
+                    "start": 105.11,
+                    "end": 105.531,
+                    "score": 0.253
+                },
+                {
+                    "word": "space.",
+                    "start": 105.551,
+                    "end": 105.771,
+                    "score": 0.325
+                }
+            ]
+        },
+        {
+            "start": 106.152,
+            "end": 107.033,
+            "text": " lo que dice literalmente es",
+            "words": [
+                {
+                    "word": "lo",
+                    "start": 106.152,
+                    "end": 106.372,
+                    "score": 0.65
+                },
+                {
+                    "word": "que",
+                    "start": 106.392,
+                    "end": 106.512,
+                    "score": 0.19
+                },
+                {
+                    "word": "dice",
+                    "start": 106.532,
+                    "end": 106.652,
+                    "score": 0.222
+                },
+                {
+                    "word": "literalmente",
+                    "start": 106.672,
+                    "end": 106.973,
+                    "score": 0.186
+                },
+                {
+                    "word": "es",
+                    "start": 106.993,
+                    "end": 107.033,
+                    "score": 0.062
+                }
+            ]
+        },
+        {
+            "start": 120.648,
+            "end": 126.278,
+            "text": " dice el marco te\u00f3rico con el cual nosotros interpretamos estas cosas, es algo que se llama el principio logr\u00e1fico.",
+            "words": [
+                {
+                    "word": "dice",
+                    "start": 120.648,
+                    "end": 120.849,
+                    "score": 0.808
+                },
+                {
+                    "word": "el",
+                    "start": 120.889,
+                    "end": 120.989,
+                    "score": 0.794
+                },
+                {
+                    "word": "marco",
+                    "start": 121.069,
+                    "end": 121.289,
+                    "score": 0.933
+                },
+                {
+                    "word": "te\u00f3rico",
+                    "start": 121.39,
+                    "end": 121.89,
+                    "score": 0.873
+                },
+                {
+                    "word": "con",
+                    "start": 121.991,
+                    "end": 122.091,
+                    "score": 0.722
+                },
+                {
+                    "word": "el",
+                    "start": 122.131,
+                    "end": 122.191,
+                    "score": 0.794
+                },
+                {
+                    "word": "cual",
+                    "start": 122.251,
+                    "end": 122.411,
+                    "score": 0.541
+                },
+                {
+                    "word": "nosotros",
+                    "start": 122.451,
+                    "end": 122.772,
+                    "score": 0.654
+                },
+                {
+                    "word": "interpretamos",
+                    "start": 122.852,
+                    "end": 123.293,
+                    "score": 0.931
+                },
+                {
+                    "word": "estas",
+                    "start": 123.333,
+                    "end": 123.493,
+                    "score": 0.806
+                },
+                {
+                    "word": "cosas,",
+                    "start": 123.553,
+                    "end": 123.794,
+                    "score": 0.871
+                },
+                {
+                    "word": "es",
+                    "start": 124.034,
+                    "end": 124.134,
+                    "score": 0.824
+                },
+                {
+                    "word": "algo",
+                    "start": 124.174,
+                    "end": 124.274,
+                    "score": 0.979
+                },
+                {
+                    "word": "que",
+                    "start": 124.294,
+                    "end": 124.375,
+                    "score": 0.833
+                },
+                {
+                    "word": "se",
+                    "start": 124.415,
+                    "end": 124.455,
+                    "score": 0.999
+                },
+                {
+                    "word": "llama",
+                    "start": 124.495,
+                    "end": 124.635,
+                    "score": 0.886
+                },
+                {
+                    "word": "el",
+                    "start": 124.655,
+                    "end": 124.735,
+                    "score": 0.506
+                },
+                {
+                    "word": "principio",
+                    "start": 124.775,
+                    "end": 125.136,
+                    "score": 0.886
+                },
+                {
+                    "word": "logr\u00e1fico.",
+                    "start": 125.236,
+                    "end": 125.697,
+                    "score": 0.952
+                }
+            ]
+        },
+        {
+            "start": 126.278,
+            "end": 129.303,
+            "text": "El principio logr\u00e1fico se deriva de relatividad general y mec\u00e1nico.",
+            "words": [
+                {
+                    "word": "El",
+                    "start": 126.278,
+                    "end": 126.358,
+                    "score": 0.74
+                },
+                {
+                    "word": "principio",
+                    "start": 126.378,
+                    "end": 126.658,
+                    "score": 0.846
+                },
+                {
+                    "word": "logr\u00e1fico",
+                    "start": 126.739,
+                    "end": 127.159,
+                    "score": 0.922
+                },
+                {
+                    "word": "se",
+                    "start": 127.259,
+                    "end": 127.36,
+                    "score": 0.796
+                },
+                {
+                    "word": "deriva",
+                    "start": 127.42,
+                    "end": 127.76,
+                    "score": 0.88
+                },
+                {
+                    "word": "de",
+                    "start": 128.181,
+                    "end": 128.281,
+                    "score": 0.716
+                },
+                {
+                    "word": "relatividad",
+                    "start": 128.341,
+                    "end": 128.762,
+                    "score": 0.818
+                },
+                {
+                    "word": "general",
+                    "start": 128.842,
+                    "end": 129.062,
+                    "score": 0.954
+                },
+                {
+                    "word": "y",
+                    "start": 129.082,
+                    "end": 129.102,
+                    "score": 0.023
+                },
+                {
+                    "word": "mec\u00e1nico.",
+                    "start": 129.143,
+                    "end": 129.303,
+                    "score": 0.004
+                }
+            ]
+        }
+    ],
+    "word_segments": [
+        {
+            "word": "Bien,",
+            "start": 11.076,
+            "end": 11.297,
+            "score": 0.424
+        },
+        {
+            "word": "gracias",
+            "start": 11.337,
+            "end": 11.537,
+            "score": 0.651
+        },
+        {
+            "word": "por",
+            "start": 11.597,
+            "end": 11.717,
+            "score": 0.558
+        },
+        {
+            "word": "seguirnos",
+            "start": 11.757,
+            "end": 12.098,
+            "score": 0.765
+        },
+        {
+            "word": "acompa\u00f1ando,",
+            "start": 12.138,
+            "end": 12.718,
+            "score": 0.885
+        },
+        {
+            "word": "vamos",
+            "start": 12.999,
+            "end": 13.179,
+            "score": 0.923
+        },
+        {
+            "word": "a",
+            "start": 13.239,
+            "end": 13.279,
+            "score": 0.499
+        },
+        {
+            "word": "continuar",
+            "start": 13.359,
+            "end": 13.96,
+            "score": 0.879
+        },
+        {
+            "word": "a",
+            "start": 13.98,
+            "end": 14.0,
+            "score": 0.001
+        },
+        {
+            "word": "ver",
+            "start": 14.701,
+            "end": 14.781,
+            "score": 0.865
+        },
+        {
+            "word": "si",
+            "start": 14.841,
+            "end": 15.081,
+            "score": 0.907
+        },
+        {
+            "word": "consigo",
+            "start": 15.182,
+            "end": 15.422,
+            "score": 0.755
+        },
+        {
+            "word": "ir",
+            "start": 15.442,
+            "end": 15.502,
+            "score": 0.911
+        },
+        {
+            "word": "terminando",
+            "start": 15.562,
+            "end": 15.903,
+            "score": 0.96
+        },
+        {
+            "word": "con",
+            "start": 15.943,
+            "end": 16.043,
+            "score": 0.805
+        },
+        {
+            "word": "la",
+            "start": 16.083,
+            "end": 16.123,
+            "score": 1.0
+        },
+        {
+            "word": "historia",
+            "start": 16.163,
+            "end": 16.403,
+            "score": 0.932
+        },
+        {
+            "word": "de",
+            "start": 16.443,
+            "end": 16.483,
+            "score": 1.0
+        },
+        {
+            "word": "los",
+            "start": 16.503,
+            "end": 16.583,
+            "score": 0.961
+        },
+        {
+            "word": "Hopkins",
+            "start": 16.603,
+            "end": 17.024,
+            "score": 0.731
+        },
+        {
+            "word": "y",
+            "start": 17.845,
+            "end": 17.905,
+            "score": 0.653
+        },
+        {
+            "word": "toda",
+            "start": 17.985,
+            "end": 18.145,
+            "score": 0.986
+        },
+        {
+            "word": "esta",
+            "start": 18.186,
+            "end": 18.366,
+            "score": 0.868
+        },
+        {
+            "word": "pel\u00edcula",
+            "start": 18.446,
+            "end": 18.746,
+            "score": 0.927
+        },
+        {
+            "word": "que",
+            "start": 18.766,
+            "end": 18.846,
+            "score": 0.786
+        },
+        {
+            "word": "hay",
+            "start": 18.866,
+            "end": 18.947,
+            "score": 0.763
+        },
+        {
+            "word": "montada.",
+            "start": 18.967,
+            "end": 19.327,
+            "score": 0.948
+        },
+        {
+            "word": "Entonces,",
+            "start": 20.468,
+            "end": 20.649,
+            "score": 0.668
+        },
+        {
+            "word": "vamos",
+            "start": 20.669,
+            "end": 20.769,
+            "score": 0.556
+        },
+        {
+            "word": "al",
+            "start": 20.809,
+            "end": 20.869,
+            "score": 0.615
+        },
+        {
+            "word": "personaje",
+            "start": 20.909,
+            "end": 21.209,
+            "score": 0.922
+        },
+        {
+            "word": "central",
+            "start": 21.29,
+            "end": 21.71,
+            "score": 0.858
+        },
+        {
+            "word": "de",
+            "start": 22.091,
+            "end": 22.211,
+            "score": 0.996
+        },
+        {
+            "word": "este",
+            "start": 22.591,
+            "end": 22.792,
+            "score": 0.963
+        },
+        {
+            "word": "episodio,",
+            "start": 22.852,
+            "end": 23.252,
+            "score": 0.912
+        },
+        {
+            "word": "de",
+            "start": 23.292,
+            "end": 23.352,
+            "score": 0.752
+        },
+        {
+            "word": "esta",
+            "start": 23.392,
+            "end": 23.573,
+            "score": 0.836
+        },
+        {
+            "word": "crisis",
+            "start": 23.773,
+            "end": 24.173,
+            "score": 0.866
+        },
+        {
+            "word": "que",
+            "start": 26.216,
+            "end": 26.296,
+            "score": 0.815
+        },
+        {
+            "word": "se",
+            "start": 26.336,
+            "end": 26.396,
+            "score": 0.851
+        },
+        {
+            "word": "ha",
+            "start": 26.416,
+            "end": 26.476,
+            "score": 0.906
+        },
+        {
+            "word": "organizado,",
+            "start": 26.516,
+            "end": 27.017,
+            "score": 0.927
+        },
+        {
+            "word": "que",
+            "start": 27.037,
+            "end": 27.097,
+            "score": 0.0
+        },
+        {
+            "word": "es",
+            "start": 27.578,
+            "end": 27.638,
+            "score": 0.475
+        },
+        {
+            "word": "este",
+            "start": 27.758,
+            "end": 27.938,
+            "score": 0.926
+        },
+        {
+            "word": "personaje",
+            "start": 28.018,
+            "end": 28.359,
+            "score": 0.855
+        },
+        {
+            "word": "David",
+            "start": 28.639,
+            "end": 28.94,
+            "score": 0.757
+        },
+        {
+            "word": "Grush.",
+            "start": 28.98,
+            "end": 29.24,
+            "score": 0.588
+        },
+        {
+            "word": "bromeamos",
+            "start": 30.936,
+            "end": 31.436,
+            "score": 0.933
+        },
+        {
+            "word": "antes",
+            "start": 31.496,
+            "end": 31.716,
+            "score": 0.867
+        },
+        {
+            "word": "con",
+            "start": 31.796,
+            "end": 31.977,
+            "score": 0.859
+        },
+        {
+            "word": "que",
+            "start": 32.077,
+            "end": 32.337,
+            "score": 0.921
+        },
+        {
+            "word": "en",
+            "start": 32.617,
+            "end": 32.677,
+            "score": 0.918
+        },
+        {
+            "word": "un",
+            "start": 32.697,
+            "end": 32.757,
+            "score": 0.756
+        },
+        {
+            "word": "momento",
+            "start": 32.777,
+            "end": 33.018,
+            "score": 0.847
+        },
+        {
+            "word": "dado",
+            "start": 33.078,
+            "end": 33.258,
+            "score": 0.885
+        },
+        {
+            "word": "en",
+            "start": 33.278,
+            "end": 33.318,
+            "score": 0.004
+        },
+        {
+            "word": "su",
+            "start": 33.658,
+            "end": 33.738,
+            "score": 0.992
+        },
+        {
+            "word": "declaraci\u00f3n,",
+            "start": 33.798,
+            "end": 34.379,
+            "score": 0.909
+        },
+        {
+            "word": "porque",
+            "start": 35.059,
+            "end": 35.18,
+            "score": 0.977
+        },
+        {
+            "word": "hay",
+            "start": 35.2,
+            "end": 35.26,
+            "score": 0.104
+        },
+        {
+            "word": "gente",
+            "start": 35.3,
+            "end": 35.46,
+            "score": 0.795
+        },
+        {
+            "word": "que",
+            "start": 35.5,
+            "end": 35.6,
+            "score": 0.828
+        },
+        {
+            "word": "dice",
+            "start": 35.64,
+            "end": 35.96,
+            "score": 0.831
+        },
+        {
+            "word": "que",
+            "start": 36.1,
+            "end": 36.18,
+            "score": 0.817
+        },
+        {
+            "word": "estas",
+            "start": 36.241,
+            "end": 36.421,
+            "score": 0.808
+        },
+        {
+            "word": "personas",
+            "start": 36.461,
+            "end": 36.721,
+            "score": 0.671
+        },
+        {
+            "word": "est\u00e1n",
+            "start": 36.761,
+            "end": 36.921,
+            "score": 0.8
+        },
+        {
+            "word": "declarando",
+            "start": 36.981,
+            "end": 37.522,
+            "score": 0.977
+        },
+        {
+            "word": "bajo",
+            "start": 37.902,
+            "end": 38.082,
+            "score": 0.901
+        },
+        {
+            "word": "juramento",
+            "start": 38.142,
+            "end": 38.743,
+            "score": 0.928
+        },
+        {
+            "word": "ante",
+            "start": 39.183,
+            "end": 39.283,
+            "score": 0.864
+        },
+        {
+            "word": "el",
+            "start": 39.303,
+            "end": 39.363,
+            "score": 0.748
+        },
+        {
+            "word": "Congreso",
+            "start": 39.403,
+            "end": 39.644,
+            "score": 0.888
+        },
+        {
+            "word": "de",
+            "start": 39.664,
+            "end": 39.724,
+            "score": 0.75
+        },
+        {
+            "word": "los",
+            "start": 39.744,
+            "end": 39.824,
+            "score": 0.836
+        },
+        {
+            "word": "Estados",
+            "start": 39.864,
+            "end": 40.024,
+            "score": 0.878
+        },
+        {
+            "word": "Unidos,",
+            "start": 40.044,
+            "end": 40.264,
+            "score": 0.883
+        },
+        {
+            "word": "esto",
+            "start": 40.404,
+            "end": 40.504,
+            "score": 0.918
+        },
+        {
+            "word": "es",
+            "start": 40.544,
+            "end": 40.604,
+            "score": 0.897
+        },
+        {
+            "word": "muy",
+            "start": 40.665,
+            "end": 40.765,
+            "score": 0.806
+        },
+        {
+            "word": "fuerte,",
+            "start": 40.825,
+            "end": 41.125,
+            "score": 0.897
+        },
+        {
+            "word": "digo",
+            "start": 42.346,
+            "end": 42.566,
+            "score": 0.714
+        },
+        {
+            "word": "no",
+            "start": 42.586,
+            "end": 42.646,
+            "score": 0.746
+        },
+        {
+            "word": "es",
+            "start": 42.686,
+            "end": 42.726,
+            "score": 0.976
+        },
+        {
+            "word": "muy",
+            "start": 42.766,
+            "end": 42.847,
+            "score": 0.949
+        },
+        {
+            "word": "fuerte",
+            "start": 42.887,
+            "end": 43.067,
+            "score": 0.876
+        },
+        {
+            "word": "seg\u00fan",
+            "start": 43.107,
+            "end": 43.247,
+            "score": 0.771
+        },
+        {
+            "word": "para",
+            "start": 43.287,
+            "end": 43.407,
+            "score": 0.826
+        },
+        {
+            "word": "qui\u00e9n,",
+            "start": 43.467,
+            "end": 43.928,
+            "score": 0.78
+        },
+        {
+            "word": "yo",
+            "start": 43.968,
+            "end": 44.068,
+            "score": 0.835
+        },
+        {
+            "word": "si",
+            "start": 44.108,
+            "end": 44.188,
+            "score": 0.53
+        },
+        {
+            "word": "tuviera",
+            "start": 44.228,
+            "end": 44.468,
+            "score": 0.817
+        },
+        {
+            "word": "que",
+            "start": 44.508,
+            "end": 44.588,
+            "score": 0.857
+        },
+        {
+            "word": "declarar",
+            "start": 44.628,
+            "end": 45.049,
+            "score": 0.836
+        },
+        {
+            "word": "bajo",
+            "start": 45.089,
+            "end": 45.229,
+            "score": 0.806
+        },
+        {
+            "word": "juramento",
+            "start": 45.289,
+            "end": 45.609,
+            "score": 0.804
+        },
+        {
+            "word": "ante",
+            "start": 45.649,
+            "end": 45.729,
+            "score": 0.906
+        },
+        {
+            "word": "el",
+            "start": 45.749,
+            "end": 45.809,
+            "score": 0.656
+        },
+        {
+            "word": "Congreso",
+            "start": 45.829,
+            "end": 46.09,
+            "score": 0.79
+        },
+        {
+            "word": "de",
+            "start": 46.11,
+            "end": 46.17,
+            "score": 0.711
+        },
+        {
+            "word": "Estados",
+            "start": 46.25,
+            "end": 46.41,
+            "score": 0.922
+        },
+        {
+            "word": "Unidos",
+            "start": 46.43,
+            "end": 46.67,
+            "score": 0.702
+        },
+        {
+            "word": "lo",
+            "start": 46.91,
+            "end": 46.97,
+            "score": 0.986
+        },
+        {
+            "word": "pasar\u00eda",
+            "start": 47.03,
+            "end": 47.311,
+            "score": 0.895
+        },
+        {
+            "word": "fatal",
+            "start": 47.351,
+            "end": 47.591,
+            "score": 0.92
+        },
+        {
+            "word": "pero",
+            "start": 48.222,
+            "end": 48.342,
+            "score": 0.869
+        },
+        {
+            "word": "se",
+            "start": 48.362,
+            "end": 48.422,
+            "score": 0.97
+        },
+        {
+            "word": "ve",
+            "start": 48.462,
+            "end": 48.502,
+            "score": 0.778
+        },
+        {
+            "word": "que",
+            "start": 48.522,
+            "end": 48.583,
+            "score": 0.857
+        },
+        {
+            "word": "hay",
+            "start": 48.603,
+            "end": 48.683,
+            "score": 0.81
+        },
+        {
+            "word": "gente",
+            "start": 48.723,
+            "end": 48.943,
+            "score": 0.637
+        },
+        {
+            "word": "que",
+            "start": 48.983,
+            "end": 49.083,
+            "score": 0.737
+        },
+        {
+            "word": "no",
+            "start": 49.143,
+            "end": 49.203,
+            "score": 0.831
+        },
+        {
+            "word": "tiene",
+            "start": 49.263,
+            "end": 49.444,
+            "score": 0.754
+        },
+        {
+            "word": "tanto",
+            "start": 49.504,
+            "end": 50.024,
+            "score": 0.984
+        },
+        {
+            "word": "escrupulos",
+            "start": 51.065,
+            "end": 51.586,
+            "score": 0.946
+        },
+        {
+            "word": "y",
+            "start": 53.028,
+            "end": 53.088,
+            "score": 0.706
+        },
+        {
+            "word": "hay",
+            "start": 53.128,
+            "end": 53.208,
+            "score": 0.84
+        },
+        {
+            "word": "varias",
+            "start": 53.248,
+            "end": 53.448,
+            "score": 0.886
+        },
+        {
+            "word": "cosas",
+            "start": 53.488,
+            "end": 53.608,
+            "score": 0.658
+        },
+        {
+            "word": "que",
+            "start": 53.628,
+            "end": 53.708,
+            "score": 0.6
+        },
+        {
+            "word": "se",
+            "start": 53.729,
+            "end": 53.789,
+            "score": 0.75
+        },
+        {
+            "word": "pueden",
+            "start": 53.809,
+            "end": 53.949,
+            "score": 0.861
+        },
+        {
+            "word": "decir",
+            "start": 53.989,
+            "end": 54.129,
+            "score": 0.954
+        },
+        {
+            "word": "de",
+            "start": 54.529,
+            "end": 54.59,
+            "score": 0.826
+        },
+        {
+            "word": "eso.",
+            "start": 54.61,
+            "end": 54.77,
+            "score": 0.9
+        },
+        {
+            "word": "Una",
+            "start": 55.491,
+            "end": 55.571,
+            "score": 0.998
+        },
+        {
+            "word": "de",
+            "start": 55.611,
+            "end": 55.671,
+            "score": 0.75
+        },
+        {
+            "word": "ellas",
+            "start": 55.691,
+            "end": 55.871,
+            "score": 0.709
+        },
+        {
+            "word": "es",
+            "start": 55.971,
+            "end": 56.031,
+            "score": 0.779
+        },
+        {
+            "word": "muy",
+            "start": 56.071,
+            "end": 56.151,
+            "score": 0.879
+        },
+        {
+            "word": "divertida",
+            "start": 56.171,
+            "end": 56.612,
+            "score": 0.87
+        },
+        {
+            "word": "y",
+            "start": 56.632,
+            "end": 56.652,
+            "score": 0.006
+        },
+        {
+            "word": "Gaston",
+            "start": 56.872,
+            "end": 57.112,
+            "score": 0.897
+        },
+        {
+            "word": "la",
+            "start": 57.132,
+            "end": 57.213,
+            "score": 0.73
+        },
+        {
+            "word": "mencion\u00f3",
+            "start": 57.253,
+            "end": 57.553,
+            "score": 0.876
+        },
+        {
+            "word": "antes,",
+            "start": 57.633,
+            "end": 57.853,
+            "score": 0.891
+        },
+        {
+            "word": "es",
+            "start": 58.794,
+            "end": 58.874,
+            "score": 0.692
+        },
+        {
+            "word": "que",
+            "start": 58.915,
+            "end": 59.075,
+            "score": 0.818
+        },
+        {
+            "word": "este",
+            "start": 59.375,
+            "end": 59.515,
+            "score": 0.874
+        },
+        {
+            "word": "se\u00f1or",
+            "start": 59.575,
+            "end": 59.856,
+            "score": 0.889
+        },
+        {
+            "word": "llega",
+            "start": 60.116,
+            "end": 60.396,
+            "score": 0.643
+        },
+        {
+            "word": "a",
+            "start": 60.416,
+            "end": 60.436,
+            "score": 0.832
+        },
+        {
+            "word": "mencionar",
+            "start": 60.496,
+            "end": 60.897,
+            "score": 0.832
+        },
+        {
+            "word": "una",
+            "start": 61.157,
+            "end": 61.257,
+            "score": 0.817
+        },
+        {
+            "word": "justificaci\u00f3n",
+            "start": 61.337,
+            "end": 61.938,
+            "score": 0.927
+        },
+        {
+            "word": "cient\u00edfica",
+            "start": 62.038,
+            "end": 62.539,
+            "score": 0.859
+        },
+        {
+            "word": "para",
+            "start": 62.619,
+            "end": 62.759,
+            "score": 0.846
+        },
+        {
+            "word": "las",
+            "start": 62.799,
+            "end": 62.899,
+            "score": 0.831
+        },
+        {
+            "word": "visitas",
+            "start": 62.919,
+            "end": 63.36,
+            "score": 0.952
+        },
+        {
+            "word": "de",
+            "start": 64.06,
+            "end": 64.121,
+            "score": 0.962
+        },
+        {
+            "word": "seres",
+            "start": 64.201,
+            "end": 64.401,
+            "score": 0.778
+        },
+        {
+            "word": "de",
+            "start": 64.421,
+            "end": 64.481,
+            "score": 0.71
+        },
+        {
+            "word": "otros",
+            "start": 64.521,
+            "end": 64.721,
+            "score": 0.773
+        },
+        {
+            "word": "mundos.",
+            "start": 64.781,
+            "end": 65.062,
+            "score": 0.885
+        },
+        {
+            "word": "Y",
+            "start": 65.762,
+            "end": 65.782,
+            "score": 0.873
+        },
+        {
+            "word": "se",
+            "start": 65.843,
+            "end": 65.903,
+            "score": 0.842
+        },
+        {
+            "word": "bueno.",
+            "start": 65.943,
+            "end": 66.103,
+            "score": 0.87
+        },
+        {
+            "word": "el",
+            "start": 66.925,
+            "end": 67.025,
+            "score": 0.828
+        },
+        {
+            "word": "marco",
+            "start": 67.105,
+            "end": 67.405,
+            "score": 0.904
+        },
+        {
+            "word": "te\u00f3rico",
+            "start": 67.485,
+            "end": 67.846,
+            "score": 0.878
+        },
+        {
+            "word": "con",
+            "start": 67.906,
+            "end": 67.986,
+            "score": 0.859
+        },
+        {
+            "word": "el",
+            "start": 68.006,
+            "end": 68.066,
+            "score": 0.748
+        },
+        {
+            "word": "que",
+            "start": 68.086,
+            "end": 68.146,
+            "score": 0.999
+        },
+        {
+            "word": "trabaja,",
+            "start": 68.206,
+            "end": 68.466,
+            "score": 0.671
+        },
+        {
+            "word": "bueno",
+            "start": 68.566,
+            "end": 68.686,
+            "score": 0.684
+        },
+        {
+            "word": "mira,",
+            "start": 68.706,
+            "end": 68.926,
+            "score": 0.904
+        },
+        {
+            "word": "no",
+            "start": 69.246,
+            "end": 69.306,
+            "score": 0.782
+        },
+        {
+            "word": "lo",
+            "start": 69.346,
+            "end": 69.386,
+            "score": 0.991
+        },
+        {
+            "word": "voy",
+            "start": 69.406,
+            "end": 69.486,
+            "score": 0.832
+        },
+        {
+            "word": "a",
+            "start": 69.506,
+            "end": 69.526,
+            "score": 0.989
+        },
+        {
+            "word": "decir,",
+            "start": 69.546,
+            "end": 69.646,
+            "score": 0.993
+        },
+        {
+            "word": "yo",
+            "start": 69.686,
+            "end": 69.767,
+            "score": 0.546
+        },
+        {
+            "word": "vamos",
+            "start": 69.787,
+            "end": 69.907,
+            "score": 0.889
+        },
+        {
+            "word": "a",
+            "start": 69.927,
+            "end": 69.947,
+            "score": 0.939
+        },
+        {
+            "word": "escucharlo",
+            "start": 69.987,
+            "end": 70.307,
+            "score": 0.881
+        },
+        {
+            "word": "a",
+            "start": 70.347,
+            "end": 70.367,
+            "score": 0.706
+        },
+        {
+            "word": "\u00e9l",
+            "start": 70.407,
+            "end": 70.507,
+            "score": 0.374
+        },
+        {
+            "word": "porque",
+            "start": 70.547,
+            "end": 70.727,
+            "score": 0.834
+        },
+        {
+            "word": "tengo",
+            "start": 70.767,
+            "end": 70.907,
+            "score": 0.812
+        },
+        {
+            "word": "aqu\u00ed",
+            "start": 70.927,
+            "end": 71.047,
+            "score": 0.914
+        },
+        {
+            "word": "el",
+            "start": 71.087,
+            "end": 71.167,
+            "score": 0.746
+        },
+        {
+            "word": "cork,",
+            "start": 71.227,
+            "end": 71.487,
+            "score": 0.856
+        },
+        {
+            "word": "est\u00e1",
+            "start": 71.748,
+            "end": 71.848,
+            "score": 0.98
+        },
+        {
+            "word": "en",
+            "start": 71.868,
+            "end": 71.908,
+            "score": 0.417
+        },
+        {
+            "word": "ingl\u00e9s,",
+            "start": 71.968,
+            "end": 72.228,
+            "score": 0.793
+        },
+        {
+            "word": "ahora",
+            "start": 72.288,
+            "end": 72.408,
+            "score": 0.906
+        },
+        {
+            "word": "se",
+            "start": 72.468,
+            "end": 72.508,
+            "score": 0.002
+        },
+        {
+            "word": "lo,",
+            "start": 72.548,
+            "end": 72.888,
+            "score": 0.716
+        },
+        {
+            "word": "si",
+            "start": 72.928,
+            "end": 72.988,
+            "score": 0.951
+        },
+        {
+            "word": "no",
+            "start": 73.008,
+            "end": 73.068,
+            "score": 0.748
+        },
+        {
+            "word": "habla",
+            "start": 73.088,
+            "end": 73.188,
+            "score": 0.851
+        },
+        {
+            "word": "en",
+            "start": 73.208,
+            "end": 73.248,
+            "score": 0.064
+        },
+        {
+            "word": "ingl\u00e9s",
+            "start": 73.308,
+            "end": 73.468,
+            "score": 0.847
+        },
+        {
+            "word": "no",
+            "start": 73.488,
+            "end": 73.548,
+            "score": 0.763
+        },
+        {
+            "word": "se",
+            "start": 73.568,
+            "end": 73.648,
+            "score": 0.795
+        },
+        {
+            "word": "produc\u00fapen",
+            "start": 73.688,
+            "end": 74.089,
+            "score": 0.771
+        },
+        {
+            "word": "que",
+            "start": 74.109,
+            "end": 74.189,
+            "score": 0.984
+        },
+        {
+            "word": "ahora",
+            "start": 74.389,
+            "end": 74.529,
+            "score": 0.899
+        },
+        {
+            "word": "lo",
+            "start": 74.549,
+            "end": 74.589,
+            "score": 0.972
+        },
+        {
+            "word": "vamos",
+            "start": 74.629,
+            "end": 74.789,
+            "score": 0.884
+        },
+        {
+            "word": "a",
+            "start": 74.809,
+            "end": 74.829,
+            "score": 0.997
+        },
+        {
+            "word": "traducir,",
+            "start": 74.889,
+            "end": 75.269,
+            "score": 0.932
+        },
+        {
+            "word": "pero",
+            "start": 75.729,
+            "end": 75.87,
+            "score": 0.907
+        },
+        {
+            "word": "esto",
+            "start": 76.05,
+            "end": 76.21,
+            "score": 0.896
+        },
+        {
+            "word": "es",
+            "start": 76.25,
+            "end": 76.31,
+            "score": 0.876
+        },
+        {
+            "word": "lo",
+            "start": 76.35,
+            "end": 76.39,
+            "score": 0.999
+        },
+        {
+            "word": "que",
+            "start": 76.43,
+            "end": 76.51,
+            "score": 0.838
+        },
+        {
+            "word": "dijo.",
+            "start": 76.55,
+            "end": 76.71,
+            "score": 0.974
+        },
+        {
+            "word": "Y",
+            "start": 77.583,
+            "end": 77.603,
+            "score": 0.009
+        },
+        {
+            "word": "en",
+            "start": 77.623,
+            "end": 77.723,
+            "score": 0.202
+        },
+        {
+            "word": "t\u00e9rminos",
+            "start": 77.763,
+            "end": 78.023,
+            "score": 0.136
+        },
+        {
+            "word": "de",
+            "start": 78.063,
+            "end": 78.143,
+            "score": 0.23
+        },
+        {
+            "word": "multidimensialos,",
+            "start": 78.163,
+            "end": 78.684,
+            "score": 0.206
+        },
+        {
+            "word": "que",
+            "start": 78.724,
+            "end": 79.284,
+            "score": 0.533
+        },
+        {
+            "word": "es",
+            "start": 79.404,
+            "end": 79.984,
+            "score": 0.589
+        },
+        {
+            "word": "la",
+            "start": 80.024,
+            "end": 80.105,
+            "score": 0.499
+        },
+        {
+            "word": "forma",
+            "start": 80.125,
+            "end": 80.365,
+            "score": 0.356
+        },
+        {
+            "word": "de",
+            "start": 80.385,
+            "end": 80.445,
+            "score": 0.2
+        },
+        {
+            "word": "la",
+            "start": 80.465,
+            "end": 80.565,
+            "score": 0.462
+        },
+        {
+            "word": "frema",
+            "start": 80.585,
+            "end": 80.745,
+            "score": 0.205
+        },
+        {
+            "word": "que",
+            "start": 80.785,
+            "end": 80.905,
+            "score": 0.339
+        },
+        {
+            "word": "estoy",
+            "start": 80.965,
+            "end": 81.205,
+            "score": 0.373
+        },
+        {
+            "word": "familiar",
+            "start": 81.225,
+            "end": 81.485,
+            "score": 0.367
+        },
+        {
+            "word": "con,",
+            "start": 81.505,
+            "end": 81.605,
+            "score": 0.19
+        },
+        {
+            "word": "por",
+            "start": 81.645,
+            "end": 81.765,
+            "score": 0.313
+        },
+        {
+            "word": "ejemplo,",
+            "start": 81.806,
+            "end": 82.226,
+            "score": 0.435
+        },
+        {
+            "word": "es",
+            "start": 82.286,
+            "end": 82.346,
+            "score": 0.436
+        },
+        {
+            "word": "algo",
+            "start": 82.506,
+            "end": 82.646,
+            "score": 0.303
+        },
+        {
+            "word": "called",
+            "start": 82.686,
+            "end": 82.946,
+            "score": 0.314
+        },
+        {
+            "word": "the",
+            "start": 83.426,
+            "end": 83.607,
+            "score": 0.61
+        },
+        {
+            "word": "hologr\u00e1fico",
+            "start": 83.627,
+            "end": 83.907,
+            "score": 0.141
+        },
+        {
+            "word": "principal.",
+            "start": 83.927,
+            "end": 84.187,
+            "score": 0.174
+        },
+        {
+            "word": "Es,",
+            "start": 84.207,
+            "end": 84.247,
+            "score": 0.122
+        },
+        {
+            "word": "es,",
+            "start": 84.267,
+            "end": 84.307,
+            "score": 0.135
+        },
+        {
+            "word": "es,",
+            "start": 84.447,
+            "end": 84.567,
+            "score": 0.432
+        },
+        {
+            "word": "es",
+            "start": 84.587,
+            "end": 84.627,
+            "score": 0.172
+        },
+        {
+            "word": "de",
+            "start": 84.647,
+            "end": 84.807,
+            "score": 0.568
+        },
+        {
+            "word": "forma",
+            "start": 84.827,
+            "end": 84.947,
+            "score": 0.179
+        },
+        {
+            "word": "de",
+            "start": 84.967,
+            "end": 85.027,
+            "score": 0.248
+        },
+        {
+            "word": "generar",
+            "start": 85.047,
+            "end": 85.208,
+            "score": 0.129
+        },
+        {
+            "word": "altos",
+            "start": 85.268,
+            "end": 85.548,
+            "score": 0.488
+        },
+        {
+            "word": "y",
+            "start": 85.568,
+            "end": 85.588,
+            "score": 0.011
+        },
+        {
+            "word": "cuantos",
+            "start": 85.948,
+            "end": 86.208,
+            "score": 0.284
+        },
+        {
+            "word": "mec\u00e1nicos,",
+            "start": 86.228,
+            "end": 86.548,
+            "score": 0.262
+        },
+        {
+            "word": "y",
+            "start": 86.568,
+            "end": 86.588,
+            "score": 0.007
+        },
+        {
+            "word": "eso",
+            "start": 86.648,
+            "end": 86.728,
+            "score": 0.227
+        },
+        {
+            "word": "es",
+            "start": 86.788,
+            "end": 86.829,
+            "score": 0.105
+        },
+        {
+            "word": "If",
+            "start": 94.473,
+            "end": 94.694,
+            "score": 0.379
+        },
+        {
+            "word": "you",
+            "start": 94.714,
+            "end": 94.834,
+            "score": 0.291
+        },
+        {
+            "word": "want",
+            "start": 94.854,
+            "end": 95.034,
+            "score": 0.267
+        },
+        {
+            "word": "to",
+            "start": 95.054,
+            "end": 95.214,
+            "score": 0.44
+        },
+        {
+            "word": "imagine",
+            "start": 95.294,
+            "end": 95.755,
+            "score": 0.452
+        },
+        {
+            "word": "3D",
+            "start": 95.775,
+            "end": 95.795,
+            "score": 0.007
+        },
+        {
+            "word": "objects,",
+            "start": 96.296,
+            "end": 97.037,
+            "score": 0.391
+        },
+        {
+            "word": "such",
+            "start": 97.057,
+            "end": 97.378,
+            "score": 0.426
+        },
+        {
+            "word": "as",
+            "start": 97.418,
+            "end": 97.498,
+            "score": 0.356
+        },
+        {
+            "word": "yourself,",
+            "start": 97.518,
+            "end": 98.019,
+            "score": 0.333
+        },
+        {
+            "word": "casting",
+            "start": 98.119,
+            "end": 98.5,
+            "score": 0.399
+        },
+        {
+            "word": "a",
+            "start": 98.54,
+            "end": 98.6,
+            "score": 0.412
+        },
+        {
+            "word": "shadow",
+            "start": 98.7,
+            "end": 99.161,
+            "score": 0.502
+        },
+        {
+            "word": "onto",
+            "start": 99.321,
+            "end": 99.481,
+            "score": 0.477
+        },
+        {
+            "word": "a",
+            "start": 99.521,
+            "end": 99.561,
+            "score": 0.424
+        },
+        {
+            "word": "2D",
+            "start": 99.581,
+            "end": 99.601,
+            "score": 0.011
+        },
+        {
+            "word": "surface,",
+            "start": 99.641,
+            "end": 100.182,
+            "score": 0.431
+        },
+        {
+            "word": "that's",
+            "start": 100.202,
+            "end": 100.403,
+            "score": 0.197
+        },
+        {
+            "word": "the",
+            "start": 101.084,
+            "end": 101.344,
+            "score": 0.358
+        },
+        {
+            "word": "whole",
+            "start": 101.384,
+            "end": 101.685,
+            "score": 0.35
+        },
+        {
+            "word": "graphic",
+            "start": 101.705,
+            "end": 102.126,
+            "score": 0.351
+        },
+        {
+            "word": "principle.",
+            "start": 102.166,
+            "end": 102.446,
+            "score": 0.233
+        },
+        {
+            "word": "So",
+            "start": 102.466,
+            "end": 102.646,
+            "score": 0.468
+        },
+        {
+            "word": "you",
+            "start": 102.686,
+            "end": 102.847,
+            "score": 0.344
+        },
+        {
+            "word": "can",
+            "start": 102.867,
+            "end": 103.007,
+            "score": 0.407
+        },
+        {
+            "word": "be",
+            "start": 103.047,
+            "end": 103.187,
+            "score": 0.246
+        },
+        {
+            "word": "projected,",
+            "start": 103.207,
+            "end": 103.888,
+            "score": 0.416
+        },
+        {
+            "word": "quasi",
+            "start": 103.948,
+            "end": 104.329,
+            "score": 0.453
+        },
+        {
+            "word": "projected",
+            "start": 104.349,
+            "end": 104.73,
+            "score": 0.417
+        },
+        {
+            "word": "from",
+            "start": 104.77,
+            "end": 104.91,
+            "score": 0.204
+        },
+        {
+            "word": "higher",
+            "start": 104.93,
+            "end": 105.09,
+            "score": 0.206
+        },
+        {
+            "word": "dimensional",
+            "start": 105.11,
+            "end": 105.531,
+            "score": 0.253
+        },
+        {
+            "word": "space.",
+            "start": 105.551,
+            "end": 105.771,
+            "score": 0.325
+        },
+        {
+            "word": "lo",
+            "start": 106.152,
+            "end": 106.372,
+            "score": 0.65
+        },
+        {
+            "word": "que",
+            "start": 106.392,
+            "end": 106.512,
+            "score": 0.19
+        },
+        {
+            "word": "dice",
+            "start": 106.532,
+            "end": 106.652,
+            "score": 0.222
+        },
+        {
+            "word": "literalmente",
+            "start": 106.672,
+            "end": 106.973,
+            "score": 0.186
+        },
+        {
+            "word": "es",
+            "start": 106.993,
+            "end": 107.033,
+            "score": 0.062
+        },
+        {
+            "word": "dice",
+            "start": 120.648,
+            "end": 120.849,
+            "score": 0.808
+        },
+        {
+            "word": "el",
+            "start": 120.889,
+            "end": 120.989,
+            "score": 0.794
+        },
+        {
+            "word": "marco",
+            "start": 121.069,
+            "end": 121.289,
+            "score": 0.933
+        },
+        {
+            "word": "te\u00f3rico",
+            "start": 121.39,
+            "end": 121.89,
+            "score": 0.873
+        },
+        {
+            "word": "con",
+            "start": 121.991,
+            "end": 122.091,
+            "score": 0.722
+        },
+        {
+            "word": "el",
+            "start": 122.131,
+            "end": 122.191,
+            "score": 0.794
+        },
+        {
+            "word": "cual",
+            "start": 122.251,
+            "end": 122.411,
+            "score": 0.541
+        },
+        {
+            "word": "nosotros",
+            "start": 122.451,
+            "end": 122.772,
+            "score": 0.654
+        },
+        {
+            "word": "interpretamos",
+            "start": 122.852,
+            "end": 123.293,
+            "score": 0.931
+        },
+        {
+            "word": "estas",
+            "start": 123.333,
+            "end": 123.493,
+            "score": 0.806
+        },
+        {
+            "word": "cosas,",
+            "start": 123.553,
+            "end": 123.794,
+            "score": 0.871
+        },
+        {
+            "word": "es",
+            "start": 124.034,
+            "end": 124.134,
+            "score": 0.824
+        },
+        {
+            "word": "algo",
+            "start": 124.174,
+            "end": 124.274,
+            "score": 0.979
+        },
+        {
+            "word": "que",
+            "start": 124.294,
+            "end": 124.375,
+            "score": 0.833
+        },
+        {
+            "word": "se",
+            "start": 124.415,
+            "end": 124.455,
+            "score": 0.999
+        },
+        {
+            "word": "llama",
+            "start": 124.495,
+            "end": 124.635,
+            "score": 0.886
+        },
+        {
+            "word": "el",
+            "start": 124.655,
+            "end": 124.735,
+            "score": 0.506
+        },
+        {
+            "word": "principio",
+            "start": 124.775,
+            "end": 125.136,
+            "score": 0.886
+        },
+        {
+            "word": "logr\u00e1fico.",
+            "start": 125.236,
+            "end": 125.697,
+            "score": 0.952
+        },
+        {
+            "word": "El",
+            "start": 126.278,
+            "end": 126.358,
+            "score": 0.74
+        },
+        {
+            "word": "principio",
+            "start": 126.378,
+            "end": 126.658,
+            "score": 0.846
+        },
+        {
+            "word": "logr\u00e1fico",
+            "start": 126.739,
+            "end": 127.159,
+            "score": 0.922
+        },
+        {
+            "word": "se",
+            "start": 127.259,
+            "end": 127.36,
+            "score": 0.796
+        },
+        {
+            "word": "deriva",
+            "start": 127.42,
+            "end": 127.76,
+            "score": 0.88
+        },
+        {
+            "word": "de",
+            "start": 128.181,
+            "end": 128.281,
+            "score": 0.716
+        },
+        {
+            "word": "relatividad",
+            "start": 128.341,
+            "end": 128.762,
+            "score": 0.818
+        },
+        {
+            "word": "general",
+            "start": 128.842,
+            "end": 129.062,
+            "score": 0.954
+        },
+        {
+            "word": "y",
+            "start": 129.082,
+            "end": 129.102,
+            "score": 0.023
+        },
+        {
+            "word": "mec\u00e1nico.",
+            "start": 129.143,
+            "end": 129.303,
+            "score": 0.004
+        }
+    ]
+}

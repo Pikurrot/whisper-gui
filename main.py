@@ -144,6 +144,7 @@ A simple interface to transcribe audio files using the Whisper model''')
 				with gr.Row():
 					audio_upload = gr.Audio(source='upload', type='filepath', label='Upload Audio File')
 					audio_record = gr.Audio(source='microphone', type='numpy', label='or Record Audio (If both are provided, only microphone audio will be used)')
+				gr.Examples(examples=['examples/coffe_break_example.mp3'], inputs=audio_upload)
 				with gr.Accordion(label='Advanced Options', open=False):
 					language_select = gr.Dropdown(['auto', 'en', 'es', 'fr', 'de', 'it', 'ja', 'zh', 'nl', 'uk', 'pt'], value = 'auto', label='Language', info='Select the language of the audio file. Select "auto" to automatically detect it.')
 					device_select = gr.Radio(['cuda', 'cpu'], value = 'cuda', label='Device', info='If you don\'t have a GPU, select "cpu"')
