@@ -11,6 +11,8 @@ If you have GPU: `conda install pytorch==2.0.0 torchaudio==2.0.0 pytorch-cuda=11
 If not, for CPU: `conda install pytorch==2.0.0 torchaudio==2.0.0 cpuonly -c pytorch`
 ### Install whisperx
 `pip install git+https://github.com/m-bain/whisperx.git`  
+### Install necessary libraries
+`pip install gradio==3.23.0`  
 Original instructions in: https://github.com/m-bain/whisperX
 ### Clone this repository
 `git clone https://github.com/Pikurrot/whisper-gui`
