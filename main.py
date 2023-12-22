@@ -93,6 +93,7 @@ def format_alignments(alignments):
 def transcribe_audio(model_name, audio_path, micro_audio, device, batch_size, compute_type, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments):
 	print('Inputs received. Starting...')
 	# Create save folder
+	save_dir = None
 	if not os.path.exists('temp'):
 		os.makedirs('temp')
 	if save_audio or save_transcription or save_alignments:
