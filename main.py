@@ -42,13 +42,13 @@ def save_audio_to_mp3(audio_tuple, save_dir):
 
 def save_transcription_to_txt(text_str, save_dir):
 	text_path = os.path.join(save_dir, 'transcription.txt')
-	with open(text_path, 'w') as f:
+	with open(text_path, 'w', encoding='utf-8') as f:
 		f.write(text_str)
 	return text_path
 
 def save_alignments_to_json(alignment_dict, save_dir):
 	json_path = os.path.join(save_dir, 'alignments.json')
-	with open(json_path, 'w') as f:
+	with open(json_path, 'w', encoding='utf-8') as f:
 		json.dump(alignment_dict, f, indent=4)
 	return json_path
 
@@ -93,6 +93,7 @@ def format_alignments(alignments):
 def transcribe_audio(model_name, audio_path, micro_audio, device, batch_size, compute_type, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments):
 	print('Inputs received. Starting...')
 	# Create save folder
+	save_dir = None
 	if not os.path.exists('temp'):
 		os.makedirs('temp')
 	if save_audio or save_transcription or save_alignments:
