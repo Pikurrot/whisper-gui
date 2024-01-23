@@ -146,18 +146,17 @@ A simple interface to transcribe audio files using the Whisper model""")
 		with gr.Row():
 			with gr.Column():
 				model_select = gr.Dropdown(["large-v2", "large-v1", "large", "medium", "small", "base", "tiny", "medium.en", "small.en", "base.en", "tiny.en"], value="base", label="Load Model")
-				with gr.Row():
-					audio_upload = gr.Audio(source="upload", type="filepath", label="Upload Audio File")
-					audio_record = gr.Audio(source="microphone", type="numpy", label="or Record Audio (If both are provided, only microphone audio will be used)")
+				audio_upload = gr.Audio(sources=["upload"], type="filepath", label="Upload Audio File")
+				audio_record = gr.Audio(sources=["microphone"], type="numpy", label="or Record Audio (If both are provided, only microphone audio will be used)")
+				save_audio = gr.Checkbox(value=False, label="Save Audio")
 				gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=audio_upload)
 				with gr.Accordion(label="Advanced Options", open=False):
 					language_select = gr.Dropdown(["auto", "en", "es", "fr", "de", "it", "ja", "zh", "nl", "uk", "pt"], value = "auto", label="Language", info="Select the language of the audio file. Select \"auto\" to automatically detect it.")
 					device_select = gr.Radio(["cuda", "cpu"], value = "cuda", label="Device", info="If you don\"t have a GPU, select \"cpu\"")
 					with gr.Row():
-						save_audio = gr.Checkbox(value=False, label="Save Audio")
 						save_transcription = gr.Checkbox(value=True, label="Save Transcription")
 						save_alignments = gr.Checkbox(value=True, label="Save Alignments")
-					save_root = gr.Textbox(label="Save Path", placeholder="outputs", lines=1)
+					save_root = gr.Textbox(label="Save Path", placeholder="/outputs", lines=1)
 					gr.Markdown("""### Optimizations""")
 					compute_type_select = gr.Radio(["int8", "float16", "float32"], value = "int8", label="Compute Type", info="int8 is fastest and requires less memory. float32 is more accurate (The model or your device may not support some data types)")
 					batch_size_slider = gr.Slider(1, 128, value = 1, label="Batch Size", info="Larger batch sizes may be faster but require more memory")
