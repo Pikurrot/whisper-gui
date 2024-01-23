@@ -129,6 +129,9 @@ def transcribe_audio(model_name, audio_path, micro_audio, device, batch_size, co
 		if device == "cuda": torch.cuda.empty_cache()
 		else: gc.collect()
 	print("Done!")
+	if not os.listdir("temp"):
+		# Remove temp folder if empty
+		os.rmdir("temp")
 	return joined_text, format_alignments(aligned_result)
 
 def main():
