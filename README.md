@@ -1,7 +1,7 @@
 # Whisper-GUI
 A simple GUI made with `gradio` to use WhisperX on Windows.  
 
-![whisper-gui-img](images/whisper-gui.png)
+![whisper-gui-img](https://github.com/Pikurrot/Pikurrot/blob/main/images/whisper-gui/interface_screenshot.png?raw=true)
 
 ## Requirements
 - [Anaconda](https://docs.anaconda.com/free/anaconda/install/windows/) installed and `conda` added to PATH.
