@@ -4,6 +4,9 @@ import subprocess, os, gc, argparse, shutil
 import soundfile as sf
 import torch, re, json
 from datetime import datetime
+from scripts.whisper_model import CustomWhisper, load_custom_model, LANG_CODES
+
+ALIGN_LANGS = ["en", "fr", "de", "es", "it", "ja", "zh", "nl", "uk", "pt", "ar", "cs", "ru", "pl", "hu", "fi", "fa", "el", "tr", "da", "he", "vi", "ko", "ur", "te", "hi", "ca", "ml", "no", "nn"]
 
 def list_models():
 	models_dir = os.path.join("models", "custom")
@@ -97,21 +100,43 @@ def format_alignments(alignments):
 		formatted_transcription.append(formatted_line)
 	return "\n\n".join(formatted_transcription)
 
-def transcribe_audio(model_name,
-					 audio_path,
-					 micro_audio,
-					 device,
-					 batch_size,
-					 compute_type,
-					 language,
-					 chunk_size,
-					 release_memory,
-					 save_root,
-					 save_audio,
-					 save_transcription,
-					 save_alignments,
-					 whisperx=True):
+def transcribe_whisperx(model_name,
+						audio_path,
+						micro_audio,
+						device,
+						batch_size,
+						compute_type,
+						language,
+						chunk_size,
+						release_memory,
+						save_root,
+						save_audio,
+						save_transcription,
+						save_alignments):
 	print("Inputs received. Starting...")
+	print("Loading model...")
+	model = whisperx.load_model(model_name, device, compute_type=compute_type, download_root="models/whisperx")
+	return transcribe(model, audio_path, micro_audio, device, batch_size, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments)
+
+def transcribe_custom(model_name,
+					  audio_path,
+					  micro_audio,
+					  device,
+					  batch_size,
+					  compute_type,
+					  language,
+					  chunk_size,
+					  release_memory,
+					  save_root,
+					  save_audio,
+					  save_transcription,
+					  save_alignments):
+	print("Inputs received. Starting...")
+	print("Loading model...")
+	model = load_custom_model(model_name, device, compute_type=compute_type, download_root="models/custom")
+	return transcribe(model, audio_path, micro_audio, device, batch_size, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments)
+
+def transcribe(model, audio_path, micro_audio, device, batch_size, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments):
 	# Create save folder
 	save_dir = None
 	if not os.path.exists("temp"):
@@ -120,13 +145,9 @@ def transcribe_audio(model_name,
 		if not save_root: save_root = "outputs"
 		save_dir = create_save_folder(save_root)
 
-	# Transcription
-	print("Loading model...")
-	model = whisperx.load_model(model_name, device, compute_type=compute_type, download_root="models/whisperx")
-	print("Loading audio...")
 	audio = load_and_save_audio(audio_path, micro_audio, save_audio, save_dir)
+	print("Audio loaded.")
 
-	print("Transcribing...")
 	if language == "auto": language = None
 	result = model.transcribe(audio, batch_size=batch_size, language=language, chunk_size=chunk_size, print_progress=True)
 	joined_text = " ".join([segment["text"].strip() for segment in result["segments"]])
@@ -139,7 +160,11 @@ def transcribe_audio(model_name,
 
 	# Alignment
 	print("Loading alignment model...")
-	model_a, metadata = whisperx.load_align_model(language_code=result["language"], device=device, model_dir="models/whisperx/alignment")
+	lang_used = result["language"]
+	if lang_used not in ALIGN_LANGS:
+		print(f"WARNING! Language {lang_used} not supported for alignment. Using English instead. Results may be inaccurate.")
+		lang_used = "en"
+	model_a, metadata = whisperx.load_align_model(language_code=lang_used, device=device, model_dir="models/alignment")
 	print("Aligning...")
 	aligned_result = whisperx.align(result["segments"], model_a, metadata, audio, device, return_char_alignments=False)
 	if save_alignments:
@@ -154,6 +179,7 @@ def transcribe_audio(model_name,
 		os.rmdir("temp")
 	return joined_text, format_alignments(aligned_result)
 
+
 def main():
 	# Parse arguments
 	parser = argparse.ArgumentParser(description="Transcribe audio files using WhisperX")
@@ -164,19 +190,7 @@ def main():
 	whisperx_models = ["large-v2", "large-v1", "large", "medium", "small", "base", "tiny", "medium.en", "small.en", "base.en", "tiny.en"]
 	custom_models = list_models()
 	whisperx_langs = ["auto", "en", "es", "fr", "de", "it", "ja", "zh", "nl", "uk", "pt"]
-	custom_langs = ["english", "spanish", "french", "german", "italian", "catalan", "chinese", "japanese", 
-				 "afrikaans", "albanian", "amharic", "arabic", "armenian", "assamese", "azerbaijani", "bashkir", 
-				 "basque", "belarusian", "bengali", "bosnian", "breton", "bulgarian", "burmese", "cantonese", "castilian",
-				 "croatian", "czech", "danish", "dutch", "estonian", "faroese", "finnish",
-				 "flemish", "galician", "georgian", "greek", "gujarati", "haitian", "haitian creole",
-				 "hausa", "hawaiian", "hebrew", "hindi", "hungarian", "icelandic", "indonesian",
-				 "javanese", "kannada", "kazakh", "khmer", "korean", "lao", "latin", "latvian", "letzeburgesch", "lingala",
-				 "lithuanian", "luxembourgish", "macedonian", "malagasy", "malay", "malayalam", "maltese", "mandarin", "maori",
-				 "marathi", "moldavian", "moldovan", "mongolian", "myanmar", "nepali", "norwegian", "nynorsk", "occitan",
-				 "panjabi", "pashto", "persian", "polish", "portuguese", "punjabi", "pushto", "romanian", "russian", "sanskrit",
-				 "serbian", "shona", "sindhi", "sinhala", "sinhalese", "slovak", "slovenian", "somali", "sundanese",
-				 "swahili", "swedish", "tagalog", "tajik", "tamil", "tatar", "telugu", "thai", "tibetan", "turkish", "turkmen",
-				 "ukrainian", "urdu", "uzbek", "valencian", "vietnamese", "welsh", "yiddish", "yoruba"]
+	custom_langs = LANG_CODES.keys()
 
 	# Create Gradio Interface
 	print("Creating interface...")
@@ -214,14 +228,14 @@ A simple interface to transcribe audio files using the Whisper model""")
 				with gr.Column():
 					with gr.Group():
 						model_select2 = gr.Dropdown(custom_models, value=None, label="Load Local Model")
-						model_download = gr.Textbox(placeholder="openai/whisper-base", label="or Download Model from HuggingFace (If both are provided, only the downloaded model will be used)")
+						model_download = gr.Textbox(placeholder="openai/whisper-base", label="or Download Model from HuggingFace", info="If both are provided, only the downloaded model will be used")
 					with gr.Group():
 						audio_upload2 = gr.Audio(sources=["upload"], type="filepath", label="Load Audio File")
 						audio_record2 = gr.Audio(sources=["microphone"], type="numpy", label="or Record Audio (If both are provided, only microphone audio will be used)")
 						save_audio2 = gr.Checkbox(value=False, label="Save Audio")
 					gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=audio_upload2)
 					with gr.Accordion(label="Advanced Options", open=False):
-						language_select2 = gr.Dropdown(custom_langs, value = "english", label="Language")
+						language_select2 = gr.Dropdown(custom_langs, value = "auto", label="Language")
 						device_select2 = gr.Radio(["cuda", "cpu"], value = "cuda", label="Device", info="If you don\"t have a GPU, select \"cpu\"")
 						with gr.Group():
 							with gr.Row():
@@ -239,12 +253,12 @@ A simple interface to transcribe audio files using the Whisper model""")
 					alignments_output2 = gr.Textbox(label="Alignments", lines=15)
 
 		
-		submit_button.click(transcribe_audio,
-					  		inputs=[model_select, audio_upload, audio_record, device_select, batch_size_slider, compute_type_select, language_select, chunk_size_slider, release_memory_checkbox, save_root, save_audio, save_transcription, save_alignments, True],
+		submit_button.click(transcribe_whisperx,
+					  		inputs=[model_select, audio_upload, audio_record, device_select, batch_size_slider, compute_type_select, language_select, chunk_size_slider, release_memory_checkbox, save_root, save_audio, save_transcription, save_alignments],
 							outputs=[transcription_output, alignments_output])
 		
-		submit_button2.click(transcribe_audio,
-					  		inputs=[model_select2, audio_upload2, audio_record2, device_select2, batch_size_slider2, compute_type_select2, language_select2, chunk_size_slider2, release_memory_checkbox2, save_root2, save_audio2, save_transcription2, save_alignments2, False],
+		submit_button2.click(transcribe_custom,
+					  		inputs=[model_select2, audio_upload2, audio_record2, device_select2, batch_size_slider2, compute_type_select2, language_select2, chunk_size_slider2, release_memory_checkbox2, save_root2, save_audio2, save_transcription2, save_alignments2],
 							outputs=[transcription_output2, alignments_output2])
 
 	# Launch the interface
