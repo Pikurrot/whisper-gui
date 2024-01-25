@@ -6,6 +6,8 @@ from typing import List
 
 SAMPLE_RATE = 16000
 
+LANG_CODES = {"english": "en", "spanish": "es", "french": "fr", "german": "de", "italian": "it", "catalan": "ca", "chinese": "zh", "japanese": "ja", "portuguese": "pt", "arabic": "ar", "afrikaans": "af", "albanian": "sq", "amharic": "am", "armenian": "hy", "assamese": "as", "azerbaijani": "az", "bashkir": "ba", "basque": "eu", "belarusian": "be", "bengali": "bn", "bosnian": "bs", "breton": "br", "bulgarian": "bg", "burmese": "my", "castilian": "es", "croatian": "hr", "czech": "cs", "danish": "da", "dutch": "nl", "estonian": "et", "faroese": "fo", "finnish": "fi", "flemish": "nl", "galician": "gl", "georgian": "ka", "greek": "el", "gujarati": "gu", "haitian": "ht", "haitian creole": "ht", "hausa": "ha", "hebrew": "he", "hindi": "hi", "hungarian": "hu", "icelandic": "is", "indonesian": "id", "javanese": "jv", "kannada": "kn", "kazakh": "kk", "korean": "ko", "lao": "lo", "latin": "la", "latvian": "lv", "letzeburgesch": "lb", "lingala": "ln", "lithuanian": "lt", "luxembourgish": "lb", "macedonian": "mk", "malagasy": "mg", "malay": "ms", "malayalam": "ml", "maltese": "mt", "maori": "mi", "marathi": "mr", "moldavian": "ro", "moldovan": "ro", "mongolian": "mn", "nepali": "ne", "norwegian": "no", "occitan": "oc", "panjabi": "pa", "pashto": "ps", "persian": "fa", "polish": "pl", "punjabi": "pa", "pushto": "ps", "romanian": "ro", "russian": "ru", "sanskrit": "sa", "serbian": "sr", "shona": "sn", "sindhi": "sd", "sinhala": "si", "sinhalese": "si", "slovak": "sk", "slovenian": "sl", "somali": "so", "sundanese": "su", "swahili": "sw", "swedish": "sv", "tagalog": "tl", "tajik": "tg", "tamil": "ta", "tatar": "tt", "telugu": "te", "thai": "th", "tibetan": "bo", "turkish": "tr", "turkmen": "tk", "ukrainian": "uk", "urdu": "ur", "uzbek": "uz", "valencian": "ca", "vietnamese": "vi", "welsh": "cy", "yiddish": "yi", "yoruba": "yo"}
+
 class CustomWhisper():
 	def __init__(
 			self,
@@ -61,10 +63,12 @@ class CustomWhisper():
 			offset=self.vad_params["vad_offset"],
 		)
 		print("VAD segments merged.")
+		lang_iso = LANG_CODES.get(language, None)
+		# TODO: detect language if None
 		print(f"Transcribing (language = {language})...")
 		segments = []
 		total_segments = len(vad_segments)
-		for idx, out in enumerate(self._transcribe_segments(_audio_segment_gen(audio, vad_segments), language)):
+		for idx, out in enumerate(self._transcribe_segments(_audio_segment_gen(audio, vad_segments), lang_iso)):
 			if print_progress:
 				percent_complete = ((idx + 1) / total_segments) * 100
 				print(f"Progress: {percent_complete:.2f}%...")
@@ -76,7 +80,7 @@ class CustomWhisper():
 					"end": round(vad_segments[idx]["end"], 3)
 				}
 			)
-		return {"segments": segments, "language": language}
+		return {"segments": segments, "language": lang_iso}
 
 
 def load_custom_model(
