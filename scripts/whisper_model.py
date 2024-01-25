@@ -1,8 +1,8 @@
 import torch
 import whisperx
-from transformers import WhisperProcessor, WhisperForConditionalGeneration
+from transformers import WhisperProcessor, WhisperForConditionalGeneration, WhisperTokenizer
 import os
-from typing import List
+from typing import List, Optional, Collection, Dict
 
 SAMPLE_RATE = 16000
 
@@ -49,6 +49,7 @@ class CustomWhisper():
 			chunk_size,
 			print_progress
 	):
+		# Obtain VAD segments (timestamps where speech is detected)
 		print("Obtaining VAD segments...")
 		vad_segments = self.vad({
 			"waveform": torch.from_numpy(audio).unsqueeze(0),
@@ -63,12 +64,28 @@ class CustomWhisper():
 			offset=self.vad_params["vad_offset"],
 		)
 		print("VAD segments merged.")
-		lang_iso = LANG_CODES.get(language, None)
-		# TODO: detect language if None
+
+		lang_code = LANG_CODES.get(language, None)
+
+		if lang_code is None:
+			# Detect language
+			print("Language not specified. Detecting language...")
+			input_features = self.processor(
+				audio,
+				sampling_rate=SAMPLE_RATE,
+				return_tensors="pt"
+			).input_features.to(self.device).to(self.compute_type)
+				
+			language_tokens = [t[2:-2] for t in self.processor.tokenizer.additional_special_tokens if len(t) == 6]
+			possible_languages = list(set(language_tokens).intersection(LANG_CODES.values()))
+			lang_code = self._detect_language(input_features, possible_languages)[0]
+			language = list(LANG_CODES.keys())[list(LANG_CODES.values()).index(lang_code)]
+			print(f"Language detected in the first 30s: {language}")
+
 		print(f"Transcribing (language = {language})...")
 		segments = []
 		total_segments = len(vad_segments)
-		for idx, out in enumerate(self._transcribe_segments(_audio_segment_gen(audio, vad_segments), lang_iso)):
+		for idx, out in enumerate(self._transcribe_segments(_audio_segment_gen(audio, vad_segments), lang_code)):
 			if print_progress:
 				percent_complete = ((idx + 1) / total_segments) * 100
 				print(f"Progress: {percent_complete:.2f}%...")
@@ -80,8 +97,38 @@ class CustomWhisper():
 					"end": round(vad_segments[idx]["end"], 3)
 				}
 			)
-		return {"segments": segments, "language": lang_iso}
+		return {"segments": segments, "language": lang_code}
 
+	def _detect_language(
+			self,
+			input_features,
+			possible_languages: Optional[Collection[str]] = None
+	) -> List[Dict[str, float]]:
+		# hacky, but all language tokens and only language tokens are 6 characters long
+		language_tokens = [t for t in self.processor.tokenizer.additional_special_tokens if len(t) == 6]
+		if possible_languages is not None:
+			language_tokens = [t for t in language_tokens if t[2:-2] in possible_languages]
+			if len(language_tokens) < len(possible_languages):
+				raise RuntimeError(f'Some languages in {possible_languages} did not have associated language tokens')
+
+		language_token_ids = self.processor.tokenizer.convert_tokens_to_ids(language_tokens)
+
+		# 50258 is the token for transcribing
+		logits = self.model(input_features,
+						decoder_input_ids = torch.tensor([[50258] for _ in range(input_features.shape[0])], device=self.device)).logits
+		mask = torch.ones(logits.shape[-1], dtype=torch.bool)
+		mask[language_token_ids] = False
+		logits[:, :, mask] = -float('inf')
+
+		output_probs = logits.softmax(dim=-1).cpu()
+		lang_probs= [
+			{
+				lang: output_probs[input_idx, 0, token_id].item()
+				for token_id, lang in zip(language_token_ids, language_tokens)
+			}
+			for input_idx in range(logits.shape[0])
+		]
+		return [max(prob_dict, key=prob_dict.get)[2:-2] for prob_dict in lang_probs]
 
 def load_custom_model(
 		model_id,
@@ -141,3 +188,4 @@ def _audio_segment_gen(audio, segments):
 		f1 = int(seg["start"] * whisperx.audio.SAMPLE_RATE)
 		f2 = int(seg["end"] * whisperx.audio.SAMPLE_RATE)
 		yield audio[f1:f2]
+	

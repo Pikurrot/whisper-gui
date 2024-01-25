@@ -190,7 +190,7 @@ def main():
 	whisperx_models = ["large-v2", "large-v1", "large", "medium", "small", "base", "tiny", "medium.en", "small.en", "base.en", "tiny.en"]
 	custom_models = list_models()
 	whisperx_langs = ["auto", "en", "es", "fr", "de", "it", "ja", "zh", "nl", "uk", "pt"]
-	custom_langs = LANG_CODES.keys()
+	custom_langs = ["auto"] + list(LANG_CODES.keys())
 
 	# Create Gradio Interface
 	print("Creating interface...")
