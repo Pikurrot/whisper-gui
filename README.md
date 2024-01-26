@@ -41,3 +41,9 @@ Otherwise, to run manually:
 - Speaker-diarization
 - Subtitle creation for videos
 - Automatic setup for Linux / Mac
+
+## Licensing
+This project is primarily distributed under the terms of the MIT License. See the [LICENSE](LICENSE) file for details.
+
+**Third-Party Code**  
+Portions of this project incorporate code from [WhisperX](https://github.com/m-bain/whisperX), which is licensed under BSD-4-Clause license. This code is used in accordance with its license, and the full text of the license can be found within the relevant [source files](scripts/whisper_model.py).
