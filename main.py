@@ -4,7 +4,8 @@ import subprocess, os, gc, argparse, shutil
 import soundfile as sf
 import torch, re, json
 from datetime import datetime
-from scripts.whisper_model import CustomWhisper, load_custom_model, LANG_CODES
+from scripts.whisper_model import load_custom_model, LANG_CODES
+from typing import Optional, Tuple
 
 ALIGN_LANGS = ["en", "fr", "de", "es", "it", "ja", "zh", "nl", "uk", "pt", "ar", "cs", "ru", "pl", "hu", "fi", "fa", "el", "tr", "da", "he", "vi", "ko", "ur", "te", "hi", "ca", "ml", "no", "nn"]
 
@@ -100,47 +101,51 @@ def format_alignments(alignments):
 		formatted_transcription.append(formatted_line)
 	return "\n\n".join(formatted_transcription)
 
-def transcribe_whisperx(model_name,
-						audio_path,
-						micro_audio,
-						device,
-						batch_size,
-						compute_type,
-						language,
-						chunk_size,
-						release_memory,
-						save_root,
-						save_audio,
-						save_transcription,
-						save_alignments):
+def transcribe_whisperx(
+		model_name: str,
+		audio_path: str,
+		micro_audio: tuple,
+		device: str,
+		batch_size: int,
+		compute_type: str,
+		language: str,
+		chunk_size: int,
+		release_memory: bool,
+		save_root: Optional[bool],
+		save_audio: bool,
+		save_transcription: bool,
+		save_alignments: bool
+	) -> Tuple[str, str]:
 	print("Inputs received. Starting...")
 	print("Loading model...")
 	model = whisperx.load_model(model_name, device, compute_type=compute_type, download_root="models/whisperx")
-	return transcribe(model, audio_path, micro_audio, device, batch_size, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments)
+	return _transcribe(model, audio_path, micro_audio, device, batch_size, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments)
 
-def transcribe_custom(model_name,
-					  model_download,
-					  audio_path,
-					  micro_audio,
-					  device,
-					  batch_size,
-					  compute_type,
-					  language,
-					  chunk_size,
-					  release_memory,
-					  save_root,
-					  save_audio,
-					  save_transcription,
-					  save_alignments):
+def transcribe_custom(
+		model_name: str,
+		model_download: str,
+		audio_path: str,
+		micro_audio: tuple,
+		device: str,
+		batch_size: int,
+		compute_type: str,
+		language: str,
+		chunk_size: int,
+		release_memory: bool,
+		save_root: Optional[bool],
+		save_audio: bool,
+		save_transcription: bool,
+		save_alignments: bool
+	) -> Tuple[str, str]:
 	print("Inputs received. Starting...")
 	print("Loading model...")
 	if model_download != "":
 		model_name = model_download
 		print("Downloading model...")
 	model = load_custom_model(model_name, device, compute_type=compute_type, download_root="models/custom")
-	return transcribe(model, audio_path, micro_audio, device, batch_size, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments)
+	return _transcribe(model, audio_path, micro_audio, device, batch_size, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments)
 
-def transcribe(model, audio_path, micro_audio, device, batch_size, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments):
+def _transcribe(model, audio_path, micro_audio, device, batch_size, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments) -> Tuple[str, str]:
 	# Create save folder
 	save_dir = None
 	if not os.path.exists("temp"):
@@ -149,20 +154,23 @@ def transcribe(model, audio_path, micro_audio, device, batch_size, language, chu
 		if not save_root: save_root = "outputs"
 		save_dir = create_save_folder(save_root)
 
+	# Load (and save) audio
 	audio = load_and_save_audio(audio_path, micro_audio, save_audio, save_dir)
 	print("Audio loaded.")
 
+	# Transcription
 	if language == "auto": language = None
 	result = model.transcribe(audio, batch_size=batch_size, language=language, chunk_size=chunk_size, print_progress=True)
 	joined_text = " ".join([segment["text"].strip() for segment in result["segments"]])
 	if save_transcription:
 		save_transcription_to_txt(joined_text, save_dir)
 	if release_memory:
+		# Release whisper model from memory
 		del model
 		if device == "cuda": torch.cuda.empty_cache()
 		else: gc.collect()
 
-	# Alignment
+	# Word-level alignment
 	print("Loading alignment model...")
 	lang_used = result["language"]
 	if lang_used not in ALIGN_LANGS:
@@ -174,6 +182,7 @@ def transcribe(model, audio_path, micro_audio, device, batch_size, language, chu
 	if save_alignments:
 		save_alignments_to_json(aligned_result, save_dir)
 	if release_memory:
+		# Release alignment model from memory
 		print("Releasing memory...")
 		del model_a, metadata
 		if device == "cuda": torch.cuda.empty_cache()
@@ -182,6 +191,7 @@ def transcribe(model, audio_path, micro_audio, device, batch_size, language, chu
 	if not os.listdir("temp"):
 		# Remove temp folder if empty
 		os.rmdir("temp")
+	# Return the transcription and sentence-level alignments
 	return joined_text, format_alignments(aligned_result)
 
 

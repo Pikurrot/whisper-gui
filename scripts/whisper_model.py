@@ -1,8 +1,10 @@
 import torch
 import whisperx
-from transformers import WhisperProcessor, WhisperForConditionalGeneration, GenerationConfig
+from whisperx.vad import VoiceActivitySegmentation
+from transformers import WhisperProcessor, WhisperForConditionalGeneration
 import os
-from typing import List, Optional, Collection, Dict
+from typing import List, Optional, Collection, Dict, Any, Union
+import numpy as np
 
 SAMPLE_RATE = 16000
 
@@ -11,13 +13,18 @@ LANG_CODES = {"english": "en", "spanish": "es", "french": "fr", "german": "de", 
 class CustomWhisper():
 	def __init__(
 			self,
-			model,
-			processor,
-			vad,
-			vad_params,
-			device,
-			compute_type
+			model: WhisperForConditionalGeneration,
+			processor: WhisperProcessor,
+			vad: VoiceActivitySegmentation,
+			vad_params: Dict[str, Any],
+			device: str,
+			compute_type: torch.dtype
 	):
+		"""
+		Custom Whisper model. Takes any valid whisper model, its processor and a VAD model and allows transcribing audio.
+
+		Recommended to instantiate with load_custom_model().
+		"""
 		self.model = model
 		self.processor = processor
 		self.vad = vad
@@ -51,12 +58,25 @@ class CustomWhisper():
 	
 	def transcribe(
 			self,
-			audio,
-			batch_size,
-			language,
-			chunk_size,
-			print_progress
-	):
+			audio: np.ndarray,
+			batch_size: int = 1,
+			language: str = None,
+			chunk_size: int = 20,
+			print_progress: bool = True
+	) -> Dict[str, List[Dict[str, Any]]]:
+		"""
+		Transcribe a given audio array.
+		
+		Returns as:
+			{"segments": [
+				{
+					"text": str,
+					"start": float,
+					"end": float
+				}, ...],
+			 "language": str
+			 }
+		"""
 		# Obtain VAD segments (timestamps where speech is detected)
 		print("Obtaining VAD segments...")
 		vad_segments = self.vad({
@@ -73,16 +93,17 @@ class CustomWhisper():
 		)
 		print("VAD segments merged.")
 
+		# Obtain language
 		lang_code = LANG_CODES.get(language, None)
-
 		if lang_code is None:
-			# Detect language
+			# Detect language for first 30s of audio (max duration a Whisper model allows)
 			print("Language not specified. Detecting language...")
 			input_features = self.processor(
 				audio,
 				sampling_rate=SAMPLE_RATE,
 				return_tensors="pt"
 			).input_features.to(self.device).to(self.compute_type)
+			print(type(input_features))
 				
 			language_tokens = [t[2:-2] for t in self.processor.tokenizer.additional_special_tokens if len(t) == 6]
 			possible_languages = list(set(language_tokens).intersection(LANG_CODES.values()))
@@ -90,16 +111,18 @@ class CustomWhisper():
 			language = list(LANG_CODES.keys())[list(LANG_CODES.values()).index(lang_code)]
 			print(f"Language detected in the first 30s: {language}")
 
+		# Transcribe
 		print(f"Transcribing (language = {language})...")
 		segments = _audio_segment_gen(audio, vad_segments)
 		audio_batches = []
 		current_batch = []
+		# prepare batches of size batch_size for batch inference
 		for segment in segments:
 			current_batch.append(segment)
 			if len(current_batch) == batch_size:
 				audio_batches.append(current_batch)
 				current_batch = []
-		if current_batch:  # Add the last batch if it has any segments
+		if current_batch:  # Add the last batch (can have different size) if it has any segments
 			audio_batches.append(current_batch)
 
 		final_transcriptions = []
@@ -125,7 +148,7 @@ class CustomWhisper():
 
 	def _detect_language(
 			self,
-			input_features,
+			input_features: torch.Tensor,
 			possible_languages: Optional[Collection[str]] = None
 	) -> List[Dict[str, float]]:
 		# hacky, but all language tokens and only language tokens are 6 characters long
@@ -155,13 +178,16 @@ class CustomWhisper():
 		return [max(prob_dict, key=prob_dict.get)[2:-2] for prob_dict in lang_probs]
 
 def load_custom_model(
-		model_id,
-		device,
-		compute_type,
-		download_root,
-		vad_model=None,
-		vad_options=None,
+		model_id: str,
+		device: Union[str, torch.device],
+		compute_type: str = "float32",
+		download_root: str = "models/custom",
+		vad_model: Optional[VoiceActivitySegmentation] = None,
+		vad_options: Optional[Dict[str, Any]] = None
 ):
+	"""
+	Load a custom Whisper model local or, if not detected, download it from HuggingFace. Returns an instance of a CustomWhisper model.
+	"""
 	if isinstance(compute_type, str):
 		if compute_type == "float32":
 			compute_type = torch.float32
@@ -170,6 +196,7 @@ def load_custom_model(
 		else:
 			raise ValueError(f"Unsupported compute_type: {compute_type}")
 
+	# Check if model is already downloaded
 	is_local = _check_is_local(model_id, download_root)
 
 	# Load Whisper model and processor
@@ -179,6 +206,7 @@ def load_custom_model(
 	model = WhisperForConditionalGeneration.from_pretrained(
 		model_id, torch_dtype=compute_type, use_safetensors=True, cache_dir=download_root, local_files_only=is_local
 	)
+	print("Model loaded.")
 
 	# Load VAD model
 	default_vad_options = {
