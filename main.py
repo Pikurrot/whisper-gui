@@ -174,6 +174,7 @@ def transcribe(model, audio_path, micro_audio, device, batch_size, language, chu
 	if save_alignments:
 		save_alignments_to_json(aligned_result, save_dir)
 	if release_memory:
+		print("Releasing memory...")
 		del model_a, metadata
 		if device == "cuda": torch.cuda.empty_cache()
 		else: gc.collect()
@@ -239,7 +240,7 @@ A simple interface to transcribe audio files using the Whisper model""")
 						save_audio2 = gr.Checkbox(value=False, label="Save Audio")
 					gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=audio_upload2)
 					with gr.Accordion(label="Advanced Options", open=False):
-						language_select2 = gr.Dropdown(custom_langs, value = "auto", label="Language")
+						language_select2 = gr.Dropdown(custom_langs, value = "auto", label="Language", info="Select the language of the audio file. Select \"auto\" to automatically detect it.")
 						device_select2 = gr.Radio(["cuda", "cpu"], value = "cuda", label="Device", info="If you don\"t have a GPU, select \"cpu\"")
 						with gr.Group():
 							with gr.Row():
@@ -247,10 +248,10 @@ A simple interface to transcribe audio files using the Whisper model""")
 								save_alignments2 = gr.Checkbox(value=True, label="Save Alignments")
 							save_root2 = gr.Textbox(label="Save Path", placeholder="/outputs", lines=1)
 						gr.Markdown("""### Optimizations""")
-						compute_type_select2 = gr.Radio(["float16", "float32"], value = "float16", label="Compute Type")
-						batch_size_slider2 = gr.Slider(1, 128, value = 1, label="Batch Size")
-						chunk_size_slider2 = gr.Slider(1, 80, value = 20, label="Chunk Size")
-						release_memory_checkbox2 = gr.Checkbox(label="Release Memory", value=True)
+						compute_type_select2 = gr.Radio(["float16", "float32"], value = "float16", label="Compute Type", info="float16 is faster and requires less memory. float32 is more accurate (Your device may not support some data types)")
+						batch_size_slider2 = gr.Slider(1, 128, value = 1, label="Batch Size", info="Larger batch sizes may be faster but require more memory")
+						chunk_size_slider2 = gr.Slider(1, 80, value = 20, label="Chunk Size", info="Larger chunk sizes may be faster but require more memory")
+						release_memory_checkbox2 = gr.Checkbox(label="Release Memory", value=True, info="Release model from memory after every transcription")
 					submit_button2 = gr.Button(value="Start Transcription")
 				with gr.Column():
 					transcription_output2 = gr.Textbox(label="Transcription", lines=15)
