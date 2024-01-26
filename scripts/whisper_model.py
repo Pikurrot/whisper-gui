@@ -1,6 +1,6 @@
 import torch
 import whisperx
-from transformers import WhisperProcessor, WhisperForConditionalGeneration, WhisperTokenizer
+from transformers import WhisperProcessor, WhisperForConditionalGeneration, GenerationConfig
 import os
 from typing import List, Optional, Collection, Dict
 
@@ -35,7 +35,10 @@ class CustomWhisper():
 				return_tensors="pt"
 			).input_features.to(self.device).to(self.compute_type)
 
-			predicted_ids = self.model.generate(input_features, language=language)
+			try:
+				predicted_ids = self.model.generate(input_features, language=language)
+			except ValueError:
+				raise ValueError("The generation config of this model is outdated.")
 
 			transcription = self.processor.batch_decode(predicted_ids, skip_special_tokens=True)
 			transcriptions.append(transcription)
@@ -143,8 +146,6 @@ def load_custom_model(
 			compute_type = torch.float32
 		elif compute_type == "float16":
 			compute_type = torch.float16
-		elif compute_type == "int8":
-			compute_type = torch.int8
 		else:
 			raise ValueError(f"Unsupported compute_type: {compute_type}")
 
@@ -188,4 +189,3 @@ def _audio_segment_gen(audio, segments):
 		f1 = int(seg["start"] * whisperx.audio.SAMPLE_RATE)
 		f2 = int(seg["end"] * whisperx.audio.SAMPLE_RATE)
 		yield audio[f1:f2]
-	

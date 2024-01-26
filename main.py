@@ -119,6 +119,7 @@ def transcribe_whisperx(model_name,
 	return transcribe(model, audio_path, micro_audio, device, batch_size, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments)
 
 def transcribe_custom(model_name,
+					  model_download,
 					  audio_path,
 					  micro_audio,
 					  device,
@@ -133,6 +134,9 @@ def transcribe_custom(model_name,
 					  save_alignments):
 	print("Inputs received. Starting...")
 	print("Loading model...")
+	if model_download != "":
+		model_name = model_download
+		print("Downloading model...")
 	model = load_custom_model(model_name, device, compute_type=compute_type, download_root="models/custom")
 	return transcribe(model, audio_path, micro_audio, device, batch_size, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments)
 
@@ -228,7 +232,7 @@ A simple interface to transcribe audio files using the Whisper model""")
 				with gr.Column():
 					with gr.Group():
 						model_select2 = gr.Dropdown(custom_models, value=None, label="Load Local Model")
-						model_download = gr.Textbox(placeholder="openai/whisper-base", label="or Download Model from HuggingFace", info="If both are provided, only the downloaded model will be used")
+						model_download = gr.Textbox(placeholder="openai/whisper-base", label="or Download a Model from HuggingFace", info="If both are provided, only the downloaded model will be used")
 					with gr.Group():
 						audio_upload2 = gr.Audio(sources=["upload"], type="filepath", label="Load Audio File")
 						audio_record2 = gr.Audio(sources=["microphone"], type="numpy", label="or Record Audio (If both are provided, only microphone audio will be used)")
@@ -258,7 +262,7 @@ A simple interface to transcribe audio files using the Whisper model""")
 							outputs=[transcription_output, alignments_output])
 		
 		submit_button2.click(transcribe_custom,
-					  		inputs=[model_select2, audio_upload2, audio_record2, device_select2, batch_size_slider2, compute_type_select2, language_select2, chunk_size_slider2, release_memory_checkbox2, save_root2, save_audio2, save_transcription2, save_alignments2],
+					  		inputs=[model_select2, model_download, audio_upload2, audio_record2, device_select2, batch_size_slider2, compute_type_select2, language_select2, chunk_size_slider2, release_memory_checkbox2, save_root2, save_audio2, save_transcription2, save_alignments2],
 							outputs=[transcription_output2, alignments_output2])
 
 	# Launch the interface
