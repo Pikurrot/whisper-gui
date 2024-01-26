@@ -26,22 +26,27 @@ class CustomWhisper():
 		self.compute_type = compute_type
 		self.model.to(device)
 		
-	def _transcribe_segments(self, audio_segments, language):
+	def _transcribe_segments(self, audio_batches, language):
 		transcriptions = []
-		for audio in audio_segments:
+		for audio_batch in audio_batches:
 			input_features = self.processor(
-				audio,
+				audio_batch,
 				sampling_rate=SAMPLE_RATE,
-				return_tensors="pt"
+				return_tensors="pt",
+				padding=True  # Ensure all sequences in the batch have the same length
 			).input_features.to(self.device).to(self.compute_type)
 
-			try:
-				predicted_ids = self.model.generate(input_features, language=language)
-			except ValueError:
-				raise ValueError("The generation config of this model is outdated.")
+			required_length = 3000
+			current_length = input_features.shape[2]
+			if current_length < required_length:
+				padding_length = required_length - current_length
+				padding = torch.zeros((input_features.shape[0], input_features.shape[1], padding_length), device=self.device, dtype=self.compute_type)
+				input_features = torch.cat([input_features, padding], dim=2)
 
-			transcription = self.processor.batch_decode(predicted_ids, skip_special_tokens=True)
-			transcriptions.append(transcription)
+			predicted_ids = self.model.generate(input_features, language=language)
+
+			batch_transcriptions = self.processor.batch_decode(predicted_ids, skip_special_tokens=True)
+			transcriptions.extend(batch_transcriptions)
 		return transcriptions
 	
 	def transcribe(
@@ -86,21 +91,37 @@ class CustomWhisper():
 			print(f"Language detected in the first 30s: {language}")
 
 		print(f"Transcribing (language = {language})...")
-		segments = []
-		total_segments = len(vad_segments)
-		for idx, out in enumerate(self._transcribe_segments(_audio_segment_gen(audio, vad_segments), lang_code)):
+		segments = _audio_segment_gen(audio, vad_segments)
+		audio_batches = []
+		current_batch = []
+		for segment in segments:
+			current_batch.append(segment)
+			if len(current_batch) == batch_size:
+				audio_batches.append(current_batch)
+				current_batch = []
+		if current_batch:  # Add the last batch if it has any segments
+			audio_batches.append(current_batch)
+
+		final_transcriptions = []
+		total_batches = len(audio_batches)
+		for idx, audio_batch in enumerate(audio_batches):
 			if print_progress:
-				percent_complete = ((idx + 1) / total_segments) * 100
-				print(f"Progress: {percent_complete:.2f}%...")
-			text = out[0]
-			segments.append(
-				{
-					"text": text,
-					"start": round(vad_segments[idx]["start"], 3),
-					"end": round(vad_segments[idx]["end"], 3)
-				}
-			)
-		return {"segments": segments, "language": lang_code}
+				percent_complete = ((idx + 1) / total_batches) * 100
+				print(f"Processing batch {idx + 1}/{total_batches}, Progress: {percent_complete:.2f}%...")
+
+			batch_transcriptions = self._transcribe_segments(audio_batch, lang_code)
+			
+			for segment_idx, transcription in enumerate(batch_transcriptions):
+				actual_segment_idx = idx * batch_size + segment_idx
+				if actual_segment_idx < len(vad_segments):
+					vad_segment = vad_segments[actual_segment_idx]
+					final_transcriptions.append({
+						"text": transcription,
+						"start": round(vad_segment["start"], 3),
+						"end": round(vad_segment["end"], 3)
+					})
+
+		return {"segments": final_transcriptions, "language": lang_code}
 
 	def _detect_language(
 			self,
