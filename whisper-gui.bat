@@ -208,6 +208,7 @@ if "!GPU_SUPPORT!" == "true" (
 	echo Installing dependencies for CPU...
 	set DEP_FILE=configs\environment_cpu.yml
 )
+call pip install git+https://github.com/m-bain/whisperx.git
 call conda env update --name !ENV_NAME! --file !DEP_FILE! --prune
 if %errorlevel% GEQ 1 (
 	echo Failed to install dependencies.
