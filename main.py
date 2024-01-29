@@ -6,6 +6,7 @@ import torch, re, json
 from datetime import datetime
 from scripts.whisper_model import load_custom_model, LANG_CODES
 from typing import Optional, Tuple
+from scripts.config_io import read_config_value
 
 ALIGN_LANGS = ["en", "fr", "de", "es", "it", "ja", "zh", "nl", "uk", "pt", "ar", "cs", "ru", "pl", "hu", "fi", "fa", "el", "tr", "da", "he", "vi", "ko", "ur", "te", "hi", "ca", "ml", "no", "nn"]
 
@@ -207,6 +208,20 @@ def main():
 	whisperx_langs = ["auto", "en", "es", "fr", "de", "it", "ja", "zh", "nl", "uk", "pt"]
 	custom_langs = ["auto"] + list(LANG_CODES.keys())
 
+	# Read config
+	gpu_support, error = read_config_value("gpu_support")
+	if gpu_support:
+		device = "cuda"
+		device_interactive = True
+		device_message = ""
+	else:
+		device = "cpu"
+		device_interactive = False
+		if gpu_support is None:
+			device_message = "If you don\"t have a GPU, select \"cpu\""
+		else:
+			device_message = "GPU support is disabled in the config file."
+
 	# Create Gradio Interface
 	print("Creating interface...")
 	with gr.Blocks(title="Whisper GUI") as gui:
@@ -223,7 +238,7 @@ A simple interface to transcribe audio files using the Whisper model""")
 					gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=audio_upload)
 					with gr.Accordion(label="Advanced Options", open=False):
 						language_select = gr.Dropdown(whisperx_langs, value = "auto", label="Language", info="Select the language of the audio file. Select \"auto\" to automatically detect it.")
-						device_select = gr.Radio(["cuda", "cpu"], value = "cuda", label="Device", info="If you don\"t have a GPU, select \"cpu\"")
+						device_select = gr.Radio(["cuda", "cpu"], value = device, label="Device", info=device_message, interactive=device_interactive)
 						with gr.Group():
 							with gr.Row():
 								save_transcription = gr.Checkbox(value=True, label="Save Transcription")
