@@ -6,8 +6,10 @@ A simple GUI made with `gradio` to use WhisperX on Windows.
 ## Requirements
 - [Anaconda](https://docs.anaconda.com/free/anaconda/install/windows/) installed and `conda` added to PATH.
 - `git` installed and added to PATH.
+- `ffmpeg` installed and added to PATH. See instructions for [Windows](https://phoenixnap.com/kb/ffmpeg-windows) or [Linux](https://phoenixnap.com/kb/install-ffmpeg-ubuntu)
 
 ## Set up
+- Install
 - Run the `whisper-gui.bat` file and follow the instructions. After the process, it will run the GUI in a new browser tab.
 
 Otherwise, manual steps are:
