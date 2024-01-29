@@ -51,7 +51,8 @@ class CustomWhisper():
 			vad: VoiceActivitySegmentation,
 			vad_params: Dict[str, Any],
 			device: str,
-			compute_type: torch.dtype
+			compute_type: torch.dtype,
+			beam_size: int
 	):
 		"""
 		Custom Whisper model. Takes any valid whisper model, its processor and a VAD model and allows transcribing audio.
@@ -64,6 +65,7 @@ class CustomWhisper():
 		self.vad_params = vad_params
 		self.device = device
 		self.compute_type = compute_type
+		self.beam_size = beam_size
 		self.model.to(device)
 		
 	def _transcribe_segments(self, audio_batches, language):
@@ -83,7 +85,7 @@ class CustomWhisper():
 				padding = torch.zeros((input_features.shape[0], input_features.shape[1], padding_length), device=self.device, dtype=self.compute_type)
 				input_features = torch.cat([input_features, padding], dim=2)
 
-			predicted_ids = self.model.generate(input_features, language=language)
+			predicted_ids = self.model.generate(input_features, language=language, num_beams=self.beam_size)
 
 			batch_transcriptions = self.processor.batch_decode(predicted_ids, skip_special_tokens=True)
 			transcriptions.extend(batch_transcriptions)
@@ -216,6 +218,7 @@ def load_custom_model(
 		model_id: str,
 		device: Union[str, torch.device],
 		compute_type: str = "float32",
+		beam_size: int = 5,
 		download_root: str = "models/custom",
 		vad_model: Optional[VoiceActivitySegmentation] = None,
 		vad_options: Optional[Dict[str, Any]] = None
@@ -260,7 +263,7 @@ def load_custom_model(
 		print("VAD model loaded.")
 	default_vad_options["chunk_size"] = 16
 
-	return CustomWhisper(model, processor, vad_model, default_vad_options, device, compute_type)
+	return CustomWhisper(model, processor, vad_model, default_vad_options, device, compute_type, beam_size)
 
 def _check_is_local(model_id, models_dir):
 	model_folder = str(model_id).replace("/", "--")
