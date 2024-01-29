@@ -260,7 +260,7 @@ A simple interface to transcribe audio files using the Whisper model""")
 					submit_button = gr.Button(value="Start Transcription")
 				with gr.Column():
 					transcription_output = gr.Textbox(label="Transcription", lines=15)
-					alignments_output = gr.Textbox(label="Alignments", lines=15)
+					alignments_output = gr.Textbox(label="Timestamps", lines=15)
 					with gr.Row():
 						time_transcribe = gr.Textbox(label="Transcription Time", info="Including language detection (if Language = \"auto\")", lines=1)
 						time_align = gr.Textbox(label="Alignment Time", lines=1)
@@ -291,7 +291,7 @@ A simple interface to transcribe audio files using the Whisper model""")
 					submit_button2 = gr.Button(value="Start Transcription")
 				with gr.Column():
 					transcription_output2 = gr.Textbox(label="Transcription", lines=15)
-					alignments_output2 = gr.Textbox(label="Alignments", lines=15)
+					alignments_output2 = gr.Textbox(label="Timestamps", lines=15)
 					with gr.Row():
 						time_transcribe2 = gr.Textbox(label="Transcription Time", lines=1)
 						time_align2 = gr.Textbox(label="Alignment Time", lines=1)
