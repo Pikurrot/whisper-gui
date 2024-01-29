@@ -2,7 +2,7 @@ import gradio as gr
 import whisperx
 import subprocess, os, gc, argparse, shutil
 import soundfile as sf
-import torch, re, json
+import torch, re, json, time
 from datetime import datetime
 from scripts.whisper_model import load_custom_model, LANG_CODES
 from typing import Optional, Tuple
@@ -116,7 +116,7 @@ def transcribe_whisperx(
 		save_audio: bool,
 		save_transcription: bool,
 		save_alignments: bool
-	) -> Tuple[str, str]:
+	) -> Tuple[str, str, float, float]:
 	print("Inputs received. Starting...")
 	print("Loading model...")
 	model = whisperx.load_model(model_name, device, compute_type=compute_type, download_root="models/whisperx")
@@ -137,7 +137,7 @@ def transcribe_custom(
 		save_audio: bool,
 		save_transcription: bool,
 		save_alignments: bool
-	) -> Tuple[str, str]:
+	) -> Tuple[str, str, float, float]:
 	print("Inputs received. Starting...")
 	print("Loading model...")
 	if model_download != "":
@@ -161,7 +161,13 @@ def _transcribe(model, audio_path, micro_audio, device, batch_size, language, ch
 
 	# Transcription
 	if language == "auto": language = None
+	time_transcribe = time.time()
 	result = model.transcribe(audio, batch_size=batch_size, language=language, chunk_size=chunk_size, print_progress=True)
+	# check "time" in result
+	if "time" in result.keys():
+		time_transcribe = result["time"]
+	else:
+		time_transcribe = time.time() - time_transcribe
 	joined_text = " ".join([segment["text"].strip() for segment in result["segments"]])
 	if save_transcription:
 		save_transcription_to_txt(joined_text, save_dir)
@@ -179,7 +185,9 @@ def _transcribe(model, audio_path, micro_audio, device, batch_size, language, ch
 		lang_used = "en"
 	model_a, metadata = whisperx.load_align_model(language_code=lang_used, device=device, model_dir="models/alignment")
 	print("Aligning...")
+	time_align = time.time()
 	aligned_result = whisperx.align(result["segments"], model_a, metadata, audio, device, return_char_alignments=False)
+	time_align = time.time() - time_align
 	if save_alignments:
 		save_alignments_to_json(aligned_result, save_dir)
 	if release_memory:
@@ -193,7 +201,7 @@ def _transcribe(model, audio_path, micro_audio, device, batch_size, language, ch
 		# Remove temp folder if empty
 		os.rmdir("temp")
 	# Return the transcription and sentence-level alignments
-	return joined_text, format_alignments(aligned_result)
+	return joined_text, format_alignments(aligned_result), round(time_transcribe, 3), round(time_align, 3)
 
 
 def main():
@@ -253,6 +261,9 @@ A simple interface to transcribe audio files using the Whisper model""")
 				with gr.Column():
 					transcription_output = gr.Textbox(label="Transcription", lines=15)
 					alignments_output = gr.Textbox(label="Alignments", lines=15)
+					with gr.Row():
+						time_transcribe = gr.Textbox(label="Transcription Time", info="Including language detection (if Language = \"auto\")", lines=1)
+						time_align = gr.Textbox(label="Alignment Time", lines=1)
 		with gr.Tab("Custom model"):
 			with gr.Row():
 				with gr.Column():
@@ -281,15 +292,18 @@ A simple interface to transcribe audio files using the Whisper model""")
 				with gr.Column():
 					transcription_output2 = gr.Textbox(label="Transcription", lines=15)
 					alignments_output2 = gr.Textbox(label="Alignments", lines=15)
+					with gr.Row():
+						time_transcribe2 = gr.Textbox(label="Transcription Time", lines=1)
+						time_align2 = gr.Textbox(label="Alignment Time", lines=1)
 
 		
 		submit_button.click(transcribe_whisperx,
 					  		inputs=[model_select, audio_upload, audio_record, device_select, batch_size_slider, compute_type_select, language_select, chunk_size_slider, release_memory_checkbox, save_root, save_audio, save_transcription, save_alignments],
-							outputs=[transcription_output, alignments_output])
+							outputs=[transcription_output, alignments_output, time_transcribe, time_align])
 		
 		submit_button2.click(transcribe_custom,
 					  		inputs=[model_select2, model_download, audio_upload2, audio_record2, device_select2, batch_size_slider2, compute_type_select2, language_select2, chunk_size_slider2, release_memory_checkbox2, save_root2, save_audio2, save_transcription2, save_alignments2],
-							outputs=[transcription_output2, alignments_output2])
+							outputs=[transcription_output2, alignments_output2, time_transcribe2, time_align2])
 
 	# Launch the interface
 	gui.launch(inbrowser=args.autolaunch, share=args.share)

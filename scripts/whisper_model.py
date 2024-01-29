@@ -35,7 +35,7 @@ import torch
 import whisperx
 from whisperx.vad import VoiceActivitySegmentation
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
-import os
+import os, time
 from typing import List, Optional, Collection, Dict, Any, Union
 import numpy as np
 
@@ -107,7 +107,8 @@ class CustomWhisper():
 					"start": float,
 					"end": float
 				}, ...],
-			 "language": str
+			 "language": str,
+			 "time": float
 			 }
 		"""
 		# Obtain VAD segments (timestamps where speech is detected)
@@ -136,7 +137,6 @@ class CustomWhisper():
 				sampling_rate=SAMPLE_RATE,
 				return_tensors="pt"
 			).input_features.to(self.device).to(self.compute_type)
-			print(type(input_features))
 				
 			language_tokens = [t[2:-2] for t in self.processor.tokenizer.additional_special_tokens if len(t) == 6]
 			possible_languages = list(set(language_tokens).intersection(LANG_CODES.values()))
@@ -160,6 +160,7 @@ class CustomWhisper():
 
 		final_transcriptions = []
 		total_batches = len(audio_batches)
+		time_transcribe = time.time()
 		for idx, audio_batch in enumerate(audio_batches):
 			if print_progress:
 				percent_complete = ((idx + 1) / total_batches) * 100
@@ -176,8 +177,9 @@ class CustomWhisper():
 						"start": round(vad_segment["start"], 3),
 						"end": round(vad_segment["end"], 3)
 					})
+		time_transcribe = time.time() - time_transcribe
 
-		return {"segments": final_transcriptions, "language": lang_code}
+		return {"segments": final_transcriptions, "language": lang_code, "time": time_transcribe}
 
 	def _detect_language(
 			self,
