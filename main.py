@@ -183,7 +183,6 @@ def transcribe_whisperx(
 
 def transcribe_custom(
 		model_name: str,
-		model_download: str,
 		audio_path: str,
 		micro_audio: tuple,
 		device: str,
@@ -200,8 +199,6 @@ def transcribe_custom(
 	) -> Tuple[str, str, str, str]:
 
 	print("Inputs received. Starting...")
-	if model_download != "":
-		model_name = model_download
 	params = get_params(transcribe_custom, locals())
 	global g_model, g_params
 
@@ -286,10 +283,14 @@ def main():
 	parser.add_argument("--share", action="store_true", default=False, help="Create a share link to access the interface from another device")
 	args = parser.parse_args()
 
+	# Prepare interface data
 	whisperx_models = ["large-v2", "large-v1", "large", "medium", "small", "base", "tiny", "medium.en", "small.en", "base.en", "tiny.en"]
 	custom_models = list_models()
 	whisperx_langs = ["auto", "en", "es", "fr", "de", "it", "ja", "zh", "nl", "uk", "pt"]
 	custom_langs = ["auto"] + list(LANG_CODES.keys())
+	release_whisper_message = "When changed, requires the Whisper model to reload."
+	release_align_message = "When changed, requires the alignment model to reload."
+	release_both_message = "When changed, requires both models to reload."
 
 	# Read config
 	gpu_support, error = read_config_value("gpu_support")
@@ -301,9 +302,9 @@ def main():
 		device = "cpu"
 		device_interactive = False
 		if gpu_support is None:
-			device_message = "If you don\"t have a GPU, select \"cpu\""
+			device_message = "If you don\"t have a GPU, select \"cpu\".\n"
 		else:
-			device_message = "GPU support is disabled in the config file."
+			device_message = "GPU support is disabled in the config file.\n"
 
 	# Create Gradio Interface
 	print("Creating interface...")
@@ -313,26 +314,26 @@ A simple interface to transcribe audio files using the Whisper model""")
 		with gr.Tab("WhisperX"):
 			with gr.Row():
 				with gr.Column():
-					model_select = gr.Dropdown(whisperx_models, value="base", label="Load WhisperX Model")
+					model_select = gr.Dropdown(whisperx_models, value="base", label="Load WhisperX Model", info=release_whisper_message)
 					with gr.Group():
 						audio_upload = gr.Audio(sources=["upload"], type="filepath", label="Upload Audio File")
 						audio_record = gr.Audio(sources=["microphone"], type="numpy", label="or Record Audio (If both are provided, only microphone audio will be used)")
 						save_audio = gr.Checkbox(value=False, label="Save Audio")
 					gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=audio_upload)
 					with gr.Accordion(label="Advanced Options", open=False):
-						language_select = gr.Dropdown(whisperx_langs, value = "auto", label="Language", info="Select the language of the audio file. Select \"auto\" to automatically detect it.")
-						device_select = gr.Radio(["cuda", "cpu"], value = device, label="Device", info=device_message, interactive=device_interactive)
+						language_select = gr.Dropdown(whisperx_langs, value = "auto", label="Language", info="Select the language of the audio file. Select \"auto\" to automatically detect it. "+release_align_message)
+						device_select = gr.Radio(["cuda", "cpu"], value = device, label="Device", info=device_message+release_both_message, interactive=device_interactive)
 						with gr.Group():
 							with gr.Row():
 								save_transcription = gr.Checkbox(value=True, label="Save Transcription")
 								save_alignments = gr.Checkbox(value=True, label="Save Alignments")
 							save_root = gr.Textbox(label="Save Path", placeholder="outputs", lines=1)
 						gr.Markdown("""### Optimizations""")
-						compute_type_select = gr.Radio(["int8", "float16", "float32"], value = "int8", label="Compute Type", info="int8 is fastest and requires less memory. float32 is more accurate (Your device may not support some data types)")
-						batch_size_slider = gr.Slider(1, 128, value = 1, step=1, label="Batch Size", info="Larger batch sizes may be faster but require more memory")
-						chunk_size_slider = gr.Slider(1, 80, value = 20, step=1, label="Chunk Size", info="Larger chunk sizes may be faster but require more memory")
-						beam_size_slider = gr.Slider(1, 100, value = 5, step=1, label="Beam Size", info="Larger beam sizes may be more accurate but require more memory and may decrease speed")
-						release_memory_checkbox = gr.Checkbox(label="Release Memory", value=True, info="Release Whisper model from memory before loading alignment model")
+						compute_type_select = gr.Radio(["int8", "float16", "float32"], value = "int8", label="Compute Type", info="int8 is fastest and requires less memory. float32 is more accurate (Your device may not support some data types). "+release_whisper_message)
+						batch_size_slider = gr.Slider(1, 128, value = 1, step=1, label="Batch Size", info="Larger batch sizes may be faster but require more memory.")
+						chunk_size_slider = gr.Slider(1, 80, value = 20, step=1, label="Chunk Size", info="Larger chunk sizes may be faster but require more memory.")
+						beam_size_slider = gr.Slider(1, 100, value = 5, step=1, label="Beam Size", info="Larger beam sizes may be more accurate but require more memory and may decrease speed. "+release_whisper_message)
+						release_memory_checkbox = gr.Checkbox(label="Release Memory", value=True, info="Release Whisper model from memory before loading alignment model. Then release alignment model. Prevents having both models in memory at the same time.")
 					submit_button = gr.Button(value="Start Transcription")
 				with gr.Column():
 					transcription_output = gr.Textbox(label="Transcription", lines=15)
@@ -340,33 +341,33 @@ A simple interface to transcribe audio files using the Whisper model""")
 					with gr.Row():
 						time_transcribe = gr.Textbox(label="Transcription Time", info="Including language detection (if Language = \"auto\")", lines=1)
 						time_align = gr.Textbox(label="Alignment Time", lines=1)
-					release_memory_button = gr.Button(value="Release Memory")
+					release_memory_button = gr.Button(value="Release Models from Memory")
 
 		with gr.Tab("Custom model"):
 			with gr.Row():
 				with gr.Column():
 					with gr.Group():
-						model_select2 = gr.Dropdown(custom_models, value=None, label="Load Local Model")
-						model_download = gr.Textbox(placeholder="openai/whisper-base", label="or Download a Model from HuggingFace", info="If both are provided, only the downloaded model will be used")
+						model_select2 = gr.Dropdown(custom_models, value=None, label="Load Local Model  or  Download a Model from HuggingFace", allow_custom_value=True, info=release_whisper_message)
+						# model_download = gr.Textbox(placeholder="openai/whisper-base", label="or Download a Model from HuggingFace", info="If both are provided, only the downloaded model will be used")
 					with gr.Group():
 						audio_upload2 = gr.Audio(sources=["upload"], type="filepath", label="Load Audio File")
 						audio_record2 = gr.Audio(sources=["microphone"], type="numpy", label="or Record Audio (If both are provided, only microphone audio will be used)")
 						save_audio2 = gr.Checkbox(value=False, label="Save Audio")
 					gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=audio_upload2)
 					with gr.Accordion(label="Advanced Options", open=False):
-						language_select2 = gr.Dropdown(custom_langs, value = "auto", label="Language", info="Select the language of the audio file. Select \"auto\" to automatically detect it.")
-						device_select2 = gr.Radio(["cuda", "cpu"], value = "cuda", label="Device", info="If you don\"t have a GPU, select \"cpu\"")
+						language_select2 = gr.Dropdown(custom_langs, value = "auto", label="Language", info="Select the language of the audio file. Select \"auto\" to automatically detect it. "+release_align_message)
+						device_select2 = gr.Radio(["cuda", "cpu"], value = device, label="Device", info=device_message+release_both_message, interactive=device_interactive)
 						with gr.Group():
 							with gr.Row():
 								save_transcription2 = gr.Checkbox(value=True, label="Save Transcription")
 								save_alignments2 = gr.Checkbox(value=True, label="Save Alignments")
 							save_root2 = gr.Textbox(label="Save Path", placeholder="/outputs", lines=1)
 						gr.Markdown("""### Optimizations""")
-						compute_type_select2 = gr.Radio(["float16", "float32"], value = "float16", label="Compute Type", info="float16 is faster and requires less memory. float32 is more accurate (Your device may not support some data types)")
-						batch_size_slider2 = gr.Slider(1, 128, value = 1, step=1, label="Batch Size", info="Larger batch sizes may be faster but require more memory")
-						chunk_size_slider2 = gr.Slider(1, 80, value = 20, step=1, label="Chunk Size", info="Larger chunk sizes may be faster but require more memory")
-						beam_size_slider2 = gr.Slider(1, 100, value = 5, step=1, label="Beam Size", info="Larger beam sizes may be more accurate but require more memory and may decrease speed")
-						release_memory_checkbox2 = gr.Checkbox(label="Release Memory", value=True, info="Release Whisper model from memory before loading alignment model")
+						compute_type_select2 = gr.Radio(["float16", "float32"], value = "float16", label="Compute Type", info="float16 is faster and requires less memory. float32 is more accurate (Your device may not support some data types). "+release_whisper_message)
+						batch_size_slider2 = gr.Slider(1, 128, value = 1, step=1, label="Batch Size", info="Larger batch sizes may be faster but require more memory.")
+						chunk_size_slider2 = gr.Slider(1, 80, value = 20, step=1, label="Chunk Size", info="Larger chunk sizes may be faster but require more memory.")
+						beam_size_slider2 = gr.Slider(1, 100, value = 5, step=1, label="Beam Size", info="Larger beam sizes may be more accurate but require more memory and may decrease speed. "+release_whisper_message)
+						release_memory_checkbox2 = gr.Checkbox(label="Release Memory", value=True, info="Release Whisper model from memory before loading alignment model.")
 					submit_button2 = gr.Button(value="Start Transcription")
 				with gr.Column():
 					transcription_output2 = gr.Textbox(label="Transcription", lines=15)
@@ -374,7 +375,7 @@ A simple interface to transcribe audio files using the Whisper model""")
 					with gr.Row():
 						time_transcribe2 = gr.Textbox(label="Transcription Time", lines=1)
 						time_align2 = gr.Textbox(label="Alignment Time", lines=1)
-					release_memory_button2 = gr.Button(value="Release Memory")
+					release_memory_button2 = gr.Button(value="Release Models from Memory")
 
 		
 		submit_button.click(transcribe_whisperx,
@@ -382,7 +383,7 @@ A simple interface to transcribe audio files using the Whisper model""")
 							outputs=[transcription_output, alignments_output, time_transcribe, time_align])
 		
 		submit_button2.click(transcribe_custom,
-					  		inputs=[model_select2, model_download, audio_upload2, audio_record2, device_select2, batch_size_slider2, compute_type_select2, language_select2, chunk_size_slider2, beam_size_slider2, release_memory_checkbox2, save_root2, save_audio2, save_transcription2, save_alignments2],
+					  		inputs=[model_select2, audio_upload2, audio_record2, device_select2, batch_size_slider2, compute_type_select2, language_select2, chunk_size_slider2, beam_size_slider2, release_memory_checkbox2, save_root2, save_audio2, save_transcription2, save_alignments2],
 							outputs=[transcription_output2, alignments_output2, time_transcribe2, time_align2])
 		
 		release_memory_button.click(release_memory_models)
