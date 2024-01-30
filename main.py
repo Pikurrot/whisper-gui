@@ -2,10 +2,11 @@ import gradio as gr
 import whisperx
 import subprocess, os, gc, argparse, shutil
 import soundfile as sf
-import torch, re, json
+import torch, re, json, time
 from datetime import datetime
 from scripts.whisper_model import load_custom_model, LANG_CODES
 from typing import Optional, Tuple
+from scripts.config_io import read_config_value
 
 ALIGN_LANGS = ["en", "fr", "de", "es", "it", "ja", "zh", "nl", "uk", "pt", "ar", "cs", "ru", "pl", "hu", "fi", "fa", "el", "tr", "da", "he", "vi", "ko", "ur", "te", "hi", "ca", "ml", "no", "nn"]
 
@@ -110,15 +111,16 @@ def transcribe_whisperx(
 		compute_type: str,
 		language: str,
 		chunk_size: int,
+		beam_size: int,
 		release_memory: bool,
 		save_root: Optional[bool],
 		save_audio: bool,
 		save_transcription: bool,
 		save_alignments: bool
-	) -> Tuple[str, str]:
+	) -> Tuple[str, str, str, str]:
 	print("Inputs received. Starting...")
 	print("Loading model...")
-	model = whisperx.load_model(model_name, device, compute_type=compute_type, download_root="models/whisperx")
+	model = whisperx.load_model(model_name, device, compute_type=compute_type, asr_options={"beam_size": beam_size}, download_root="models/whisperx")
 	return _transcribe(model, audio_path, micro_audio, device, batch_size, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments)
 
 def transcribe_custom(
@@ -131,18 +133,19 @@ def transcribe_custom(
 		compute_type: str,
 		language: str,
 		chunk_size: int,
+		beam_size: int,
 		release_memory: bool,
 		save_root: Optional[bool],
 		save_audio: bool,
 		save_transcription: bool,
 		save_alignments: bool
-	) -> Tuple[str, str]:
+	) -> Tuple[str, str, str, str]:
 	print("Inputs received. Starting...")
 	print("Loading model...")
 	if model_download != "":
 		model_name = model_download
 		print("Downloading model...")
-	model = load_custom_model(model_name, device, compute_type=compute_type, download_root="models/custom")
+	model = load_custom_model(model_name, device, compute_type=compute_type, beam_size=beam_size, download_root="models/custom")
 	return _transcribe(model, audio_path, micro_audio, device, batch_size, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments)
 
 def _transcribe(model, audio_path, micro_audio, device, batch_size, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments) -> Tuple[str, str]:
@@ -160,7 +163,13 @@ def _transcribe(model, audio_path, micro_audio, device, batch_size, language, ch
 
 	# Transcription
 	if language == "auto": language = None
+	time_transcribe = time.time()
 	result = model.transcribe(audio, batch_size=batch_size, language=language, chunk_size=chunk_size, print_progress=True)
+	# check "time" in result
+	if "time" in result.keys():
+		time_transcribe = result["time"]
+	else:
+		time_transcribe = time.time() - time_transcribe
 	joined_text = " ".join([segment["text"].strip() for segment in result["segments"]])
 	if save_transcription:
 		save_transcription_to_txt(joined_text, save_dir)
@@ -178,7 +187,9 @@ def _transcribe(model, audio_path, micro_audio, device, batch_size, language, ch
 		lang_used = "en"
 	model_a, metadata = whisperx.load_align_model(language_code=lang_used, device=device, model_dir="models/alignment")
 	print("Aligning...")
+	time_align = time.time()
 	aligned_result = whisperx.align(result["segments"], model_a, metadata, audio, device, return_char_alignments=False)
+	time_align = time.time() - time_align
 	if save_alignments:
 		save_alignments_to_json(aligned_result, save_dir)
 	if release_memory:
@@ -192,7 +203,7 @@ def _transcribe(model, audio_path, micro_audio, device, batch_size, language, ch
 		# Remove temp folder if empty
 		os.rmdir("temp")
 	# Return the transcription and sentence-level alignments
-	return joined_text, format_alignments(aligned_result)
+	return joined_text, format_alignments(aligned_result), f"{round(time_transcribe, 3)}s", f"{round(time_align, 3)}s"
 
 
 def main():
@@ -206,6 +217,20 @@ def main():
 	custom_models = list_models()
 	whisperx_langs = ["auto", "en", "es", "fr", "de", "it", "ja", "zh", "nl", "uk", "pt"]
 	custom_langs = ["auto"] + list(LANG_CODES.keys())
+
+	# Read config
+	gpu_support, error = read_config_value("gpu_support")
+	if gpu_support:
+		device = "cuda"
+		device_interactive = True
+		device_message = ""
+	else:
+		device = "cpu"
+		device_interactive = False
+		if gpu_support is None:
+			device_message = "If you don\"t have a GPU, select \"cpu\""
+		else:
+			device_message = "GPU support is disabled in the config file."
 
 	# Create Gradio Interface
 	print("Creating interface...")
@@ -223,7 +248,7 @@ A simple interface to transcribe audio files using the Whisper model""")
 					gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=audio_upload)
 					with gr.Accordion(label="Advanced Options", open=False):
 						language_select = gr.Dropdown(whisperx_langs, value = "auto", label="Language", info="Select the language of the audio file. Select \"auto\" to automatically detect it.")
-						device_select = gr.Radio(["cuda", "cpu"], value = "cuda", label="Device", info="If you don\"t have a GPU, select \"cpu\"")
+						device_select = gr.Radio(["cuda", "cpu"], value = device, label="Device", info=device_message, interactive=device_interactive)
 						with gr.Group():
 							with gr.Row():
 								save_transcription = gr.Checkbox(value=True, label="Save Transcription")
@@ -231,13 +256,17 @@ A simple interface to transcribe audio files using the Whisper model""")
 							save_root = gr.Textbox(label="Save Path", placeholder="outputs", lines=1)
 						gr.Markdown("""### Optimizations""")
 						compute_type_select = gr.Radio(["int8", "float16", "float32"], value = "int8", label="Compute Type", info="int8 is fastest and requires less memory. float32 is more accurate (Your device may not support some data types)")
-						batch_size_slider = gr.Slider(1, 128, value = 1, label="Batch Size", info="Larger batch sizes may be faster but require more memory")
-						chunk_size_slider = gr.Slider(1, 80, value = 20, label="Chunk Size", info="Larger chunk sizes may be faster but require more memory")
+						batch_size_slider = gr.Slider(1, 128, value = 1, step=1, label="Batch Size", info="Larger batch sizes may be faster but require more memory")
+						chunk_size_slider = gr.Slider(1, 80, value = 20, step=1, label="Chunk Size", info="Larger chunk sizes may be faster but require more memory")
+						beam_size_slider = gr.Slider(1, 100, value = 5, step=1, label="Beam Size", info="Larger beam sizes may be more accurate but require more memory and may decrease speed")
 						release_memory_checkbox = gr.Checkbox(label="Release Memory", value=True, info="Release model from memory after every transcription")
 					submit_button = gr.Button(value="Start Transcription")
 				with gr.Column():
 					transcription_output = gr.Textbox(label="Transcription", lines=15)
-					alignments_output = gr.Textbox(label="Alignments", lines=15)
+					alignments_output = gr.Textbox(label="Timestamps", lines=15)
+					with gr.Row():
+						time_transcribe = gr.Textbox(label="Transcription Time", info="Including language detection (if Language = \"auto\")", lines=1)
+						time_align = gr.Textbox(label="Alignment Time", lines=1)
 		with gr.Tab("Custom model"):
 			with gr.Row():
 				with gr.Column():
@@ -259,22 +288,26 @@ A simple interface to transcribe audio files using the Whisper model""")
 							save_root2 = gr.Textbox(label="Save Path", placeholder="/outputs", lines=1)
 						gr.Markdown("""### Optimizations""")
 						compute_type_select2 = gr.Radio(["float16", "float32"], value = "float16", label="Compute Type", info="float16 is faster and requires less memory. float32 is more accurate (Your device may not support some data types)")
-						batch_size_slider2 = gr.Slider(1, 128, value = 1, label="Batch Size", info="Larger batch sizes may be faster but require more memory")
-						chunk_size_slider2 = gr.Slider(1, 80, value = 20, label="Chunk Size", info="Larger chunk sizes may be faster but require more memory")
+						batch_size_slider2 = gr.Slider(1, 128, value = 1, step=1, label="Batch Size", info="Larger batch sizes may be faster but require more memory")
+						chunk_size_slider2 = gr.Slider(1, 80, value = 20, step=1, label="Chunk Size", info="Larger chunk sizes may be faster but require more memory")
+						beam_size_slider2 = gr.Slider(1, 100, value = 5, step=1, label="Beam Size", info="Larger beam sizes may be more accurate but require more memory and may decrease speed")
 						release_memory_checkbox2 = gr.Checkbox(label="Release Memory", value=True, info="Release model from memory after every transcription")
 					submit_button2 = gr.Button(value="Start Transcription")
 				with gr.Column():
 					transcription_output2 = gr.Textbox(label="Transcription", lines=15)
-					alignments_output2 = gr.Textbox(label="Alignments", lines=15)
+					alignments_output2 = gr.Textbox(label="Timestamps", lines=15)
+					with gr.Row():
+						time_transcribe2 = gr.Textbox(label="Transcription Time", lines=1)
+						time_align2 = gr.Textbox(label="Alignment Time", lines=1)
 
 		
 		submit_button.click(transcribe_whisperx,
-					  		inputs=[model_select, audio_upload, audio_record, device_select, batch_size_slider, compute_type_select, language_select, chunk_size_slider, release_memory_checkbox, save_root, save_audio, save_transcription, save_alignments],
-							outputs=[transcription_output, alignments_output])
+					  		inputs=[model_select, audio_upload, audio_record, device_select, batch_size_slider, compute_type_select, language_select, chunk_size_slider, beam_size_slider, release_memory_checkbox, save_root, save_audio, save_transcription, save_alignments],
+							outputs=[transcription_output, alignments_output, time_transcribe, time_align])
 		
 		submit_button2.click(transcribe_custom,
-					  		inputs=[model_select2, model_download, audio_upload2, audio_record2, device_select2, batch_size_slider2, compute_type_select2, language_select2, chunk_size_slider2, release_memory_checkbox2, save_root2, save_audio2, save_transcription2, save_alignments2],
-							outputs=[transcription_output2, alignments_output2])
+					  		inputs=[model_select2, model_download, audio_upload2, audio_record2, device_select2, batch_size_slider2, compute_type_select2, language_select2, chunk_size_slider2, beam_size_slider2, release_memory_checkbox2, save_root2, save_audio2, save_transcription2, save_alignments2],
+							outputs=[transcription_output2, alignments_output2, time_transcribe2, time_align2])
 
 	# Launch the interface
 	gui.launch(inbrowser=args.autolaunch, share=args.share)
