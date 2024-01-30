@@ -1,14 +1,20 @@
 import gradio as gr
 import whisperx
-import subprocess, os, gc, argparse, shutil
+import subprocess, os, gc, argparse, shutil, inspect
 import soundfile as sf
 import torch, re, json, time
 from datetime import datetime
 from scripts.whisper_model import load_custom_model, LANG_CODES
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Callable
 from scripts.config_io import read_config_value
 
 ALIGN_LANGS = ["en", "fr", "de", "es", "it", "ja", "zh", "nl", "uk", "pt", "ar", "cs", "ru", "pl", "hu", "fi", "fa", "el", "tr", "da", "he", "vi", "ko", "ur", "te", "hi", "ca", "ml", "no", "nn"]
+
+# global variables
+g_model = None
+g_model_a = None
+g_model_a_metadata = None
+g_params = {}
 
 def list_models():
 	models_dir = os.path.join("models", "custom")
@@ -102,6 +108,44 @@ def format_alignments(alignments):
 		formatted_transcription.append(formatted_line)
 	return "\n\n".join(formatted_transcription)
 
+def release_whisper():
+	global g_model, g_params
+	del g_model
+	if g_params.get("device", None) == "cuda": torch.cuda.empty_cache()
+	else: gc.collect()
+	g_model = None
+	print("Whisper model released from memory")
+
+def release_align():
+	global g_model_a, g_params
+	del g_model_a
+	if g_params.get("device", None) == "cuda": torch.cuda.empty_cache()
+	else: gc.collect()
+	g_model_a = None
+	print("Alignment model released from memory")
+
+def release_memory_models():
+	global g_model, g_model_a, g_params
+	del g_model, g_model_a
+	if g_params.get("device", None) == "cuda": torch.cuda.empty_cache()
+	else: gc.collect()
+	g_model = None
+	g_model_a = None
+	print("Models released from memory")
+
+def get_args_str(func: Callable) -> list:
+	return list(inspect.signature(func).parameters)
+
+def get_params(func: Callable, values: list) -> dict:
+	keys = get_args_str(func)
+	return {k: values[k] for k in keys}
+
+def same_params(params1: dict, params2: dict, *args):
+	if args:
+		return all(params1.get(arg, None) == params2.get(arg, None) for arg in args)
+	else:
+		return params1 == params2
+
 def transcribe_whisperx(
 		model_name: str,
 		audio_path: str,
@@ -118,10 +162,24 @@ def transcribe_whisperx(
 		save_transcription: bool,
 		save_alignments: bool
 	) -> Tuple[str, str, str, str]:
+
 	print("Inputs received. Starting...")
-	print("Loading model...")
-	model = whisperx.load_model(model_name, device, compute_type=compute_type, asr_options={"beam_size": beam_size}, download_root="models/whisperx")
-	return _transcribe(model, audio_path, micro_audio, device, batch_size, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments)
+	params = get_params(transcribe_whisperx, locals())
+	global g_model, g_params
+
+	if not same_params(params, g_params, "language"):
+		print("Language changed. Releasing previous alignment model from memory...")
+		release_align()
+
+	if not same_params(params, g_params, "model_name", "device", "compute_type", "beam_size") or g_model is None:
+		if g_model is not None:
+			print("Parameters changed. Releasing previous whisper model from memory...")
+			release_whisper()
+		print("Loading model...")
+		g_model = whisperx.load_model(model_name, device, compute_type=compute_type, asr_options={"beam_size": beam_size}, download_root="models/whisperx")
+	g_params = params
+
+	return _transcribe()
 
 def transcribe_custom(
 		model_name: str,
@@ -140,64 +198,79 @@ def transcribe_custom(
 		save_transcription: bool,
 		save_alignments: bool
 	) -> Tuple[str, str, str, str]:
+
 	print("Inputs received. Starting...")
-	print("Loading model...")
 	if model_download != "":
 		model_name = model_download
-		print("Downloading model...")
-	model = load_custom_model(model_name, device, compute_type=compute_type, beam_size=beam_size, download_root="models/custom")
-	return _transcribe(model, audio_path, micro_audio, device, batch_size, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments)
+	params = get_params(transcribe_custom, locals())
+	global g_model, g_params
 
-def _transcribe(model, audio_path, micro_audio, device, batch_size, language, chunk_size, release_memory, save_root, save_audio, save_transcription, save_alignments) -> Tuple[str, str]:
+	if not same_params(params, g_params, "language", "device"):
+		print("Language changed. Releasing previous alignment model from memory...")
+		release_align()
+
+	if not same_params(params, g_params, "model_name", "device", "compute_type", "beam_size") or g_model is None:
+		if g_model is not None:
+			print("Parameters changed. Releasing previous models from memory...")
+			release_memory_models()
+		print("Loading model...")
+		g_model = load_custom_model(model_name, device, compute_type=compute_type, beam_size=beam_size, download_root="models/custom")
+	g_params = params
+
+	return _transcribe()
+
+def _transcribe() -> Tuple[str, str]:
+	global g_model, g_model_a, g_model_a_metadata, g_params
 	# Create save folder
 	save_dir = None
 	if not os.path.exists("temp"):
 		os.makedirs("temp")
-	if save_audio or save_transcription or save_alignments:
-		if not save_root: save_root = "outputs"
+	if g_params["save_audio"] or g_params["save_transcription"] or g_params["save_alignments"]:
+		if g_params["save_root"] is not None:
+			save_root = g_params["save_root"]
+		else:
+			save_root = "outputs"
 		save_dir = create_save_folder(save_root)
 
 	# Load (and save) audio
-	audio = load_and_save_audio(audio_path, micro_audio, save_audio, save_dir)
-	print("Audio loaded.")
+		print("Loading audio...")
+	audio = load_and_save_audio(g_params["audio_path"], g_params["micro_audio"], g_params["save_audio"], save_dir)
 
 	# Transcription
-	if language == "auto": language = None
+	if g_params["language"] == "auto": 
+		language = None
+	else:
+		language = g_params["language"]
 	time_transcribe = time.time()
-	result = model.transcribe(audio, batch_size=batch_size, language=language, chunk_size=chunk_size, print_progress=True)
-	# check "time" in result
+	print("Starting transcription...")
+	result = g_model.transcribe(audio, batch_size=g_params["batch_size"], language=language, chunk_size=g_params["chunk_size"], print_progress=True)
 	if "time" in result.keys():
 		time_transcribe = result["time"]
 	else:
 		time_transcribe = time.time() - time_transcribe
 	joined_text = " ".join([segment["text"].strip() for segment in result["segments"]])
-	if save_transcription:
+	if g_params["save_transcription"]:
 		save_transcription_to_txt(joined_text, save_dir)
-	if release_memory:
-		# Release whisper model from memory
-		del model
-		if device == "cuda": torch.cuda.empty_cache()
-		else: gc.collect()
+
+	if g_params["release_memory"]:
+		release_whisper()
 
 	# Word-level alignment
-	print("Loading alignment model...")
 	lang_used = result["language"]
 	if lang_used not in ALIGN_LANGS:
 		print(f"WARNING! Language {lang_used} not supported for alignment. Using English instead. Results may be inaccurate.")
 		lang_used = "en"
-	model_a, metadata = whisperx.load_align_model(language_code=lang_used, device=device, model_dir="models/alignment")
+	if g_model_a is None:
+		print("Loading alignment model...")
+		g_model_a, g_model_a_metadata = whisperx.load_align_model(language_code=lang_used, device=g_params["device"], model_dir="models/alignment")
 	print("Aligning...")
 	time_align = time.time()
-	aligned_result = whisperx.align(result["segments"], model_a, metadata, audio, device, return_char_alignments=False)
+	aligned_result = whisperx.align(result["segments"], g_model_a, g_model_a_metadata, audio, g_params["device"], return_char_alignments=False)
 	time_align = time.time() - time_align
-	if save_alignments:
+	if g_params["save_alignments"]:
 		save_alignments_to_json(aligned_result, save_dir)
-	if release_memory:
-		# Release alignment model from memory
-		print("Releasing memory...")
-		del model_a, metadata
-		if device == "cuda": torch.cuda.empty_cache()
-		else: gc.collect()
+	if g_params["release_memory"]:
+		release_align()
 	print("Done!")
 	if not os.listdir("temp"):
 		# Remove temp folder if empty
@@ -259,7 +332,7 @@ A simple interface to transcribe audio files using the Whisper model""")
 						batch_size_slider = gr.Slider(1, 128, value = 1, step=1, label="Batch Size", info="Larger batch sizes may be faster but require more memory")
 						chunk_size_slider = gr.Slider(1, 80, value = 20, step=1, label="Chunk Size", info="Larger chunk sizes may be faster but require more memory")
 						beam_size_slider = gr.Slider(1, 100, value = 5, step=1, label="Beam Size", info="Larger beam sizes may be more accurate but require more memory and may decrease speed")
-						release_memory_checkbox = gr.Checkbox(label="Release Memory", value=True, info="Release model from memory after every transcription")
+						release_memory_checkbox = gr.Checkbox(label="Release Memory", value=True, info="Release Whisper model from memory before loading alignment model")
 					submit_button = gr.Button(value="Start Transcription")
 				with gr.Column():
 					transcription_output = gr.Textbox(label="Transcription", lines=15)
@@ -267,6 +340,8 @@ A simple interface to transcribe audio files using the Whisper model""")
 					with gr.Row():
 						time_transcribe = gr.Textbox(label="Transcription Time", info="Including language detection (if Language = \"auto\")", lines=1)
 						time_align = gr.Textbox(label="Alignment Time", lines=1)
+					release_memory_button = gr.Button(value="Release Memory")
+
 		with gr.Tab("Custom model"):
 			with gr.Row():
 				with gr.Column():
@@ -291,7 +366,7 @@ A simple interface to transcribe audio files using the Whisper model""")
 						batch_size_slider2 = gr.Slider(1, 128, value = 1, step=1, label="Batch Size", info="Larger batch sizes may be faster but require more memory")
 						chunk_size_slider2 = gr.Slider(1, 80, value = 20, step=1, label="Chunk Size", info="Larger chunk sizes may be faster but require more memory")
 						beam_size_slider2 = gr.Slider(1, 100, value = 5, step=1, label="Beam Size", info="Larger beam sizes may be more accurate but require more memory and may decrease speed")
-						release_memory_checkbox2 = gr.Checkbox(label="Release Memory", value=True, info="Release model from memory after every transcription")
+						release_memory_checkbox2 = gr.Checkbox(label="Release Memory", value=True, info="Release Whisper model from memory before loading alignment model")
 					submit_button2 = gr.Button(value="Start Transcription")
 				with gr.Column():
 					transcription_output2 = gr.Textbox(label="Transcription", lines=15)
@@ -299,6 +374,7 @@ A simple interface to transcribe audio files using the Whisper model""")
 					with gr.Row():
 						time_transcribe2 = gr.Textbox(label="Transcription Time", lines=1)
 						time_align2 = gr.Textbox(label="Alignment Time", lines=1)
+					release_memory_button2 = gr.Button(value="Release Memory")
 
 		
 		submit_button.click(transcribe_whisperx,
@@ -308,6 +384,9 @@ A simple interface to transcribe audio files using the Whisper model""")
 		submit_button2.click(transcribe_custom,
 					  		inputs=[model_select2, model_download, audio_upload2, audio_record2, device_select2, batch_size_slider2, compute_type_select2, language_select2, chunk_size_slider2, beam_size_slider2, release_memory_checkbox2, save_root2, save_audio2, save_transcription2, save_alignments2],
 							outputs=[transcription_output2, alignments_output2, time_transcribe2, time_align2])
+		
+		release_memory_button.click(release_memory_models)
+		release_memory_button2.click(release_memory_models)
 
 	# Launch the interface
 	gui.launch(inbrowser=args.autolaunch, share=args.share)

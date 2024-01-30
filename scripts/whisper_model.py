@@ -118,7 +118,7 @@ class CustomWhisper():
 		vad_segments = self.vad({
 			"waveform": torch.from_numpy(audio).unsqueeze(0),
 			"sample_rate": SAMPLE_RATE})
-		print("VAD segments obtained.")
+		print("Merging VAD segments...")
 		if chunk_size is None:
 			chunk_size = self.vad_params["chunk_size"]
 		vad_segments = whisperx.vad.merge_chunks(
@@ -127,7 +127,6 @@ class CustomWhisper():
 			onset=self.vad_params["vad_onset"],
 			offset=self.vad_params["vad_offset"],
 		)
-		print("VAD segments merged.")
 
 		# Obtain language
 		lang_code = LANG_CODES.get(language, None)
@@ -236,6 +235,8 @@ def load_custom_model(
 
 	# Check if model is already downloaded
 	is_local = _check_is_local(model_id, download_root)
+	if not is_local:
+		print("Downloading model...")
 
 	# Load Whisper model and processor
 	processor = WhisperProcessor.from_pretrained(
@@ -244,7 +245,6 @@ def load_custom_model(
 	model = WhisperForConditionalGeneration.from_pretrained(
 		model_id, torch_dtype=compute_type, use_safetensors=True, cache_dir=download_root, local_files_only=is_local
 	)
-	print("Model loaded.")
 
 	# Load VAD model
 	default_vad_options = {
@@ -260,7 +260,6 @@ def load_custom_model(
 			use_auth_token=None, 
 			**default_vad_options
 		)
-		print("VAD model loaded.")
 	default_vad_options["chunk_size"] = 16
 
 	return CustomWhisper(model, processor, vad_model, default_vad_options, device, compute_type, beam_size)
