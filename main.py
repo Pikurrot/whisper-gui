@@ -347,8 +347,7 @@ A simple interface to transcribe audio files using the Whisper model""")
 			with gr.Row():
 				with gr.Column():
 					with gr.Group():
-						model_select2 = gr.Dropdown(custom_models, value=None, label="Load Local Model  or  Download a Model from HuggingFace", allow_custom_value=True, info=release_whisper_message)
-						# model_download = gr.Textbox(placeholder="openai/whisper-base", label="or Download a Model from HuggingFace", info="If both are provided, only the downloaded model will be used")
+						model_select2 = gr.Dropdown(custom_models, value=None, label="Upload Local Model  or  Download a Model from HuggingFace", allow_custom_value=True, info=release_whisper_message)
 					with gr.Group():
 						audio_upload2 = gr.Audio(sources=["upload"], type="filepath", label="Load Audio File")
 						audio_record2 = gr.Audio(sources=["microphone"], type="numpy", label="or Record Audio (If both are provided, only microphone audio will be used)")
@@ -361,13 +360,13 @@ A simple interface to transcribe audio files using the Whisper model""")
 							with gr.Row():
 								save_transcription2 = gr.Checkbox(value=True, label="Save Transcription")
 								save_alignments2 = gr.Checkbox(value=True, label="Save Alignments")
-							save_root2 = gr.Textbox(label="Save Path", placeholder="/outputs", lines=1)
+							save_root2 = gr.Textbox(label="Save Path", placeholder="outputs", lines=1)
 						gr.Markdown("""### Optimizations""")
 						compute_type_select2 = gr.Radio(["float16", "float32"], value = "float16", label="Compute Type", info="float16 is faster and requires less memory. float32 is more accurate (Your device may not support some data types). "+release_whisper_message)
 						batch_size_slider2 = gr.Slider(1, 128, value = 1, step=1, label="Batch Size", info="Larger batch sizes may be faster but require more memory.")
 						chunk_size_slider2 = gr.Slider(1, 80, value = 20, step=1, label="Chunk Size", info="Larger chunk sizes may be faster but require more memory.")
 						beam_size_slider2 = gr.Slider(1, 100, value = 5, step=1, label="Beam Size", info="Larger beam sizes may be more accurate but require more memory and may decrease speed. "+release_whisper_message)
-						release_memory_checkbox2 = gr.Checkbox(label="Release Memory", value=True, info="Release Whisper model from memory before loading alignment model.")
+						release_memory_checkbox2 = gr.Checkbox(label="Release Memory", value=True, info="Release Whisper model from memory before loading alignment model. Then release alignment model. Prevents having both models in memory at the same time.")
 					submit_button2 = gr.Button(value="Start Transcription")
 				with gr.Column():
 					transcription_output2 = gr.Textbox(label="Transcription", lines=15)
