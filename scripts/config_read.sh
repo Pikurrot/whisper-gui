@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Check if a key was provided
+# Exit if no key was provided
 if [ -z "$1" ]; then
 	echo "No key provided."
 	exit 1
@@ -15,22 +15,18 @@ if [ ! -f "$CONFIG_FILE" ] || [ ! -r "$CONFIG_FILE" ]; then
 	exit 1
 fi
 
-# Attempt to read the value for the key using grep and sed
-VALUE_LINE=$(grep -o "\"$KEY\": *\"[^\"]*\"" "$CONFIG_FILE")
+# Use awk to extract the value for the key
+VALUE=$(grep -o "\"$KEY\":.*" $CONFIG_FILE | head -n 1 | sed -E 's/.*: *"?([^",]+)"?,?/\1/' | tr -d '"' | tr -d '\r')
 
-if [ -z "$VALUE_LINE" ]; then
-	# Key not found in the file
+# Handle different cases based on the value extracted
+if [ -z "$VALUE" ]; then
+	echo "Key not found."
 	exit 2
-fi
-
-# Extract the value from the line
-VALUE=$(echo "$VALUE_LINE" | sed -E "s/.*\"$KEY\": *\"([^\"]*)\".*/\1/")
-
-if [ "$VALUE" == "null" ] || [ -z "$VALUE" ]; then
-	# Key found but value is null or empty
+elif [ "$VALUE" == "null" ]; then
+	echo "Key found but value is null."
 	exit 3
+else
+	# Output the value and exit successfully
+	echo "$VALUE"
+	exit 0
 fi
-
-# Output the value and exit
-echo "$VALUE"
-exit 0
