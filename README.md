@@ -37,13 +37,6 @@ Otherwise, to run manually:
 `conda activate whisperx`  
 `python main.py --autolaunch`
 
-## Future updates
-- Allow selection of customm downloaded models
-- Real-time voice transcription
-- Speaker-diarization
-- Subtitle creation for videos
-- Automatic setup for Linux / Mac
-
 ## Licensing
 This project is primarily distributed under the terms of the MIT License. See the [LICENSE](LICENSE) file for details.
 
