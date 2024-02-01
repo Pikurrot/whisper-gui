@@ -4,3 +4,4 @@ temp
 admin-update.bat
 configs/config.json
 **/__pycache__/
+*test.py
