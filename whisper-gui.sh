@@ -81,7 +81,9 @@ select_env() {
 	
 	# Check Python version
 	echo "Checking Python version..."
-	source activate "$ENV_NAME" &> /dev/null
+	conda_base=$(dirname $(dirname $CONDA_EXE))
+    source "$conda_base/etc/profile.d/conda.sh"
+	conda activate "$ENV_NAME" &> /dev/null
 	PYTHON_VERSION=$(python --version 2>&1)
 	if [ $? -ne 0 ]; then
 		echo "Python is not installed in this environment. Install Python first."
@@ -134,7 +136,9 @@ read_env_name() {
 
 activate_env() {
 	echo "Activating environment $ENV_NAME..."
-	source activate "$ENV_NAME"
+	conda_base=$(dirname $(dirname $CONDA_EXE))
+    source "$conda_base/etc/profile.d/conda.sh"
+	conda activate "$ENV_NAME"
 	if [[ $? -ne 0 ]]; then
 		echo "Failed to activate environment."
 		exit 1
