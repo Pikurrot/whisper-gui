@@ -1,3 +1,7 @@
 models
 outputs
 temp
+admin-update.*
+configs/config.json
+**/__pycache__/
+*test.py
