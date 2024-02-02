@@ -203,12 +203,27 @@ install_deps() {
 	if [[ "$GPU_SUPPORT" == "true" ]]; then
 		echo "Installing dependencies for GPU..."
 		DEP_FILE="configs/environment_gpu.yml"
+		echo "Installing PyTorch with CUDA 11.8..."
+		conda install pytorch torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
 	else
 		echo "Installing dependencies for CPU..."
 		DEP_FILE="configs/environment_cpu.yml"
+		echo "Installing PyTorch..."
+		TEMP=$(uname -s)
+		echo "Operating system: $TEMP"
+		if [ "$TEMP" == "Linux" ]; then
+			conda install pytorch torchaudio cpuonly -c pytorch
+		elif [ "$TEMP" == "Darwin" ]; then
+			conda install pytorch::pytorch torchaudio -c pytorch
+		else
+			echo "This is neither Linux nor macOS."
+			exit 1
+		fi
 	fi
-	pip install git+https://github.com/m-bain/whisperx.git &> /dev/null
-	conda env update --name "$ENV_NAME" --file "$DEP_FILE" --prune &> /dev/null
+	echo "Installing whisperx..."
+	pip install git+https://github.com/m-bain/whisperx.git
+	echo "Installing other dependencies..."
+	conda env update --name "$ENV_NAME" --file "$DEP_FILE" --prune
 	if [[ $? -ne 0 ]]; then
 		echo "Failed to install dependencies."
 		exit 1
