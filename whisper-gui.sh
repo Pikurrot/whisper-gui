@@ -40,10 +40,12 @@ start() {
 list_envs() {
     echo "Listing conda environments..."
     while IFS= read -r line; do
+    if [[ -n "$line" ]]; then # Skip empty lines
         envs[ENV_COUNT]="$line"
         echo "$ENV_COUNT. $line"
         ((ENV_COUNT++))
-    done < <(conda env list | awk 'NR > 2 {print $1}')
+    fi
+	done < <(conda env list | awk 'NR > 2 && $1 != "" {print $1}')
     
     if [[ $ENV_COUNT -eq 0 ]]; then
         echo "No conda environments found."
@@ -101,8 +103,7 @@ select_env() {
 
 create_env() {
     echo "Creating new environment '$ENV_NAME' with python 3.10.13..."
-    #if ! conda create -n "$ENV_NAME" python=3.10.13 -y &> /dev/null; then
-	if false; then
+    if ! conda create -n "$ENV_NAME" python=3.10.13 -y &> /dev/null; then
         echo "Failed to create environment."
         exit 1
     fi
@@ -158,32 +159,36 @@ save_env_name() {
 check_gpu() {
     echo "Checking GPU support..."
     GPU_SUPPORT=$(scripts/config_read.sh "gpu_support")
-    if [[ $? -eq 0 ]]; then
+    TEMP=$?
+
+    if [[ $TEMP -eq 0 ]]; then
         install_deps
-    elif [[ $? -eq 1 ]]; then
+    elif [[ $TEMP -eq 1 ]]; then
         echo "Failed to read config file."
         exit 1
-    elif [[ $? -eq 2 ]]; then
-		echo "Config file does not contain 'gpu_support' key."
+    elif [[ $TEMP -eq 2 ]]; then
+        echo "Config file does not contain 'gpu_support' key."
         test_gpu
-	elif [[ $? -eq 3 ]]; then
-		echo "'gpu_support' key is null in config file."
-		test_gpu
+    elif [[ $TEMP -eq 3 ]]; then
+        echo "'gpu_support' key is null in config file."
+        test_gpu
     fi
 }
 
 test_gpu() {
     echo "Testing if GPU is available..."
     if nvidia-smi &> /dev/null; then
-        echo "GPU support enabled."
-        GPU_SUPPORT=true
-    else
-        echo "No GPU detected."
-        read -p "Do you want to proceed without GPU support? ([y]/n): " TEMP
-        if [[ "$TEMP" == "n" ]]; then
-            echo "Exiting..."
-            exit 0
+        echo "GPU detected."
+        read -p "Do you want to use GPU support? ([y]/n): " TEMP
+        if [[ "$TEMP" == "y" ]]; then
+            GPU_SUPPORT=true
+            echo "GPU support enabled."
+        else
+            GPU_SUPPORT=false
+            echo "Proceeding with CPU support."
         fi
+    else
+        echo "No GPU detected. Proceeding with CPU support."
         GPU_SUPPORT=false
     fi
     echo "Saving result to config file..."
@@ -202,9 +207,8 @@ install_deps() {
 		echo "Installing dependencies for CPU..."
 		DEP_FILE="configs/environment_cpu.yml"
 	fi
-	pip --version
-	# pip install git+https://github.com/m-bain/whisperx.git &> /dev/null
-	# conda env update --name "$ENV_NAME" --file "$DEP_FILE" --prune &> /dev/null
+	pip install git+https://github.com/m-bain/whisperx.git &> /dev/null
+	conda env update --name "$ENV_NAME" --file "$DEP_FILE" --prune &> /dev/null
 	if [[ $? -ne 0 ]]; then
 		echo "Failed to install dependencies."
 		exit 1
@@ -231,11 +235,11 @@ check_updates() {
         return
     fi
 
-    LOCAL_COMMIT=$(git rev-parse HEAD)
-    REMOTE_COMMIT=$(git rev-parse @{u})
+    LOCAL_COMMIT=$(git rev-parse master)
+    REMOTE_COMMIT=$(git rev-parse origin/master)
 
     AUTO_UPDATE=$(scripts/config_read.sh "auto_update")
-    if [[ $? -ne 0 ]]; then
+    if [[ $? -eq 1 ]]; then
         echo "Failed to read config file."
         run
         return
@@ -293,10 +297,8 @@ set_auto_update() {
 }
 
 run() {
-    if [[ -n $run ]]; then
-        echo "Running Whisper-GUI..."
-        python main.py --autolaunch
-    fi
+	echo "Running Whisper-GUI..."
+	python main.py --autolaunch
 }
 
 start
