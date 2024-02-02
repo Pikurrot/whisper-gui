@@ -6,17 +6,19 @@ A simple GUI made with `gradio` to use WhisperX on Windows.
 ## Requirements
 - [Anaconda](https://docs.anaconda.com/free/anaconda/install/) or [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/) installed and `conda` added to PATH.
 - `git` installed and added to PATH. See [instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
-- `ffmpeg` installed and added to PATH. See instructions for [Windows](https://phoenixnap.com/kb/ffmpeg-windows), [Linux](https://phoenixnap.com/kb/install-ffmpeg-ubuntu) or [MacOS](https://phoenixnap.com/kb/ffmpeg-mac).
+- `ffmpeg` installed and added to PATH. See instructions for [Windows](https://phoenixnap.com/kb/ffmpeg-windows), [Linux](https://phoenixnap.com/kb/install-ffmpeg-ubuntu) or [macOS](https://phoenixnap.com/kb/ffmpeg-mac).
 
 ## Set up
-- In **Windows**, run the `whisper-gui.bat` file. In **Linux / MacOS** run the `whisper-gui.sh` file. Follow the instructions and let the script install the necessary dependencies. After the process, it will run the GUI in a new browser tab.
+- In **Windows**, run the `whisper-gui.bat` file. In **Linux / macOS** run the `whisper-gui.sh` file. Follow the instructions and let the script install the necessary dependencies. After the process, it will run the GUI in a new browser tab.
 
 Otherwise, manual steps are:
 - **Create a conda environment with Python 3.10**  
 	`conda create --name whisperx python=3.10`  
 	`conda activate whisperx`
 - **Install PyTorch 2.0**  
-	If you have GPU:  
+	For macOS:  
+	`conda install pytorch::pytorch==2.0.0 torchaudio==2.0.0 -c pytorch`  
+	For other OS, if you have GPU:  
 	`conda install pytorch==2.0.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c nvidia`  
 	If not, for CPU:  
 	`conda install pytorch==2.0.0 torchaudio==2.0.0 cpuonly -c pytorch`
