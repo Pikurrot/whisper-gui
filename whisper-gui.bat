@@ -180,15 +180,17 @@ goto test_gpu
 echo Testing if GPU is available...
 call nvidia-smi >nul 2>&1
 if %errorlevel% EQU 0 (
-	echo GPU support enabled.
-	set GPU_SUPPORT=true
-) else (
-	echo No GPU detected.
-	set /p TEMP= "Do you want to proceed without GPU support? ([y]/n): "
-	if "!TEMP!" == "n" (
-		echo Exiting...
-		goto cleanup
+	echo GPU detected.
+	set /p TEMP= "Do you want to use GPU support? ([y]/n): "
+	if "!TEMP!" == "y" (
+		set GPU_SUPPORT=true
+		echo GPU support enabled.
+	) else (
+		set GPU_SUPPORT=false
+		echo Proceeding with CPU support.
 	)
+) else (
+	echo No GPU detected. Proceeding with CPU support.
 	set GPU_SUPPORT=false
 )
 echo Saving result to config file...
@@ -254,7 +256,7 @@ if not defined REMOTE_COMMIT (
 )
 
 for /f "delims=" %%a in ('call scripts\config_read.bat "auto_update"') do set AUTO_UPDATE=%%a
-if %errorlevel% GEQ 1 (
+if %errorlevel% EQU 1 (
 	echo Failed to read config file.
 	goto run
 )

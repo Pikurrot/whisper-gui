@@ -1,7 +1,7 @@
 models
 outputs
 temp
-admin-update.bat
+admin-update.*
 configs/config.json
 **/__pycache__/
 *test.py

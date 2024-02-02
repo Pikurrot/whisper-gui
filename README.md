@@ -4,13 +4,12 @@ A simple GUI made with `gradio` to use WhisperX on Windows.
 ![whisper-gui-img](https://github.com/Pikurrot/Pikurrot/blob/main/images/whisper-gui/interface_screenshot.png?raw=true)
 
 ## Requirements
-- [Anaconda](https://docs.anaconda.com/free/anaconda/install/windows/) installed and `conda` added to PATH.
-- `git` installed and added to PATH.
-- `ffmpeg` installed and added to PATH. See instructions for [Windows](https://phoenixnap.com/kb/ffmpeg-windows) or [Linux](https://phoenixnap.com/kb/install-ffmpeg-ubuntu)
+- [Anaconda](https://docs.anaconda.com/free/anaconda/install/) or [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/) installed and `conda` added to PATH.
+- `git` installed and added to PATH. See [instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+- `ffmpeg` installed and added to PATH. See instructions for [Windows](https://phoenixnap.com/kb/ffmpeg-windows), [Linux](https://phoenixnap.com/kb/install-ffmpeg-ubuntu) or [MacOS](https://phoenixnap.com/kb/ffmpeg-mac).
 
 ## Set up
-- Install
-- Run the `whisper-gui.bat` file and follow the instructions. After the process, it will run the GUI in a new browser tab.
+- In **Windows**, run the `whisper-gui.bat` file. In **Linux / MacOS** run the `whisper-gui.sh` file. Follow the instructions and let the script install the necessary dependencies. After the process, it will run the GUI in a new browser tab.
 
 Otherwise, manual steps are:
 - **Create a conda environment with Python 3.10**  
@@ -21,17 +20,17 @@ Otherwise, manual steps are:
 	`conda install pytorch==2.0.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c nvidia`  
 	If not, for CPU:  
 	`conda install pytorch==2.0.0 torchaudio==2.0.0 cpuonly -c pytorch`
-- **Install whisperx**  
+- **Install whisperx and dependecies**  
 	`pip install git+https://github.com/m-bain/whisperx.git`  
 	Original instructions in: https://github.com/m-bain/whisperX
-- **Install necessary libraries**  
+- **Install additional libraries**  
 	`pip install gradio`  
 - **Clone this repository**  
 	`git clone https://github.com/Pikurrot/whisper-gui`
 
 ## Run the GUI
-To run the program every time, you can just run the same `whisper-gui.bat`, which will also automatically check for updates of this repo.  
-Your transcriptions will be saved by default in the `outputs` folder of the repo.
+To run the program every time, you can just run the same `whisper-gui.bat` or `whisper-gui.sh` (whatever your OS), which will also automatically check for updates of this repository.  
+Your transcriptions will be saved by default in the `outputs` folder of the repository.
 
 Otherwise, to run manually:  
 `conda activate whisperx`  

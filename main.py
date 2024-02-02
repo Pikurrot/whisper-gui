@@ -223,7 +223,7 @@ def _transcribe() -> Tuple[str, str]:
 	if not os.path.exists("temp"):
 		os.makedirs("temp")
 	if g_params["save_audio"] or g_params["save_transcription"] or g_params["save_alignments"]:
-		if g_params["save_root"] is not None:
+		if g_params["save_root"] is not None and g_params["save_root"] != "":
 			save_root = g_params["save_root"]
 		else:
 			save_root = "outputs"
