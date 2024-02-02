@@ -208,7 +208,7 @@ install_deps() {
 		echo "Installing dependencies for GPU..."
 		DEP_FILE="configs/environment_gpu.yml"
 		echo "Installing PyTorch with CUDA 11.8..."
-		conda install pytorch torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+		conda install pytorch==2.0.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c nvidia
 	else
 		echo "Installing dependencies for CPU..."
 		DEP_FILE="configs/environment_cpu.yml"
@@ -216,9 +216,9 @@ install_deps() {
 		TEMP=$(uname -s)
 		echo "Operating system: $TEMP"
 		if [ "$TEMP" == "Linux" ]; then
-			conda install pytorch torchaudio cpuonly -c pytorch
+			conda install pytorch==2.0.0 torchaudio==2.0.0 cpuonly -c pytorch
 		elif [ "$TEMP" == "Darwin" ]; then
-			conda install pytorch::pytorch torchaudio -c pytorch
+			conda install pytorch::pytorch==2.0.0 torchaudio==2.0.0 -c pytorch
 		else
 			echo "This is neither Linux nor macOS."
 			exit 1
