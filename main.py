@@ -18,6 +18,9 @@ g_params = {}
 
 def list_models():
 	models_dir = os.path.join("models", "custom")
+	if not os.path.exists(models_dir):
+		# create the directory if it doesn"t exist
+		os.makedirs(models_dir)
 	subdirs = os.listdir(models_dir)
 	models = [s for s in subdirs if s.startswith("models--")]
 	models = [s.replace("models--", "").replace("--", "/") for s in models]
