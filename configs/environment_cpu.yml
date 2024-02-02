@@ -2,48 +2,54 @@ channels:
   - pytorch
   - defaults
 dependencies:
-  - blas=1.0=mkl
-  - bzip2=1.0.8=he774522_0
-  - ca-certificates=2023.12.12=haa95532_0
-  - cpuonly=2.0=0
-  - filelock=3.13.1=py310haa95532_0
-  - gmpy2=2.1.2=py310h7f96b67_0
-  - intel-openmp=2023.1.0=h59b6b97_46320
-  - jinja2=3.1.2=py310haa95532_0
-  - libffi=3.4.4=hd77b12b_0
-  - libuv=1.44.2=h2bbff1b_0
-  - markupsafe=2.1.3=py310h2bbff1b_0
-  - mkl=2023.1.0=h6b88ed4_46358
-  - mkl-service=2.4.0=py310h2bbff1b_1
-  - mkl_fft=1.3.8=py310h2bbff1b_0
-  - mkl_random=1.2.4=py310h59b6b97_0
-  - mpc=1.1.0=h7edee0f_1
-  - mpfr=4.0.2=h62dcd97_1
-  - mpir=3.0.0=hec2e145_1
-  - mpmath=1.3.0=py310haa95532_0
-  - networkx=3.1=py310haa95532_0
-  - numpy=1.26.3=py310h055cbcc_0
-  - numpy-base=1.26.3=py310h65a83cf_0
-  - openssl=3.0.12=h2bbff1b_0
-  - pip=23.3.1=py310haa95532_0
-  - python=3.10.13=he1021f5_0
-  - pytorch=2.0.0=py3.10_cpu_0
-  - pytorch-mutex=1.0=cpu
-  - setuptools=68.2.2=py310haa95532_0
-  - sqlite=3.41.2=h2bbff1b_0
-  - sympy=1.12=py310haa95532_0
-  - tbb=2021.8.0=h59b6b97_0
-  - tk=8.6.12=h2bbff1b_0
-  - torchaudio=2.0.0=py310_cpu
-  - typing_extensions=4.9.0=py310haa95532_0
-  - vc=14.2=h21ff451_1
-  - vs2015_runtime=14.27.29016=h5e58377_2
-  - wheel=0.41.2=py310haa95532_0
-  - xz=5.4.5=h8cc25b3_0
-  - zlib=1.2.13=h8cc25b3_0
+  - _libgcc_mutex=0.1
+  - _openmp_mutex=5.1
+  - blas=1.0
+  - bzip2=1.0.8
+  - ca-certificates=2023.12.12
+  - cpuonly=2.0
+  - filelock=3.13.1
+  - gmp=6.2.1
+  - gmpy2=2.1.2
+  - intel-openmp=2023.1.0
+  - jinja2=3.1.3
+  - ld_impl_linux-64=2.38
+  - libffi=3.4.4
+  - libgcc-ng=11.2.0
+  - libgomp=11.2.0
+  - libstdcxx-ng=11.2.0
+  - libuuid=1.41.5
+  - markupsafe=2.1.3
+  - mkl=2023.1.0
+  - mkl-service=2.4.0
+  - mkl_fft=1.3.8
+  - mkl_random=1.2.4
+  - mpc=1.1.0
+  - mpfr=4.0.2
+  - mpmath=1.3.0
+  - ncurses=6.4
+  - networkx=3.1
+  - numpy=1.26.3
+  - numpy-base=1.26.3
+  - openssl=3.0.12
+  - pip=23.3.1
+  - python=3.10.13
+  - pytorch=2.0.0
+  - pytorch-mutex=1.0
+  - readline=8.2
+  - setuptools=68.2.2
+  - sqlite=3.41.2
+  - sympy=1.12
+  - tbb=2021.8.0
+  - tk=8.6.12
+  - torchaudio=2.0.0
+  - typing_extensions=4.9.0
+  - wheel=0.41.2
+  - xz=5.4.5
+  - zlib=1.2.13
   - pip:
       - aiofiles==23.2.1
-      - aiohttp==3.9.1
+      - aiohttp==3.9.3
       - aiosignal==1.3.1
       - alembic==1.13.1
       - altair==5.2.0
@@ -55,13 +61,13 @@ dependencies:
       - attrs==23.2.0
       - audioread==3.0.1
       - av==10.0.0
-      - certifi==2023.11.17
+      - certifi==2024.2.2
       - cffi==1.16.0
       - charset-normalizer==3.3.2
       - click==8.1.7
       - colorama==0.4.6
       - coloredlogs==15.0.1
-      - colorlog==6.8.0
+      - colorlog==6.8.2
       - contourpy==1.2.0
       - ctranslate2==3.24.0
       - cycler==0.12.1
@@ -76,43 +82,43 @@ dependencies:
       - fonttools==4.47.2
       - frozenlist==1.4.1
       - fsspec==2023.12.2
-      - gradio==3.23.0
+      - gradio==4.16.0
+      - gradio-client==0.8.1
       - greenlet==3.0.3
       - h11==0.14.0
       - httpcore==1.0.2
       - httpx==0.26.0
-      - huggingface-hub==0.20.2
+      - huggingface-hub==0.20.3
       - humanfriendly==10.0
       - hyperpyyaml==1.2.2
       - idna==3.6
+      - importlib-resources==6.1.1
       - joblib==1.3.2
-      - jsonschema==4.21.0
+      - jsonschema==4.21.1
       - jsonschema-specifications==2023.12.1
       - julius==0.2.7
       - kiwisolver==1.4.5
       - lazy-loader==0.3
       - librosa==0.10.1
-      - lightning==2.1.3
-      - lightning-utilities==0.10.0
-      - linkify-it-py==2.0.2
-      - llvmlite==0.41.1
-      - mako==1.3.0
-      - markdown-it-py==2.2.0
+      - lightning==2.1.4
+      - lightning-utilities==0.10.1
+      - llvmlite==0.42.0
+      - mako==1.3.2
+      - markdown-it-py==3.0.0
       - matplotlib==3.8.2
-      - mdit-py-plugins==0.3.3
       - mdurl==0.1.2
       - msgpack==1.0.7
-      - multidict==6.0.4
+      - multidict==6.0.5
       - nltk==3.8.1
-      - numba==0.58.1
+      - numba==0.59.0
       - omegaconf==2.3.0
-      - onnxruntime==1.16.3
+      - onnxruntime==1.17.0
       - optuna==3.5.0
-      - orjson==3.9.10
+      - orjson==3.9.12
       - packaging==23.2
-      - pandas==2.1.4
+      - pandas==2.2.0
       - pillow==10.2.0
-      - platformdirs==4.1.0
+      - platformdirs==4.2.0
       - pooch==1.8.0
       - primepy==1.3
       - protobuf==4.25.2
@@ -122,28 +128,28 @@ dependencies:
       - pyannote-metrics==3.2.1
       - pyannote-pipeline==3.0.1
       - pycparser==2.21
-      - pydantic==2.5.3
-      - pydantic-core==2.14.6
+      - pydantic==2.6.0
+      - pydantic-core==2.16.1
       - pydub==0.25.1
       - pygments==2.17.2
       - pyparsing==3.1.1
-      - pyreadline3==3.4.1
       - python-dateutil==2.8.2
       - python-multipart==0.0.6
-      - pytorch-lightning==2.1.3
+      - pytorch-lightning==2.1.4
       - pytorch-metric-learning==2.4.1
-      - pytz==2023.3.post1
+      - pytz==2024.1
       - pyyaml==6.0.1
-      - referencing==0.32.1
+      - referencing==0.33.0
       - regex==2023.12.25
       - requests==2.31.0
       - rich==13.7.0
       - rpds-py==0.17.1
       - ruamel-yaml==0.18.5
       - ruamel-yaml-clib==0.2.8
-      - safetensors==0.4.1
+      - ruff==0.2.0
+      - safetensors==0.4.2
       - scikit-learn==1.4.0
-      - scipy==1.11.4
+      - scipy==1.12.0
       - semantic-version==2.10.0
       - semver==3.0.2
       - sentencepiece==0.1.99
@@ -159,18 +165,18 @@ dependencies:
       - tabulate==0.9.0
       - tensorboardx==2.6.2.2
       - threadpoolctl==3.2.0
-      - tokenizers==0.15.0
-      - toolz==0.12.0
+      - tokenizers==0.15.1
+      - tomlkit==0.12.0
+      - toolz==0.12.1
       - torch-audiomentations==0.11.0
       - torch-pitch-shift==1.2.4
       - torchmetrics==1.3.0.post0
       - tqdm==4.66.1
-      - transformers==4.36.2
+      - transformers==4.37.2
       - typer==0.9.0
       - tzdata==2023.4
-      - uc-micro-py==1.0.2
-      - urllib3==2.1.0
-      - uvicorn==0.26.0
-      - websockets==12.0
+      - urllib3==2.2.0
+      - uvicorn==0.27.0.post1
+      - websockets==11.0.3
       - whisperx==3.1.1
       - yarl==1.9.4

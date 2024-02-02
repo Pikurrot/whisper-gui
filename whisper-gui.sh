@@ -81,7 +81,9 @@ select_env() {
 	
 	# Check Python version
 	echo "Checking Python version..."
-	source activate "$ENV_NAME" &> /dev/null
+	conda_base=$(dirname $(dirname $CONDA_EXE))
+    source "$conda_base/etc/profile.d/conda.sh"
+	conda activate "$ENV_NAME" &> /dev/null
 	PYTHON_VERSION=$(python --version 2>&1)
 	if [ $? -ne 0 ]; then
 		echo "Python is not installed in this environment. Install Python first."
@@ -134,7 +136,9 @@ read_env_name() {
 
 activate_env() {
 	echo "Activating environment $ENV_NAME..."
-	source activate "$ENV_NAME"
+	conda_base=$(dirname $(dirname $CONDA_EXE))
+    source "$conda_base/etc/profile.d/conda.sh"
+	conda activate "$ENV_NAME"
 	if [[ $? -ne 0 ]]; then
 		echo "Failed to activate environment."
 		exit 1
@@ -203,12 +207,27 @@ install_deps() {
 	if [[ "$GPU_SUPPORT" == "true" ]]; then
 		echo "Installing dependencies for GPU..."
 		DEP_FILE="configs/environment_gpu.yml"
+		echo "Installing PyTorch with CUDA 11.8..."
+		conda install pytorch==2.0.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c nvidia
 	else
 		echo "Installing dependencies for CPU..."
 		DEP_FILE="configs/environment_cpu.yml"
+		echo "Installing PyTorch..."
+		TEMP=$(uname -s)
+		echo "Operating system: $TEMP"
+		if [ "$TEMP" == "Linux" ]; then
+			conda install pytorch==2.0.0 torchaudio==2.0.0 cpuonly -c pytorch
+		elif [ "$TEMP" == "Darwin" ]; then
+			conda install pytorch::pytorch==2.0.0 torchaudio==2.0.0 -c pytorch
+		else
+			echo "This is neither Linux nor macOS."
+			exit 1
+		fi
 	fi
-	pip install git+https://github.com/m-bain/whisperx.git &> /dev/null
-	conda env update --name "$ENV_NAME" --file "$DEP_FILE" --prune &> /dev/null
+	echo "Installing whisperx..."
+	pip install git+https://github.com/m-bain/whisperx.git
+	echo "Installing other dependencies..."
+	conda env update --name "$ENV_NAME" --file "$DEP_FILE" --prune
 	if [[ $? -ne 0 ]]; then
 		echo "Failed to install dependencies."
 		exit 1
