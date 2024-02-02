@@ -233,7 +233,6 @@ def _transcribe() -> Tuple[str, str]:
 		save_dir = create_save_folder(save_root)
 
 	# Load (and save) audio
-		print("Loading audio...")
 	audio = load_and_save_audio(g_params["audio_path"], g_params["micro_audio"], g_params["save_audio"], save_dir)
 
 	# Transcription
@@ -287,7 +286,7 @@ def main():
 	args = parser.parse_args()
 
 	# Prepare interface data
-	whisperx_models = ["large-v2", "large-v1", "large", "medium", "small", "base", "tiny", "medium.en", "small.en", "base.en", "tiny.en"]
+	whisperx_models = ["large-v3", "large-v2", "large-v1", "medium", "small", "base", "tiny", "medium.en", "small.en", "base.en", "tiny.en"]
 	custom_models = list_models()
 	whisperx_langs = ["auto", "en", "es", "fr", "de", "it", "ja", "zh", "nl", "uk", "pt"]
 	custom_langs = ["auto"] + list(LANG_CODES.keys())
@@ -314,7 +313,7 @@ def main():
 	with gr.Blocks(title="Whisper GUI") as gui:
 		gr.Markdown("""# Whisper GUI
 A simple interface to transcribe audio files using the Whisper model""")
-		with gr.Tab("WhisperX"):
+		with gr.Tab("Faster Whisper"):
 			with gr.Row():
 				with gr.Column():
 					model_select = gr.Dropdown(whisperx_models, value="base", label="Load WhisperX Model", info=release_whisper_message)
@@ -352,7 +351,7 @@ A simple interface to transcribe audio files using the Whisper model""")
 					with gr.Group():
 						model_select2 = gr.Dropdown(custom_models, value=None, label="Upload Local Model  or  Download a Model from HuggingFace", allow_custom_value=True, info=release_whisper_message)
 					with gr.Group():
-						audio_upload2 = gr.Audio(sources=["upload"], type="filepath", label="Load Audio File")
+						audio_upload2 = gr.Audio(sources=["upload"], type="filepath", label="Upload Audio File")
 						audio_record2 = gr.Audio(sources=["microphone"], type="numpy", label="or Record Audio (If both are provided, only microphone audio will be used)")
 						save_audio2 = gr.Checkbox(value=False, label="Save Audio")
 					gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=audio_upload2)
