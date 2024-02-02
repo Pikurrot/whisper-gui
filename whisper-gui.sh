@@ -38,98 +38,98 @@ start() {
 
 # List conda environments
 list_envs() {
-    echo "Listing conda environments..."
-    while IFS= read -r line; do
-    if [[ -n "$line" ]]; then # Skip empty lines
-        envs[ENV_COUNT]="$line"
-        echo "$ENV_COUNT. $line"
-        ((ENV_COUNT++))
-    fi
+	echo "Listing conda environments..."
+	while IFS= read -r line; do
+	if [[ -n "$line" ]]; then # Skip empty lines
+		envs[ENV_COUNT]="$line"
+		echo "$ENV_COUNT. $line"
+		((ENV_COUNT++))
+	fi
 	done < <(conda env list | awk 'NR > 2 && $1 != "" {print $1}')
-    
-    if [[ $ENV_COUNT -eq 0 ]]; then
-        echo "No conda environments found."
-        read -p "Do you want to create a new environment named 'whisperx'? ([y]/n): " TEMP
-        if [[ "$TEMP" == "n" ]]; then
-            echo "Exiting..."
-            exit 0
-        fi
-        ENV_NAME="whisperx"
-        create_env
-    else
-        echo "$ENV_COUNT. Create a new environment (RECOMMENDED)"
-        echo
-        select_env
-    fi
+	
+	if [[ $ENV_COUNT -eq 0 ]]; then
+		echo "No conda environments found."
+		read -p "Do you want to create a new environment named 'whisperx'? ([y]/n): " TEMP
+		if [[ "$TEMP" == "n" ]]; then
+			echo "Exiting..."
+			exit 0
+		fi
+		ENV_NAME="whisperx"
+		create_env
+	else
+		echo "$ENV_COUNT. Create a new environment (RECOMMENDED)"
+		echo
+		select_env
+	fi
 }
 
 select_env() {
-    read -p "Select the number of the environment to use: " TEMP
-    if [[ $TEMP -lt 0 ]] || [[ $TEMP -gt $ENV_COUNT ]]; then
-        echo "Invalid input."
-        select_env
-        return
-    fi
-    if [[ "$TEMP" -eq "$ENV_COUNT" ]]; then
-        read -p "Enter the name of the new environment: " ENV_NAME
-        create_env
-        return
-    fi
-    
-    ENV_NAME="${envs[$TEMP]}"
-    echo "Selected environment: '$ENV_NAME'"
-    
-    # Check Python version
-    echo "Checking Python version..."
-    source activate "$ENV_NAME" &> /dev/null
-    PYTHON_VERSION=$(python --version 2>&1)
-    if [ $? -ne 0 ]; then
-        echo "Python is not installed in this environment. Install Python first."
-        conda deactivate &> /dev/null
-        exit 1
-    fi
-    PYTHON_MAJOR_VERSION=$(echo $PYTHON_VERSION | cut -d ' ' -f 2 | cut -d '.' -f 1)
-    PYTHON_MINOR_VERSION=$(echo $PYTHON_VERSION | cut -d ' ' -f 2 | cut -d '.' -f 2)
-    
-    if [ $PYTHON_MAJOR_VERSION -eq 3 ] && [ $PYTHON_MINOR_VERSION -lt 10 ]; then
-        echo "Incorrect Python version. Install Python 3.10 or newer."
-        conda deactivate &> /dev/null
-        exit 1
-    fi
-    
-    echo "Python version is correct: $PYTHON_VERSION"
-    save_env_name
+	read -p "Select the number of the environment to use: " TEMP
+	if [[ $TEMP -lt 0 ]] || [[ $TEMP -gt $ENV_COUNT ]]; then
+		echo "Invalid input."
+		select_env
+		return
+	fi
+	if [[ "$TEMP" -eq "$ENV_COUNT" ]]; then
+		read -p "Enter the name of the new environment: " ENV_NAME
+		create_env
+		return
+	fi
+	
+	ENV_NAME="${envs[$TEMP]}"
+	echo "Selected environment: '$ENV_NAME'"
+	
+	# Check Python version
+	echo "Checking Python version..."
+	source activate "$ENV_NAME" &> /dev/null
+	PYTHON_VERSION=$(python --version 2>&1)
+	if [ $? -ne 0 ]; then
+		echo "Python is not installed in this environment. Install Python first."
+		conda deactivate &> /dev/null
+		exit 1
+	fi
+	PYTHON_MAJOR_VERSION=$(echo $PYTHON_VERSION | cut -d ' ' -f 2 | cut -d '.' -f 1)
+	PYTHON_MINOR_VERSION=$(echo $PYTHON_VERSION | cut -d ' ' -f 2 | cut -d '.' -f 2)
+	
+	if [ $PYTHON_MAJOR_VERSION -eq 3 ] && [ $PYTHON_MINOR_VERSION -lt 10 ]; then
+		echo "Incorrect Python version. Install Python 3.10 or newer."
+		conda deactivate &> /dev/null
+		exit 1
+	fi
+	
+	echo "Python version is correct: $PYTHON_VERSION"
+	save_env_name
 }
 
 create_env() {
-    echo "Creating new environment '$ENV_NAME' with python 3.10.13..."
-    if ! conda create -n "$ENV_NAME" python=3.10.13 -y &> /dev/null; then
-        echo "Failed to create environment."
-        exit 1
-    fi
-    echo "Environment created."
-    activate_env
+	echo "Creating new environment '$ENV_NAME' with python 3.10.13..."
+	if ! conda create -n "$ENV_NAME" python=3.10.13 -y &> /dev/null; then
+		echo "Failed to create environment."
+		exit 1
+	fi
+	echo "Environment created."
+	activate_env
 }
 
 read_env_name() {
-    ENV_NAME=$(scripts/config_read.sh "env_name")
-    TEMP=$?
-    
-    if [[ $TEMP -eq 1 ]]; then
-        echo "Failed to read config file."
-        exit 1
-    elif [[ $TEMP -eq 2 ]]; then
-        echo "Config file does not contain 'env_name' key."
-        list_envs
-        return
-    elif [[ $TEMP -eq 3 ]]; then
-        echo "'env_name' key is null in config file."
-        list_envs
-        return
-    fi
-    
-    TEMP="skip"
-    activate_env
+	ENV_NAME=$(scripts/config_read.sh "env_name")
+	TEMP=$?
+	
+	if [[ $TEMP -eq 1 ]]; then
+		echo "Failed to read config file."
+		exit 1
+	elif [[ $TEMP -eq 2 ]]; then
+		echo "Config file does not contain 'env_name' key."
+		list_envs
+		return
+	elif [[ $TEMP -eq 3 ]]; then
+		echo "'env_name' key is null in config file."
+		list_envs
+		return
+	fi
+	
+	TEMP="skip"
+	activate_env
 }
 
 activate_env() {
@@ -157,46 +157,46 @@ save_env_name() {
 }
 
 check_gpu() {
-    echo "Checking GPU support..."
-    GPU_SUPPORT=$(scripts/config_read.sh "gpu_support")
-    TEMP=$?
+	echo "Checking GPU support..."
+	GPU_SUPPORT=$(scripts/config_read.sh "gpu_support")
+	TEMP=$?
 
-    if [[ $TEMP -eq 0 ]]; then
-        install_deps
-    elif [[ $TEMP -eq 1 ]]; then
-        echo "Failed to read config file."
-        exit 1
-    elif [[ $TEMP -eq 2 ]]; then
-        echo "Config file does not contain 'gpu_support' key."
-        test_gpu
-    elif [[ $TEMP -eq 3 ]]; then
-        echo "'gpu_support' key is null in config file."
-        test_gpu
-    fi
+	if [[ $TEMP -eq 0 ]]; then
+		install_deps
+	elif [[ $TEMP -eq 1 ]]; then
+		echo "Failed to read config file."
+		exit 1
+	elif [[ $TEMP -eq 2 ]]; then
+		echo "Config file does not contain 'gpu_support' key."
+		test_gpu
+	elif [[ $TEMP -eq 3 ]]; then
+		echo "'gpu_support' key is null in config file."
+		test_gpu
+	fi
 }
 
 test_gpu() {
-    echo "Testing if GPU is available..."
-    if nvidia-smi &> /dev/null; then
-        echo "GPU detected."
-        read -p "Do you want to use GPU support? ([y]/n): " TEMP
-        if [[ "$TEMP" == "y" ]]; then
-            GPU_SUPPORT=true
-            echo "GPU support enabled."
-        else
-            GPU_SUPPORT=false
-            echo "Proceeding with CPU support."
-        fi
-    else
-        echo "No GPU detected. Proceeding with CPU support."
-        GPU_SUPPORT=false
-    fi
-    echo "Saving result to config file..."
-    if ! python scripts/config_write.py "gpu_support" "$GPU_SUPPORT" &> /dev/null; then
-        echo "Failed to save result to config file."
-        exit 1
-    fi
-    install_deps
+	echo "Testing if GPU is available..."
+	if nvidia-smi &> /dev/null; then
+		echo "GPU detected."
+		read -p "Do you want to use GPU support? ([y]/n): " TEMP
+		if [[ "$TEMP" == "y" ]]; then
+			GPU_SUPPORT=true
+			echo "GPU support enabled."
+		else
+			GPU_SUPPORT=false
+			echo "Proceeding with CPU support."
+		fi
+	else
+		echo "No GPU detected. Proceeding with CPU support."
+		GPU_SUPPORT=false
+	fi
+	echo "Saving result to config file..."
+	if ! python scripts/config_write.py "gpu_support" "$GPU_SUPPORT" &> /dev/null; then
+		echo "Failed to save result to config file."
+		exit 1
+	fi
+	install_deps
 }
 
 install_deps() {
@@ -222,44 +222,44 @@ install_deps() {
 }
 
 check_updates() {
-    echo "Checking for updates..."
-    if ! git --version &> /dev/null; then
-        echo "git is not installed. Install git first and add git command to PATH."
-        run
-        return
-    fi
+	echo "Checking for updates..."
+	if ! git --version &> /dev/null; then
+		echo "git is not installed. Install git first and add git command to PATH."
+		run
+		return
+	fi
 
-    if ! git fetch &> /dev/null; then
-        echo "Failed to fetch updates. Check your internet connection."
-        run
-        return
-    fi
+	if ! git fetch &> /dev/null; then
+		echo "Failed to fetch updates. Check your internet connection."
+		run
+		return
+	fi
 
-    LOCAL_COMMIT=$(git rev-parse master)
-    REMOTE_COMMIT=$(git rev-parse origin/master)
+	LOCAL_COMMIT=$(git rev-parse master)
+	REMOTE_COMMIT=$(git rev-parse origin/master)
 
-    AUTO_UPDATE=$(scripts/config_read.sh "auto_update")
-    if [[ $? -eq 1 ]]; then
-        echo "Failed to read config file."
-        run
-        return
-    fi
+	AUTO_UPDATE=$(scripts/config_read.sh "auto_update")
+	if [[ $? -eq 1 ]]; then
+		echo "Failed to read config file."
+		run
+		return
+	fi
 
-    if [[ "$LOCAL_COMMIT" == "$REMOTE_COMMIT" ]]; then
-        echo "Your repository is up to date."
-        set_auto_update
-        return
-    else
-        echo "Updates available."
-        if [[ "$AUTO_UPDATE" != "true" ]]; then
-            read -p "Do you want to update the repository? ([y]/n): " TEMP
-            if [[ "$TEMP" == "n" ]]; then
-                set_auto_update
-                return
-            fi
-        fi
-        update_repo
-    fi
+	if [[ "$LOCAL_COMMIT" == "$REMOTE_COMMIT" ]]; then
+		echo "Your repository is up to date."
+		set_auto_update
+		return
+	else
+		echo "Updates available."
+		if [[ "$AUTO_UPDATE" != "true" ]]; then
+			read -p "Do you want to update the repository? ([y]/n): " TEMP
+			if [[ "$TEMP" == "n" ]]; then
+				set_auto_update
+				return
+			fi
+		fi
+		update_repo
+	fi
 }
 
 update_repo() {
