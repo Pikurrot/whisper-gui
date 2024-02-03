@@ -1,5 +1,5 @@
 # Whisper-GUI
-A simple GUI made with `gradio` to use WhisperX on Windows.  
+A simple GUI made with `gradio` to use Whisper.  
 
 ![whisper-gui-img](https://github.com/Pikurrot/Pikurrot/blob/main/images/whisper-gui/interface_screenshot.png?raw=true)
 
