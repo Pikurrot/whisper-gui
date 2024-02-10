@@ -61,14 +61,16 @@ def save_audio_to_mp3(audio_tuple, save_dir):
 	os.remove(wav_path)  # Remove temporary WAV file
 	return audio_path
 
-def save_transcription_to_txt(text_str, save_dir):
-	text_path = os.path.join(save_dir, "transcription.txt")
+def save_transcription_to_txt(text_str, save_dir, name="transcription.txt"):
+	text_path = os.path.join(save_dir, name)
+	print(f"Saving transcription to {text_path}...")
 	with open(text_path, "w", encoding="utf-8") as f:
 		f.write(text_str)
 	return text_path
 
-def save_alignments_to_json(alignment_dict, save_dir):
-	json_path = os.path.join(save_dir, "alignments.json")
+def save_alignments_to_json(alignment_dict, save_dir, name="alignments.json"):
+	json_path = os.path.join(save_dir, name)
+	print(f"Saving alignments to {json_path}...")
 	with open(json_path, "w", encoding="utf-8") as f:
 		json.dump(alignment_dict, f, indent=4)
 	return json_path
@@ -79,7 +81,8 @@ def load_and_save_audio(audio_path, micro_audio, save_audio, save_dir):
 		audio_path = save_audio_to_mp3(micro_audio, save_dir if save_audio else "temp")
 	elif save_audio:
 		print("Making a copy of the audio...")
-		shutil.copy(audio_path, os.path.join(save_dir, "audio.mp3"))
+		original_name = os.path.basename(audio_path)
+		shutil.copy(audio_path, os.path.join(save_dir, original_name if g_params["preserve_name"] else "audio.mp3"))
 
 	print("Loading audio...")
 	audio = whisperx.load_audio(audio_path)
@@ -160,10 +163,12 @@ def transcribe_whisperx(
 		chunk_size: int,
 		beam_size: int,
 		release_memory: bool,
-		save_root: Optional[bool],
+		save_root: Optional[str],
 		save_audio: bool,
 		save_transcription: bool,
-		save_alignments: bool
+		save_alignments: bool,
+		save_in_subfolder: bool,
+		preserve_name: bool
 	) -> Tuple[str, str, str, str]:
 
 	print("Inputs received. Starting...")
@@ -195,10 +200,12 @@ def transcribe_custom(
 		chunk_size: int,
 		beam_size: int,
 		release_memory: bool,
-		save_root: Optional[bool],
+		save_root: Optional[str],
 		save_audio: bool,
 		save_transcription: bool,
-		save_alignments: bool
+		save_alignments: bool,
+		save_in_subfolder: bool,
+		preserve_name: bool
 	) -> Tuple[str, str, str, str]:
 
 	print("Inputs received. Starting...")
@@ -230,7 +237,10 @@ def _transcribe() -> Tuple[str, str]:
 			save_root = g_params["save_root"]
 		else:
 			save_root = "outputs"
-		save_dir = create_save_folder(save_root)
+		if g_params["save_in_subfolder"]:
+			save_dir = create_save_folder(save_root)
+		else:
+			save_dir = save_root
 
 	# Load (and save) audio
 	audio = load_and_save_audio(g_params["audio_path"], g_params["micro_audio"], g_params["save_audio"], save_dir)
@@ -249,7 +259,12 @@ def _transcribe() -> Tuple[str, str]:
 		time_transcribe = time.time() - time_transcribe
 	joined_text = " ".join([segment["text"].strip() for segment in result["segments"]])
 	if g_params["save_transcription"]:
-		save_transcription_to_txt(joined_text, save_dir)
+		if g_params["preserve_name"]:
+			audio_name = os.path.basename(g_params["audio_path"]).split(".")[0]
+			save_name = f"{audio_name}_transcription.txt"
+		else:
+			save_name = "transcription.txt"
+		save_transcription_to_txt(joined_text, save_dir, save_name)
 
 	if g_params["release_memory"]:
 		release_whisper()
@@ -267,131 +282,137 @@ def _transcribe() -> Tuple[str, str]:
 	aligned_result = whisperx.align(result["segments"], g_model_a, g_model_a_metadata, audio, g_params["device"], return_char_alignments=False)
 	time_align = time.time() - time_align
 	if g_params["save_alignments"]:
-		save_alignments_to_json(aligned_result, save_dir)
+		if g_params["preserve_name"]:
+			audio_name = os.path.basename(g_params["audio_path"]).split(".")[0]
+			save_name = f"{audio_name}_timestamps.json"
+		else:
+			save_name = "_timestamps.json"
+		save_alignments_to_json(aligned_result, save_dir, save_name)
 	if g_params["release_memory"]:
 		release_align()
 	print("Done!")
-	if not os.listdir("temp"):
+	if not os.listdir("temp") and os.path.exists("temp"):
 		# Remove temp folder if empty
 		os.rmdir("temp")
 	# Return the transcription and sentence-level alignments
 	return joined_text, format_alignments(aligned_result), f"{round(time_transcribe, 3)}s", f"{round(time_align, 3)}s"
 
 
-def main():
+# Prepare interface data
+whisperx_models = ["large-v3", "large-v2", "large-v1", "medium", "small", "base", "tiny", "medium.en", "small.en", "base.en", "tiny.en"]
+custom_models = list_models()
+whisperx_langs = ["auto", "en", "es", "fr", "de", "it", "ja", "zh", "nl", "uk", "pt"]
+custom_langs = ["auto"] + list(LANG_CODES.keys())
+release_whisper_message = "When changed, requires the Whisper model to reload."
+release_align_message = "When changed, requires the alignment model to reload."
+release_both_message = "When changed, requires both models to reload."
+
+# Read config
+gpu_support, error = read_config_value("gpu_support")
+if gpu_support:
+	device = "cuda"
+	device_interactive = True
+	device_message = ""
+else:
+	device = "cpu"
+	device_interactive = False
+	if gpu_support is None:
+		device_message = "If you don\"t have a GPU, select \"cpu\".\n"
+	else:
+		device_message = "GPU support is disabled in the config file.\n"
+
+with gr.Blocks(title="Whisper GUI") as demo:
+	gr.Markdown("""# Whisper GUI
+A simple interface to transcribe audio files using the Whisper model""")
+	with gr.Tab("Faster Whisper"):
+		with gr.Row():
+			with gr.Column():
+				model_select = gr.Dropdown(whisperx_models, value="base", label="Load WhisperX Model", info=release_whisper_message)
+				with gr.Group():
+					audio_upload = gr.Audio(sources=["upload"], type="filepath", label="Upload Audio File")
+					audio_record = gr.Audio(sources=["microphone"], type="numpy", label="or Record Audio (If both are provided, only microphone audio will be used)")
+					save_audio = gr.Checkbox(value=False, label="Save Audio", info="Save copy of audio to \"Save Path\" folder.")
+				gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=audio_upload)
+				with gr.Accordion(label="Advanced Options", open=False):
+					language_select = gr.Dropdown(whisperx_langs, value = "auto", label="Language", info="Select the language of the audio file. Select \"auto\" to automatically detect it. "+release_align_message)
+					device_select = gr.Radio(["cuda", "cpu"], value = device, label="Device", info=device_message+release_both_message, interactive=device_interactive)
+					with gr.Group():
+						with gr.Row():
+							save_transcription = gr.Checkbox(value=True, label="Save Transcription")
+							save_alignments = gr.Checkbox(value=True, label="Save Timestamps")
+						save_root = gr.Textbox(label="Save Path", placeholder="outputs", lines=1)
+						save_in_subfolder = gr.Checkbox(value=True, label="Save in Subfolder", info="Save files in a subfolder \"YYYY-MM-DD/NNNN/\" in the \"Save Path\" folder. CAUTION: if unchecked, files may be overwritten.")
+						preserve_name = gr.Checkbox(value=False, label="Preserve Name", info="Preserve the original name of the audio file when saving. E.g. \"<audio_name>_transcription.txt\". Only works for uploaded audio.")
+					gr.Markdown("""### Optimizations""")
+					compute_type_select = gr.Radio(["int8", "float16", "float32"], value = "int8", label="Compute Type", info="int8 is fastest and requires less memory. float32 is more accurate (Your device may not support some data types). "+release_whisper_message)
+					batch_size_slider = gr.Slider(1, 128, value = 1, step=1, label="Batch Size", info="Larger batch sizes may be faster but require more memory.")
+					chunk_size_slider = gr.Slider(1, 80, value = 20, step=1, label="Chunk Size", info="Larger chunk sizes may be faster but require more memory.")
+					beam_size_slider = gr.Slider(1, 100, value = 5, step=1, label="Beam Size", info="Larger beam sizes may be more accurate but require more memory and may decrease speed. "+release_whisper_message)
+					release_memory_checkbox = gr.Checkbox(label="Release Memory", value=True, info="Release Whisper model from memory before loading alignment model. Then release alignment model. Prevents having both models in memory at the same time.")
+				submit_button = gr.Button(value="Start Transcription")
+			with gr.Column():
+				transcription_output = gr.Textbox(label="Transcription", lines=15)
+				alignments_output = gr.Textbox(label="Timestamps", lines=15)
+				with gr.Row():
+					time_transcribe = gr.Textbox(label="Transcription Time", info="Including language detection (if Language = \"auto\")", lines=1)
+					time_align = gr.Textbox(label="Alignment Time", lines=1)
+				release_memory_button = gr.Button(value="Release Models from Memory")
+
+	with gr.Tab("Custom model"):
+		with gr.Row():
+			with gr.Column():
+				with gr.Group():
+					model_select2 = gr.Dropdown(custom_models, value=None, label="Upload Local Model  or  Download a Model from HuggingFace", allow_custom_value=True, info=release_whisper_message)
+				with gr.Group():
+					audio_upload2 = gr.Audio(sources=["upload"], type="filepath", label="Upload Audio File")
+					audio_record2 = gr.Audio(sources=["microphone"], type="numpy", label="or Record Audio (If both are provided, only microphone audio will be used)")
+					save_audio2 = gr.Checkbox(value=False, label="Save Audio", info="Save copy of audio to \"Save Path\" folder.")
+				gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=audio_upload2)
+				with gr.Accordion(label="Advanced Options", open=False):
+					language_select2 = gr.Dropdown(custom_langs, value = "auto", label="Language", info="Select the language of the audio file. Select \"auto\" to automatically detect it. "+release_align_message)
+					device_select2 = gr.Radio(["cuda", "cpu"], value = device, label="Device", info=device_message+release_both_message, interactive=device_interactive)
+					with gr.Group():
+						with gr.Row():
+							save_transcription2 = gr.Checkbox(value=True, label="Save Transcription")
+							save_alignments2 = gr.Checkbox(value=True, label="Save Timestamps")
+						save_root2 = gr.Textbox(label="Save Path", placeholder="outputs", lines=1)
+						save_in_subfolder2 = gr.Checkbox(value=True, label="Save in Subfolder", info="Save files in a subfolder \"YYYY-MM-DD/NNNN/\" in the \"Save Path\" folder. CAUTION: if unchecked, files may be overwritten.")
+						preserve_name2 = gr.Checkbox(value=False, label="Preserve Name", info="Preserve the original name of the audio file when saving. E.g. \"<audio_name>_transcription.txt\". Only works for uploaded audio.")
+					gr.Markdown("""### Optimizations""")
+					compute_type_select2 = gr.Radio(["float16", "float32"], value = "float16", label="Compute Type", info="float16 is faster and requires less memory. float32 is more accurate (Your device may not support some data types). "+release_whisper_message)
+					batch_size_slider2 = gr.Slider(1, 128, value = 1, step=1, label="Batch Size", info="Larger batch sizes may be faster but require more memory.")
+					chunk_size_slider2 = gr.Slider(1, 80, value = 20, step=1, label="Chunk Size", info="Larger chunk sizes may be faster but require more memory.")
+					beam_size_slider2 = gr.Slider(1, 100, value = 5, step=1, label="Beam Size", info="Larger beam sizes may be more accurate but require more memory and may decrease speed. "+release_whisper_message)
+					release_memory_checkbox2 = gr.Checkbox(label="Release Memory", value=True, info="Release Whisper model from memory before loading alignment model. Then release alignment model. Prevents having both models in memory at the same time.")
+				submit_button2 = gr.Button(value="Start Transcription")
+			with gr.Column():
+				transcription_output2 = gr.Textbox(label="Transcription", lines=15)
+				alignments_output2 = gr.Textbox(label="Timestamps", lines=15)
+				with gr.Row():
+					time_transcribe2 = gr.Textbox(label="Transcription Time", lines=1)
+					time_align2 = gr.Textbox(label="Alignment Time", lines=1)
+				release_memory_button2 = gr.Button(value="Release Models from Memory")
+
+	
+	submit_button.click(transcribe_whisperx,
+						inputs=[model_select, audio_upload, audio_record, device_select, batch_size_slider, compute_type_select, language_select, chunk_size_slider, beam_size_slider, release_memory_checkbox, save_root, save_audio, save_transcription, save_alignments, save_in_subfolder, preserve_name],
+						outputs=[transcription_output, alignments_output, time_transcribe, time_align])
+	
+	submit_button2.click(transcribe_custom,
+						inputs=[model_select2, audio_upload2, audio_record2, device_select2, batch_size_slider2, compute_type_select2, language_select2, chunk_size_slider2, beam_size_slider2, release_memory_checkbox2, save_root2, save_audio2, save_transcription2, save_alignments2, save_in_subfolder2, preserve_name2],
+						outputs=[transcription_output2, alignments_output2, time_transcribe2, time_align2])
+	
+	release_memory_button.click(release_memory_models)
+	release_memory_button2.click(release_memory_models)
+	
+
+if __name__ == "__main__":
 	# Parse arguments
 	parser = argparse.ArgumentParser(description="Transcribe audio files using WhisperX")
 	parser.add_argument("--autolaunch", action="store_true", default=False, help="Launch the interface automatically in the default browser")
 	parser.add_argument("--share", action="store_true", default=False, help="Create a share link to access the interface from another device")
 	args = parser.parse_args()
 
-	# Prepare interface data
-	whisperx_models = ["large-v3", "large-v2", "large-v1", "medium", "small", "base", "tiny", "medium.en", "small.en", "base.en", "tiny.en"]
-	custom_models = list_models()
-	whisperx_langs = ["auto", "en", "es", "fr", "de", "it", "ja", "zh", "nl", "uk", "pt"]
-	custom_langs = ["auto"] + list(LANG_CODES.keys())
-	release_whisper_message = "When changed, requires the Whisper model to reload."
-	release_align_message = "When changed, requires the alignment model to reload."
-	release_both_message = "When changed, requires both models to reload."
-
-	# Read config
-	gpu_support, error = read_config_value("gpu_support")
-	if gpu_support:
-		device = "cuda"
-		device_interactive = True
-		device_message = ""
-	else:
-		device = "cpu"
-		device_interactive = False
-		if gpu_support is None:
-			device_message = "If you don\"t have a GPU, select \"cpu\".\n"
-		else:
-			device_message = "GPU support is disabled in the config file.\n"
-
-	# Create Gradio Interface
-	print("Creating interface...")
-	with gr.Blocks(title="Whisper GUI") as gui:
-		gr.Markdown("""# Whisper GUI
-A simple interface to transcribe audio files using the Whisper model""")
-		with gr.Tab("Faster Whisper"):
-			with gr.Row():
-				with gr.Column():
-					model_select = gr.Dropdown(whisperx_models, value="base", label="Load WhisperX Model", info=release_whisper_message)
-					with gr.Group():
-						audio_upload = gr.Audio(sources=["upload"], type="filepath", label="Upload Audio File")
-						audio_record = gr.Audio(sources=["microphone"], type="numpy", label="or Record Audio (If both are provided, only microphone audio will be used)")
-						save_audio = gr.Checkbox(value=False, label="Save Audio")
-					gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=audio_upload)
-					with gr.Accordion(label="Advanced Options", open=False):
-						language_select = gr.Dropdown(whisperx_langs, value = "auto", label="Language", info="Select the language of the audio file. Select \"auto\" to automatically detect it. "+release_align_message)
-						device_select = gr.Radio(["cuda", "cpu"], value = device, label="Device", info=device_message+release_both_message, interactive=device_interactive)
-						with gr.Group():
-							with gr.Row():
-								save_transcription = gr.Checkbox(value=True, label="Save Transcription")
-								save_alignments = gr.Checkbox(value=True, label="Save Alignments")
-							save_root = gr.Textbox(label="Save Path", placeholder="outputs", lines=1)
-						gr.Markdown("""### Optimizations""")
-						compute_type_select = gr.Radio(["int8", "float16", "float32"], value = "int8", label="Compute Type", info="int8 is fastest and requires less memory. float32 is more accurate (Your device may not support some data types). "+release_whisper_message)
-						batch_size_slider = gr.Slider(1, 128, value = 1, step=1, label="Batch Size", info="Larger batch sizes may be faster but require more memory.")
-						chunk_size_slider = gr.Slider(1, 80, value = 20, step=1, label="Chunk Size", info="Larger chunk sizes may be faster but require more memory.")
-						beam_size_slider = gr.Slider(1, 100, value = 5, step=1, label="Beam Size", info="Larger beam sizes may be more accurate but require more memory and may decrease speed. "+release_whisper_message)
-						release_memory_checkbox = gr.Checkbox(label="Release Memory", value=True, info="Release Whisper model from memory before loading alignment model. Then release alignment model. Prevents having both models in memory at the same time.")
-					submit_button = gr.Button(value="Start Transcription")
-				with gr.Column():
-					transcription_output = gr.Textbox(label="Transcription", lines=15)
-					alignments_output = gr.Textbox(label="Timestamps", lines=15)
-					with gr.Row():
-						time_transcribe = gr.Textbox(label="Transcription Time", info="Including language detection (if Language = \"auto\")", lines=1)
-						time_align = gr.Textbox(label="Alignment Time", lines=1)
-					release_memory_button = gr.Button(value="Release Models from Memory")
-
-		with gr.Tab("Custom model"):
-			with gr.Row():
-				with gr.Column():
-					with gr.Group():
-						model_select2 = gr.Dropdown(custom_models, value=None, label="Upload Local Model  or  Download a Model from HuggingFace", allow_custom_value=True, info=release_whisper_message)
-					with gr.Group():
-						audio_upload2 = gr.Audio(sources=["upload"], type="filepath", label="Upload Audio File")
-						audio_record2 = gr.Audio(sources=["microphone"], type="numpy", label="or Record Audio (If both are provided, only microphone audio will be used)")
-						save_audio2 = gr.Checkbox(value=False, label="Save Audio")
-					gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=audio_upload2)
-					with gr.Accordion(label="Advanced Options", open=False):
-						language_select2 = gr.Dropdown(custom_langs, value = "auto", label="Language", info="Select the language of the audio file. Select \"auto\" to automatically detect it. "+release_align_message)
-						device_select2 = gr.Radio(["cuda", "cpu"], value = device, label="Device", info=device_message+release_both_message, interactive=device_interactive)
-						with gr.Group():
-							with gr.Row():
-								save_transcription2 = gr.Checkbox(value=True, label="Save Transcription")
-								save_alignments2 = gr.Checkbox(value=True, label="Save Alignments")
-							save_root2 = gr.Textbox(label="Save Path", placeholder="outputs", lines=1)
-						gr.Markdown("""### Optimizations""")
-						compute_type_select2 = gr.Radio(["float16", "float32"], value = "float16", label="Compute Type", info="float16 is faster and requires less memory. float32 is more accurate (Your device may not support some data types). "+release_whisper_message)
-						batch_size_slider2 = gr.Slider(1, 128, value = 1, step=1, label="Batch Size", info="Larger batch sizes may be faster but require more memory.")
-						chunk_size_slider2 = gr.Slider(1, 80, value = 20, step=1, label="Chunk Size", info="Larger chunk sizes may be faster but require more memory.")
-						beam_size_slider2 = gr.Slider(1, 100, value = 5, step=1, label="Beam Size", info="Larger beam sizes may be more accurate but require more memory and may decrease speed. "+release_whisper_message)
-						release_memory_checkbox2 = gr.Checkbox(label="Release Memory", value=True, info="Release Whisper model from memory before loading alignment model. Then release alignment model. Prevents having both models in memory at the same time.")
-					submit_button2 = gr.Button(value="Start Transcription")
-				with gr.Column():
-					transcription_output2 = gr.Textbox(label="Transcription", lines=15)
-					alignments_output2 = gr.Textbox(label="Timestamps", lines=15)
-					with gr.Row():
-						time_transcribe2 = gr.Textbox(label="Transcription Time", lines=1)
-						time_align2 = gr.Textbox(label="Alignment Time", lines=1)
-					release_memory_button2 = gr.Button(value="Release Models from Memory")
-
-		
-		submit_button.click(transcribe_whisperx,
-					  		inputs=[model_select, audio_upload, audio_record, device_select, batch_size_slider, compute_type_select, language_select, chunk_size_slider, beam_size_slider, release_memory_checkbox, save_root, save_audio, save_transcription, save_alignments],
-							outputs=[transcription_output, alignments_output, time_transcribe, time_align])
-		
-		submit_button2.click(transcribe_custom,
-					  		inputs=[model_select2, audio_upload2, audio_record2, device_select2, batch_size_slider2, compute_type_select2, language_select2, chunk_size_slider2, beam_size_slider2, release_memory_checkbox2, save_root2, save_audio2, save_transcription2, save_alignments2],
-							outputs=[transcription_output2, alignments_output2, time_transcribe2, time_align2])
-		
-		release_memory_button.click(release_memory_models)
-		release_memory_button2.click(release_memory_models)
-
 	# Launch the interface
-	gui.launch(inbrowser=args.autolaunch, share=args.share)
-
-if __name__ == "__main__":
-	main()
+	print("Creating interface...")
+	demo.launch(inbrowser=args.autolaunch, share=args.share)
