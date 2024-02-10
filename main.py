@@ -333,11 +333,11 @@ def _transcribe() -> Tuple[str, str]:
 			audio_name = os.path.basename(g_params["audio_path"]).split(".")[0]
 			save_name = f"{audio_name}_timestamps." + align_format
 		else:
-			save_name = "_timestamps." + align_format
+			save_name = "timestamps." + align_format
 		if align_format == "json":
 			save_alignments_to_json(aligned_result, save_dir, save_name)
 		elif align_format == "srt":
-			subtitles = alignments2subtitles(aligned_result["segments"])
+			subtitles = alignments2subtitles(aligned_result["segments"], max_line_length=50)
 			save_alignments_to_srt(subtitles, save_dir, save_name)
 	if g_params["release_memory"]:
 		release_align()
