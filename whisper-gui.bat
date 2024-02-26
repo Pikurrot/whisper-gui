@@ -217,7 +217,7 @@ if "!GPU_SUPPORT!" == "true" (
 echo Istalling whisperx...
 call pip install git+https://github.com/m-bain/whisperx.git
 echo Installing other dependencies...
-call conda env update --name !ENV_NAME! --file !DEP_FILE! --prune
+call conda env update --name !ENV_NAME! --file !DEP_FILE!
 if %errorlevel% GEQ 1 (
 	echo Failed to install dependencies.
 	goto cleanup

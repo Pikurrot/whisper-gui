@@ -227,7 +227,7 @@ install_deps() {
 	echo "Installing whisperx..."
 	pip install git+https://github.com/m-bain/whisperx.git
 	echo "Installing other dependencies..."
-	conda env update --name "$ENV_NAME" --file "$DEP_FILE" --prune
+	conda env update --name "$ENV_NAME" --file "$DEP_FILE"
 	if [[ $? -ne 0 ]]; then
 		echo "Failed to install dependencies."
 		exit 1
