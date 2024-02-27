@@ -8,6 +8,9 @@ A simple GUI made with `gradio` to use Whisper.
 - `git` installed and added to PATH. See [instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 - `ffmpeg` installed and added to PATH. See instructions for [Windows](https://phoenixnap.com/kb/ffmpeg-windows), [Linux](https://phoenixnap.com/kb/install-ffmpeg-ubuntu) or [macOS](https://phoenixnap.com/kb/ffmpeg-mac).
 
+Optionally, to use GPU on Windows:
+- CUDA version ≥12.0. Install from [Nvidia's official site](https://developer.nvidia.com/cuda-downloads).
+
 ## Set up
 - In **Windows**, run the `whisper-gui.bat` file. In **Linux / macOS** run the `whisper-gui.sh` file. Follow the instructions and let the script install the necessary dependencies. After the process, it will run the GUI in a new browser tab.
 
