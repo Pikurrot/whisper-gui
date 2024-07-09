@@ -1,8 +1,16 @@
 import gradio as gr
 import whisperx
-import subprocess, os, gc, argparse, shutil, inspect
+import subprocess
+import os
+import gc
+import argparse
+import shutil
+import inspect
 import soundfile as sf
-import torch, re, json, time
+import torch
+import re
+import json
+import time
 from datetime import datetime
 from scripts.whisper_model import load_custom_model, LANG_CODES
 from typing import Optional, Tuple, Callable
@@ -161,24 +169,30 @@ def alignments2subtitles(subtitles, max_line_length=40):
 def release_whisper():
 	global g_model, g_params
 	del g_model
-	if g_params.get("device", None) == "cuda": torch.cuda.empty_cache()
-	else: gc.collect()
+	if g_params.get("device", None) == "cuda":
+		torch.cuda.empty_cache()
+	else:
+		gc.collect()
 	g_model = None
 	print("Whisper model released from memory")
 
 def release_align():
 	global g_model_a, g_params
 	del g_model_a
-	if g_params.get("device", None) == "cuda": torch.cuda.empty_cache()
-	else: gc.collect()
+	if g_params.get("device", None) == "cuda":
+		torch.cuda.empty_cache()
+	else:
+		gc.collect()
 	g_model_a = None
 	print("Alignment model released from memory")
 
 def release_memory_models():
 	global g_model, g_model_a, g_params
 	del g_model, g_model_a
-	if g_params.get("device", None) == "cuda": torch.cuda.empty_cache()
-	else: gc.collect()
+	if g_params.get("device", None) == "cuda":
+		torch.cuda.empty_cache()
+	else:
+		gc.collect()
 	g_model = None
 	g_model_a = None
 	print("Models released from memory")
