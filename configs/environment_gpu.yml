@@ -11,5 +11,5 @@ dependencies:
   - pip:
       - ctranslate2==4.0.0
       - faster-whisper==1.0.0
-      - gradio==4.16.0
-      - gradio-client==0.8.1
+      - gradio==4.37.2
+      - gradio-client==1.0.2
