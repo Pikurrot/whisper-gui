@@ -11,10 +11,15 @@ import torch
 import re
 import json
 import time
+import warnings
 from datetime import datetime
 from scripts.whisper_model import load_custom_model, LANG_CODES
 from typing import Optional, Tuple, Callable
 from scripts.config_io import read_config_value
+
+# Ignore warnings
+warnings.filterwarnings("ignore", message="Model was trained with pyannote.audio")
+warnings.filterwarnings("ignore", message="Model was trained with torch")
 
 ALIGN_LANGS = ["en", "fr", "de", "es", "it", "ja", "zh", "nl", "uk", "pt", "ar", "cs", "ru", "pl", "hu", "fi", "fa", "el", "tr", "da", "he", "vi", "ko", "ur", "te", "hi", "ca", "ml", "no", "nn"]
 
