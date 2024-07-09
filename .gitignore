@@ -5,3 +5,4 @@ admin-update.*
 configs/config.json
 **/__pycache__/
 *test.py
+ruff.toml
