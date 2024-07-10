@@ -1,7 +1,17 @@
+import os
+import sys
+
+def blockPrint():
+	sys.stdout = open(os.devnull, 'w')
+	sys.stderr = open(os.devnull, 'w')
+def enablePrint():
+	sys.stdout = sys.__stdout__
+	sys.stderr = sys.__stderr__
+
+blockPrint()
 import gradio as gr
 import whisperx
 import subprocess
-import os
 import gc
 import argparse
 import shutil
@@ -11,16 +21,12 @@ import torch
 import re
 import json
 import time
-import warnings
 from datetime import datetime
 from scripts.whisper_model import load_custom_model, LANG_CODES
 from typing import Optional, Tuple, Callable
 from scripts.config_io import read_config_value
 
-# Ignore warnings
-warnings.filterwarnings("ignore", message="Model was trained with pyannote.audio")
-warnings.filterwarnings("ignore", message="Model was trained with torch")
-
+enablePrint()
 ALIGN_LANGS = ["en", "fr", "de", "es", "it", "ja", "zh", "nl", "uk", "pt", "ar", "cs", "ru", "pl", "hu", "fi", "fa", "el", "tr", "da", "he", "vi", "ko", "ur", "te", "hi", "ca", "ml", "no", "nn"]
 
 # global variables
@@ -174,7 +180,7 @@ def alignments2subtitles(subtitles, max_line_length=40):
 def release_whisper():
 	global g_model, g_params
 	del g_model
-	if g_params.get("device", None) == "cuda":
+	if g_params.get("device", None) == "gpu":
 		torch.cuda.empty_cache()
 	else:
 		gc.collect()
@@ -184,7 +190,7 @@ def release_whisper():
 def release_align():
 	global g_model_a, g_params
 	del g_model_a
-	if g_params.get("device", None) == "cuda":
+	if g_params.get("device", None) == "gpu":
 		torch.cuda.empty_cache()
 	else:
 		gc.collect()
@@ -194,7 +200,7 @@ def release_align():
 def release_memory_models():
 	global g_model, g_model_a, g_params
 	del g_model, g_model_a
-	if g_params.get("device", None) == "cuda":
+	if g_params.get("device", None) == "gpu":
 		torch.cuda.empty_cache()
 	else:
 		gc.collect()
@@ -236,6 +242,8 @@ def transcribe_whisperx(
 	) -> Tuple[str, str, str, str]:
 
 	print("Inputs received. Starting...")
+	if device == "gpu":
+		device = "cuda"
 	params = get_params(transcribe_whisperx, locals())
 	global g_model, g_params
 
@@ -248,7 +256,9 @@ def transcribe_whisperx(
 			print("Parameters changed. Releasing previous whisper model from memory...")
 			release_whisper()
 		print("Loading model...")
+		blockPrint()
 		g_model = whisperx.load_model(model_name, device, compute_type=compute_type, asr_options={"beam_size": beam_size}, download_root="models/whisperx")
+		enablePrint()
 	g_params = params
 
 	return _transcribe()
@@ -274,6 +284,8 @@ def transcribe_custom(
 	) -> Tuple[str, str, str, str]:
 
 	print("Inputs received. Starting...")
+	if device == "gpu":
+		device = "cuda"
 	params = get_params(transcribe_custom, locals())
 	global g_model, g_params
 
@@ -286,7 +298,9 @@ def transcribe_custom(
 			print("Parameters changed. Releasing previous models from memory...")
 			release_memory_models()
 		print("Loading model...")
+		blockPrint()
 		g_model = load_custom_model(model_name, device, compute_type=compute_type, beam_size=beam_size, download_root="models/custom")
+		enablePrint()
 	g_params = params
 
 	return _transcribe()
@@ -379,8 +393,8 @@ release_both_message = "When changed, requires both models to reload."
 
 # Read config
 gpu_support, error = read_config_value("gpu_support")
-if gpu_support:
-	device = "cuda"
+if gpu_support in ("cuda", "rocm"):
+	device = "gpu"
 	device_interactive = True
 	device_message = ""
 else:
@@ -405,7 +419,7 @@ A simple interface to transcribe audio files using the Whisper model""")
 				gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=audio_upload)
 				with gr.Accordion(label="Advanced Options", open=False):
 					language_select = gr.Dropdown(whisperx_langs, value = "auto", label="Language", info="Select the language of the audio file. Select \"auto\" to automatically detect it. "+release_align_message)
-					device_select = gr.Radio(["cuda", "cpu"], value = device, label="Device", info=device_message+release_both_message, interactive=device_interactive)
+					device_select = gr.Radio(["gpu", "cpu"], value = device, label="Device", info=device_message+release_both_message, interactive=device_interactive)
 					with gr.Group():
 						with gr.Row():
 							save_transcription = gr.Checkbox(value=True, label="Save Transcription")
@@ -441,7 +455,7 @@ A simple interface to transcribe audio files using the Whisper model""")
 				gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=audio_upload2)
 				with gr.Accordion(label="Advanced Options", open=False):
 					language_select2 = gr.Dropdown(custom_langs, value = "auto", label="Language", info="Select the language of the audio file. Select \"auto\" to automatically detect it. "+release_align_message)
-					device_select2 = gr.Radio(["cuda", "cpu"], value = device, label="Device", info=device_message+release_both_message, interactive=device_interactive)
+					device_select2 = gr.Radio(["gpu", "cpu"], value = device, label="Device", info=device_message+release_both_message, interactive=device_interactive)
 					with gr.Group():
 						with gr.Row():
 							save_transcription2 = gr.Checkbox(value=True, label="Save Transcription")
