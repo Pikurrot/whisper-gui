@@ -181,19 +181,27 @@ check_gpu() {
 
 test_gpu() {
 	echo "Testing if GPU is available..."
+	GPU_SUPPORT="false"
 	if nvidia-smi &> /dev/null; then
-		echo "GPU detected."
+		echo "NVIDIA GPU detected."
 		read -p "Do you want to use GPU support? ([y]/n): " TEMP
 		if [[ "$TEMP" == "y" ]]; then
-			GPU_SUPPORT=true
-			echo "GPU support enabled."
+			GPU_SUPPORT="cuda"
+			echo "CUDA GPU support enabled."
 		else
-			GPU_SUPPORT=false
+			echo "Proceeding with CPU support."
+		fi
+	elif lspci | grep -i 'amdgpu' &> /dev/null; then
+		echo "AMD GPU detected."
+		read -p "Do you want to use GPU support? ([y]/n): " TEMP
+		if [[ "$TEMP" == "y" ]]; then
+			GPU_SUPPORT="rocm"
+			echo "ROCm GPU support enabled."
+		else
 			echo "Proceeding with CPU support."
 		fi
 	else
 		echo "No GPU detected. Proceeding with CPU support."
-		GPU_SUPPORT=false
 	fi
 	echo "Saving result to config file..."
 	if ! python scripts/config_write.py "gpu_support" "$GPU_SUPPORT" &> /dev/null; then
@@ -204,26 +212,37 @@ test_gpu() {
 }
 
 install_deps() {
-	if [[ "$GPU_SUPPORT" == "true" ]]; then
-		echo "Installing dependencies for GPU..."
-		DEP_FILE="configs/environment_gpu.yml"
-		echo "Installing PyTorch with CUDA 11.8..."
-		conda install pytorch==2.0.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c nvidia
-	else
-		echo "Installing dependencies for CPU..."
-		DEP_FILE="configs/environment_cpu.yml"
-		echo "Installing PyTorch..."
-		TEMP=$(uname -s)
-		echo "Operating system: $TEMP"
-		if [ "$TEMP" == "Linux" ]; then
-			conda install pytorch==2.0.0 torchaudio==2.0.0 cpuonly -c pytorch
-		elif [ "$TEMP" == "Darwin" ]; then
-			conda install pytorch::pytorch==2.0.0 torchaudio==2.0.0 -c pytorch
+	TEMP=$(uname -s)
+	echo "Operating system: $TEMP"
+
+	if [ "$TEMP" == "Linux" ]; then
+		if [[ "$GPU_SUPPORT" == "cuda" ]]; then
+			echo "Installing dependencies for CUDA GPU..."
+			DEP_FILE="configs/environment_gpu.yml"
+			echo "Installing PyTorch with CUDA 11.8..."
+			conda install pytorch==2.0.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c nvidia
+		elif [[ "$GPU_SUPPORT" == "rocm" ]]; then
+			echo "Installing dependencies for ROCm GPU..."
+			DEP_FILE="configs/environment_cpu.yml"
+			echo "Installing PyTorch with ROCm..."
+			pip install torch==2.0.0 torchaudio==2.0.0 --index-url https://download.pytorch.org/whl/rocm6.0
 		else
-			echo "This is neither Linux nor macOS."
-			exit 1
+			echo "Installing dependencies for CPU..."
+			DEP_FILE="configs/environment_cpu.yml"
+			conda install pytorch==2.0.0 torchaudio==2.0.0 cpuonly -c pytorch
 		fi
+	elif [ "$TEMP" == "Darwin" ]; then
+		if [[ "$GPU_SUPPORT" == "rocm" ]]; then
+			echo "ROCm is not supported on macOS. Proceeding with CPU support."
+		fi
+		echo "Installing dependencies for macOS..."
+		DEP_FILE="configs/environment_cpu.yml"
+		conda install pytorch::pytorch==2.0.0 torchaudio==2.0.0 -c pytorch
+	else
+		echo "This is neither Linux nor macOS."
+		exit 1
 	fi
+
 	echo "Installing whisperx..."
 	pip install git+https://github.com/m-bain/whisperx.git
 	echo "Installing other dependencies..."
