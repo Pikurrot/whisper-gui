@@ -5,9 +5,14 @@ import soundfile as sf
 import re
 import os
 import json
+import numpy as np
 from datetime import datetime
+from typing import Any
 
-def list_models():
+def list_models() -> list[str]:
+	"""
+	Return a list of all models available in the `models/custom` directory.
+	"""
 	models_dir = os.path.join("models", "custom")
 	if not os.path.exists(models_dir):
 		# create the directory if it doesn"t exist
@@ -17,7 +22,11 @@ def list_models():
 	models = [s.replace("models--", "").replace("--", "/") for s in models]
 	return models
 
-def create_save_folder(save_root):
+def create_save_folder(save_root: str) -> str:
+	"""
+	Create a new folder in the `save_root` directory with the current date and a counter.
+		Returns the path to the created folder.
+	"""
 	# Get the current date and create the date folder
 	current_date = datetime.now().strftime("%Y-%m-%d")
 	date_dir = os.path.join(save_root, current_date)
@@ -41,7 +50,14 @@ def create_save_folder(save_root):
 	os.makedirs(save_dir)
 	return save_dir
 
-def save_audio_to_mp3(audio_tuple, save_dir):
+def save_audio_to_mp3(
+		audio_tuple: tuple[int, np.ndarray],
+		save_dir: str
+) -> str:
+	"""
+	Save the audio to an MP3 file in the specified directory.
+		Returns the path to the saved MP3 file.
+	"""
 	rate, y = audio_tuple
 	if len(y.shape) == 2:
 		y = y.T[0]  # If stereo, take one channel
@@ -52,29 +68,63 @@ def save_audio_to_mp3(audio_tuple, save_dir):
 	os.remove(wav_path)  # Remove temporary WAV file
 	return audio_path
 
-def save_transcription_to_txt(text_str, save_dir, name="transcription.txt"):
+def save_transcription_to_txt(
+		text_str: str,
+		save_dir: str,
+		name: str="transcription.txt"
+) -> str:
+	"""
+	Save the transcription to a text file in the specified directory.
+		Returns the path to the saved text file.
+	"""
 	text_path = os.path.join(save_dir, name)
 	print(f"Saving transcription to {text_path}...")
 	with open(text_path, "w", encoding="utf-8") as f:
 		f.write(text_str)
 	return text_path
 
-def save_alignments_to_json(alignment_dict, save_dir, name="alignments.json"):
+def save_alignments_to_json(
+		alignment_dict: dict[str, Any],
+		save_dir: str,
+		name="timestamps.json"
+) -> str:
+	"""
+	Save the alignments to a JSON file in the specified directory.
+		Returns the path to the saved JSON file.
+	"""
 	json_path = os.path.join(save_dir, name)
 	print(f"Saving alignments to {json_path}...")
 	with open(json_path, "w", encoding="utf-8") as f:
 		json.dump(alignment_dict, f, indent=4)
 	return json_path
 
-def save_alignments_to_srt(subtitles_dict, save_dir, name="subtitles.srt"):
+def save_subtitles_to_srt(
+		subtitles_list: list[dict[str, Any]],
+		save_dir: str,
+		name: str="subtitles.srt"
+) -> str:
+	"""
+	Save the subtitles to an SRT file in the specified directory.
+		Returns the path to the saved SRT file.
+	"""
 	srt_path = os.path.join(save_dir, name)
 	print(f"Saving subtitles to {srt_path}...")
 	with open(srt_path, "w", encoding="utf-8") as f:
-		for sub in subtitles_dict:
+		for sub in subtitles_list:
 			f.write(f"{sub['number']}\n{sub['start']} --> {sub['end']}\n{sub['text']}\n\n")
 	return srt_path
 
-def load_and_save_audio(audio_path, micro_audio, save_audio, save_dir, preserve_name=False):
+def load_and_save_audio(
+		audio_path: str,
+		micro_audio: tuple[int, np.ndarray],
+		save_audio: bool,
+		save_dir: str,
+		preserve_name: bool=False
+) -> tuple[int, np.ndarray]:
+	"""
+	Load the audio from the specified path and save it to the specified directory.
+		Returns the loaded audio as a tuple of the sample rate and audio data.
+	"""
 	if micro_audio:
 		print("Saving micro audio...")
 		audio_path = save_audio_to_mp3(micro_audio, save_dir if save_audio else "temp")
@@ -91,7 +141,12 @@ def load_and_save_audio(audio_path, micro_audio, save_audio, save_dir, preserve_
 	
 	return audio
 
-def float_to_time_str(time_float):
+def float_to_time_str(
+		time_float: float
+) -> str:
+	"""
+	Convert a floating-point time value to a string in the format "HH:MM:SS" or "MM:SS".
+	"""
 	seconds_total = int(time_float)
 	hours = seconds_total // 3600
 	minutes = (seconds_total % 3600) // 60
@@ -102,7 +157,12 @@ def float_to_time_str(time_float):
 		time_str = f"{minutes:02d}:{seconds:02d}"
 	return time_str
 
-def format_alignments(alignments):
+def format_alignments(
+		alignments: dict[str, Any]
+) -> str:
+	"""
+	Format the alignments as a human-readable transcription.
+	"""
 	formatted_transcription = []
 	for segment in alignments["segments"]:
 		start_time = float_to_time_str(segment["start"])
@@ -113,7 +173,13 @@ def format_alignments(alignments):
 		formatted_transcription.append(formatted_line)
 	return "\n\n".join(formatted_transcription)
 
-def alignments2subtitles(subtitles, max_line_length=40):
+def alignments2subtitles(
+		subtitles: list[dict[str, Any]],
+		max_line_length: int=40
+) -> list[dict[str, Any]]:
+	"""
+	Convert the alignments to subtitles in the SRT format.
+	"""
 	def sec2timesrt(sec):
 		# Convert seconds to HH:MM:SS,mmm format
 		hours, remainder = divmod(sec, 3600)

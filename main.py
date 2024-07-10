@@ -19,7 +19,7 @@ import time
 from scripts.whisper_model import load_custom_model, LANG_CODES
 from typing import Optional, Tuple, Callable
 from scripts.config_io import read_config_value
-from utils import alignments2subtitles, create_save_folder, format_alignments, list_models, load_and_save_audio, save_alignments_to_json, save_alignments_to_srt, save_transcription_to_txt
+from utils import alignments2subtitles, create_save_folder, format_alignments, list_models, load_and_save_audio, save_alignments_to_json, save_subtitles_to_srt, save_transcription_to_txt
 
 enablePrint()
 ALIGN_LANGS = ["en", "fr", "de", "es", "it", "ja", "zh", "nl", "uk", "pt", "ar", "cs", "ru", "pl", "hu", "fi", "fa", "el", "tr", "da", "he", "vi", "ko", "ur", "te", "hi", "ca", "ml", "no", "nn"]
@@ -31,6 +31,9 @@ g_model_a_metadata = None
 g_params = {}
 
 def release_whisper():
+	"""
+	Release the whisper model from memory.
+	"""
 	global g_model, g_params
 	del g_model
 	if g_params.get("device", None) == "gpu":
@@ -41,6 +44,9 @@ def release_whisper():
 	print("Whisper model released from memory")
 
 def release_align():
+	"""
+	Release the alignment model from memory.
+	"""
 	global g_model_a, g_params
 	del g_model_a
 	if g_params.get("device", None) == "gpu":
@@ -51,6 +57,9 @@ def release_align():
 	print("Alignment model released from memory")
 
 def release_memory_models():
+	"""
+	Release both models from memory.
+	"""
 	global g_model, g_model_a, g_params
 	del g_model, g_model_a
 	if g_params.get("device", None) == "gpu":
@@ -62,13 +71,30 @@ def release_memory_models():
 	print("Models released from memory")
 
 def get_args_str(func: Callable) -> list:
+	"""
+	Get the names of the arguments of a function.
+	"""
 	return list(inspect.signature(func).parameters)
 
-def get_params(func: Callable, values: list) -> dict:
+def get_params(
+		func: Callable,
+		values: list
+) -> dict:
+	"""
+	Get the parameters of a function as a dictionary.
+	"""
 	keys = get_args_str(func)
 	return {k: values[k] for k in keys}
 
-def same_params(params1: dict, params2: dict, *args):
+def same_params(
+		params1: dict,
+		params2: dict,
+		*args
+) -> bool:
+	"""
+	Check if two sets of parameters are the same.
+	If args are provided, only check the specified parameters.
+	"""
 	if args:
 		return all(params1.get(arg, None) == params2.get(arg, None) for arg in args)
 	else:
@@ -92,8 +118,11 @@ def transcribe_whisperx(
 		save_in_subfolder: bool,
 		preserve_name: bool,
 		alignments_format: str
-	) -> Tuple[str, str, str, str]:
-
+) -> Tuple[str, str, str, str]:
+	"""
+	Transcribe an audio file using the WhisperX model.
+		Returns the transcription and sentence-level alignments.
+	"""
 	print("Inputs received. Starting...")
 	if device == "gpu":
 		device = "cuda"
@@ -134,8 +163,11 @@ def transcribe_custom(
 		save_in_subfolder: bool,
 		preserve_name: bool,
 		alignments_format: str
-	) -> Tuple[str, str, str, str]:
-
+) -> Tuple[str, str, str, str]:
+	"""
+	Transcribe an audio file using a custom Whisper model.
+		Returns the transcription and sentence-level alignments.
+	"""
 	print("Inputs received. Starting...")
 	if device == "gpu":
 		device = "cuda"
@@ -158,7 +190,12 @@ def transcribe_custom(
 
 	return _transcribe()
 
-def _transcribe() -> Tuple[str, str]:
+def _transcribe() -> Tuple[str, str, str, str]:
+	"""
+	Transcribe the audio file using the Whisper model.
+	Models and parameters should be loaded and stored globally before calling this function.
+		Returns the transcription and sentence-level alignments.
+	"""
 	global g_model, g_model_a, g_model_a_metadata, g_params
 	# Create save folder
 	save_dir = None
@@ -224,7 +261,7 @@ def _transcribe() -> Tuple[str, str]:
 			save_alignments_to_json(aligned_result, save_dir, save_name)
 		elif align_format == "srt":
 			subtitles = alignments2subtitles(aligned_result["segments"], max_line_length=50)
-			save_alignments_to_srt(subtitles, save_dir, save_name)
+			save_subtitles_to_srt(subtitles, save_dir, save_name)
 	if g_params["release_memory"]:
 		release_align()
 	print("Done!")
@@ -258,6 +295,7 @@ else:
 	else:
 		device_message = "GPU support is disabled in the config file.\n"
 
+# Gradio interface
 with gr.Blocks(title="Whisper GUI") as demo:
 	gr.Markdown("""# Whisper GUI
 A simple interface to transcribe audio files using the Whisper model""")
