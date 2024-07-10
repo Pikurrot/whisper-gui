@@ -1,7 +1,17 @@
+import os
+import sys
+
+def blockPrint():
+	sys.stdout = open(os.devnull, 'w')
+	sys.stderr = open(os.devnull, 'w')
+def enablePrint():
+	sys.stdout = sys.__stdout__
+	sys.stderr = sys.__stderr__
+
+blockPrint()
 import gradio as gr
 import whisperx
 import subprocess
-import os
 import gc
 import argparse
 import shutil
@@ -11,16 +21,12 @@ import torch
 import re
 import json
 import time
-import warnings
 from datetime import datetime
 from scripts.whisper_model import load_custom_model, LANG_CODES
 from typing import Optional, Tuple, Callable
 from scripts.config_io import read_config_value
 
-# Ignore warnings
-warnings.filterwarnings("ignore", message="Model was trained with pyannote.audio")
-warnings.filterwarnings("ignore", message="Model was trained with torch")
-
+enablePrint()
 ALIGN_LANGS = ["en", "fr", "de", "es", "it", "ja", "zh", "nl", "uk", "pt", "ar", "cs", "ru", "pl", "hu", "fi", "fa", "el", "tr", "da", "he", "vi", "ko", "ur", "te", "hi", "ca", "ml", "no", "nn"]
 
 # global variables
@@ -250,7 +256,9 @@ def transcribe_whisperx(
 			print("Parameters changed. Releasing previous whisper model from memory...")
 			release_whisper()
 		print("Loading model...")
+		blockPrint()
 		g_model = whisperx.load_model(model_name, device, compute_type=compute_type, asr_options={"beam_size": beam_size}, download_root="models/whisperx")
+		enablePrint()
 	g_params = params
 
 	return _transcribe()
@@ -290,7 +298,9 @@ def transcribe_custom(
 			print("Parameters changed. Releasing previous models from memory...")
 			release_memory_models()
 		print("Loading model...")
+		blockPrint()
 		g_model = load_custom_model(model_name, device, compute_type=compute_type, beam_size=beam_size, download_root="models/custom")
+		enablePrint()
 	g_params = params
 
 	return _transcribe()
