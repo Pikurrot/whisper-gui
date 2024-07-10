@@ -35,7 +35,8 @@ import torch
 import whisperx
 from whisperx.vad import VoiceActivitySegmentation
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
-import os, time
+import os
+import time
 from typing import List, Optional, Collection, Dict, Any, Union
 import numpy as np
 
