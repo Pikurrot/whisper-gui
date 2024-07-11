@@ -9,6 +9,18 @@ import numpy as np
 from datetime import datetime
 from typing import Any
 
+def reformat_lang_dict(lang_dict: dict[str, dict[str, str]]) -> dict[str, dict[str, str]]:
+	"""
+	Reformat the language dictionary to have the language as first keys.
+	"""
+	reformatted_dict = {}
+	for message, translations in lang_dict.items():
+		for lang, text in translations.items():
+			if lang not in reformatted_dict:
+				reformatted_dict[lang] = {}
+			reformatted_dict[lang][message] = text
+	return reformatted_dict
+
 def list_models() -> list[str]:
 	"""
 	Return a list of all models available in the `models/custom` directory.
