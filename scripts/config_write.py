@@ -21,9 +21,12 @@ def main(key, value):
 		sys.exit(1)
 
 	value = str(value).lower()
-	if value == "true": value = True
-	elif value == "false": value = False
-	elif value == "null": value = None
+	if value == "true":
+		value = True
+	elif value == "false":
+		value = False
+	elif value == "null":
+		value = None
 	data[key] = value
 
 	# Write the updated data

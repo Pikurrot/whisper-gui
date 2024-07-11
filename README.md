@@ -8,8 +8,10 @@ A simple GUI made with `gradio` to use Whisper.
 - `git` installed and added to PATH. See [instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 - `ffmpeg` installed and added to PATH. See instructions for [Windows](https://phoenixnap.com/kb/ffmpeg-windows), [Linux](https://phoenixnap.com/kb/install-ffmpeg-ubuntu) or [macOS](https://phoenixnap.com/kb/ffmpeg-mac).
 
-Optionally, to use GPU on Windows:
+Optionally, to use Nvidia GPU on Windows:
 - CUDA version ≥12.0. Install from [Nvidia's official site](https://developer.nvidia.com/cuda-downloads).
+
+>Note: For AMD GPUs (ROCm), GPU support for Whisper is only available in Linux.
 
 ## Set up
 - In **Windows**, run the `whisper-gui.bat` file. In **Linux / macOS** run the `whisper-gui.sh` file. Follow the instructions and let the script install the necessary dependencies. After the process, it will run the GUI in a new browser tab.
@@ -21,9 +23,11 @@ Otherwise, manual steps are:
 - **Install PyTorch 2.0**  
 	For macOS:  
 	`conda install pytorch::pytorch==2.0.0 torchaudio==2.0.0 -c pytorch`  
-	For other OS, if you have GPU:  
+	For Windows or Linux, if you have Nvidia GPU:  
 	`conda install pytorch==2.0.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c nvidia`  
-	If not, for CPU:  
+	For Linux, if you have AMD GPU:  
+	`pip install torch==2.0.0 torchaudio==2.0.0 --index-url https://download.pytorch.org/whl/rocm6.0`  
+	If not, install for CPU:  
 	`conda install pytorch==2.0.0 torchaudio==2.0.0 cpuonly -c pytorch`
 - **Install whisperx and dependecies**  
 	`pip install git+https://github.com/m-bain/whisperx.git`  
