@@ -1,0 +1,312 @@
+{
+	"whisper_released": {
+		"en": "Whisper model released from memory",
+		"es": "Modelo Whisper liberado de la memoria",
+		"ca": "Model Whisper alliberat de la memòria"
+	},
+	"align_released": {
+		"en": "Alignment model released from memory",
+		"es": "Modelo de alineación liberado de la memoria",
+		"ca": "Model d'alienació alliberat de la memòria"
+	},
+	"both_released": {
+		"en": "Models released from memory",
+		"es": "Modelos liberados de la memoria",
+		"ca": "Models alliberats de la memòria"
+	},
+	"inputs_received": {
+		"en": "Inputs received. Starting...",
+		"es": "Inputs recibidas. Comenzando...",
+		"ca": "Inputs rebuts. Començant..."
+	},
+	"lang_changed": {
+		"en": "Language changed. Releasing previous alignment model from memory...",
+		"es": "Idioma cambiado. Liberando el anterior modelo de alineación de la memoria...",
+		"ca": "Idioma canviat. Alliberant l'anterior model d'alienació de la memòria..."
+	},
+	"params_changed": {
+		"en": "Parameters changed. Releasing previous Whisper model from memory...",
+		"es": "Parámetros cambiados. Liberando el anterior modelo Whisper de la memoria...",
+		"ca": "Paràmetres canviats. Alliberant l'anterior model Whisper de la memòria..."
+	},
+	"loading_model": {
+		"en": "Loading model...",
+		"es": "Cargando modelo...",
+		"ca": "Carregant model..."
+	},
+	"starting_transcription": {
+		"en": "Starting transcription...",
+		"es": "Comenzando transcripción...",
+		"ca": "Començant transcripció..."
+	},
+	"align_lang_not_supported": {
+		"en": "WARNING! Language {} not supported for alignment. Using English instead. Results may be inaccurate.",
+		"es": "¡ATENCIÓN! Idioma {} no soportado para alineación. Usando inglés en su lugar. Los resultados pueden ser inexactos.",
+		"ca": "¡ATENCIÓ! Idioma {} no suportat per a l'alienació. Utilitzant anglès en el seu lloc. Els resultats poden ser inexactes."
+	},
+	"loading_align_model": {
+		"en": "Loading alignment model...",
+		"es": "Cargando modelo de alineación...",
+		"ca": "Carregant model d'alienació..."
+	},
+	"aligning": {
+		"en": "Aligning...",
+		"es": "Alineando...",
+		"ca": "Alienant..."
+	},
+	"done": {
+		"en": "Done!",
+		"es": "¡Hecho!",
+		"ca": "Fet!"
+	},
+	"select_cpu": {
+		"en": "If you don't have a GPU, select \"cpu\".\n",
+		"es": "Si no tienes una GPU, selecciona \"cpu\".\n",
+		"ca": "Si no tens una GPU, selecciona \"cpu\".\n"
+	},
+	"gpu_disabled": {
+		"en": "GPU support is disabled in the settings file.\n",
+		"es": "El soporte de GPU está deshabilitado en el archivo de configuración.\n",
+		"ca": "El suport de GPU està deshabilitat en l'arxiu de configuració.\n"
+	},
+	"settings_updated": {
+		"en": "Settings updated. Restart the program to apply the changes.",
+		"es": "Configuración actualizada. Reinicia el programa para aplicar los cambios.",
+		"ca": "Configuració actualitzada. Reinicia el programa per aplicar els canvis."
+	},
+	"gui_description": {
+		"en": "A simple interface to transcribe audio files using the Whisper model",
+		"es": "Una interfaz simple para transcribir archivos de audio usando el modelo Whisper",
+		"ca": "Una interfície simple per transcriure arxius d'àudio utilitzant el model Whisper"
+	},
+	"change_whisper_reload": {
+		"en": "When changed, requires the Whisper model to reload.",
+		"es": "Al modificarse, requiere recargar el modelo Whisper.",
+		"ca": "En modificar-se, requereix recarregar el model Whisper."
+	},
+	"change_align_reload": {
+		"en": "When changed, requires the alignment model to reload.",
+		"es": "Al modificarse, requiere recargar el modelo de alineación.",
+		"ca": "En modificar-se, requereix recarregar el model d'alienació."
+	},
+	"change_both_reload": {
+		"en": "When changed, requires both models to reload.",
+		"es": "Al modificarse, requiere recargar ambos modelos.",
+		"ca": "En modificar-se, requereix recarregar tots dos models."
+	},
+	"model_select_label": {
+		"en": "Load WhisperX Model",
+		"es": "Cargar Modelo WhisperX",
+		"ca": "Carregar Model WhisperX"
+	},
+	"audio_upload_label": {
+		"en": "Upload Audio File",
+		"es": "Subir Archivo de Audio",
+		"ca": "Pujar Archiu d'Àudio"
+	},
+	"audio_record_label": {
+		"en": "or Record Audio (If both are provided, only microphone audio will be used)",
+		"es": "o Grabar Audio (Si se proporcionan ambos, solo se usará el audio del micrófono)",
+		"ca": "o Gravar Àudio (Si es proporcionen tots dos, només s'utilitzarà l'àudio del micròfon)"
+	},
+	"save_audio_label": {
+		"en": "Save Audio",
+		"es": "Guardar Audio",
+		"ca": "Desar àudio"
+	},
+	"save_audio_info": {
+		"en": "Save copy of audio to \"Save Path\" folder.",
+		"es": "Guardar copia del audio en la carpeta \"Ruta de Guardado\".",
+		"ca": "Desar còpia de l'àudio a la carpeta \"Ruta de Desat\"."
+	},
+	"advanced_options": {
+		"en": "Advanced Options",
+		"es": "Opciones Avanzadas",
+		"ca": "Opcions Avançades"
+	},
+	"language_select_label": {
+		"en": "Language",
+		"es": "Idioma",
+		"ca": "Idioma"
+	},
+	"language_select_info": {
+		"en": "Select the language of the audio file. Select \"auto\" to automatically detect it. ",
+		"es": "Selecciona el idioma del archivo de audio. Selecciona \"auto\" para detectarlo automáticamente. ",
+		"ca": "Selecciona l'idioma de l'arxiu d'àudio. Selecciona \"auto\" per detectar-lo automàticament. "
+	},
+	"device_select_label": {
+		"en": "Device",
+		"es": "Dispositivo",
+		"ca": "Dispositiu"
+	},
+	"save_transcription_label": {
+		"en": "Save Transcription",
+		"es": "Guardar Transcripción",
+		"ca": "Desar Transcripció"
+	},
+	"save_align_label": {
+		"en": "Save Timestamps",
+		"es": "Guardar Marcas de Tiempo",
+		"ca": "Desar Marques de Temps"
+	},
+	"save_root_label": {
+		"en": "Save Path",
+		"es": "Ruta de Guardado",
+		"ca": "Ruta de Desat"
+	},
+	"save_subfolder_label": {
+		"en": "Save in Subfolder",
+		"es": "Guardar en Subcarpeta",
+		"ca": "Desar en Subcarpeta"
+	},
+	"save_subfolder_info": {
+		"en": "Save files in a subfolder \"YYYY-MM-DD/NNNN/\" in the \"Save Path\" folder. CAUTION: if unchecked, files may be overwritten.",
+		"es": "Guardar archivos en una subcarpeta \"YYYY-MM-DD/NNNN/\" en la carpeta \"Ruta de Guardado\". PRECAUCIÓN: si no está marcado, los archivos pueden ser sobrescritos.",
+		"ca": "Desar arxius en una subcarpeta \"YYYY-MM-DD/NNNN/\" a la carpeta \"Ruta de Desat\". PRECAUCIÓ: si no està marcat, els arxius poden ser sobrescrits."
+	},
+	"preserve_name_label": {
+		"en": "Preserve Name",
+		"es": "Conservar Nombre",
+		"ca": "Conservar Nom"
+	},
+	"preserve_name_info": {
+		"en": "Preserve the original name of the audio file when saving. E.g. \"<audio_name>_transcription.txt\". Only works for uploaded audio.",
+		"es": "Conservar el nombre original del archivo de audio al guardar. E.g. \"<audio_name>_transcription.txt\". Solo funciona para un audio subido.",
+		"ca": "Conservar el nom original de l'arxiu d'àudio en desar. E.g. \"<audio_name>_transcription.txt\". Només funciona per a un àudio pujat."
+	},
+	"align_format_label": {
+		"en": "Alignments Format",
+		"es": "Formato de Alineaciones",
+		"ca": "Format d'Alienacions"
+	},
+	"optimizations": {
+		"en": "Optimizations",
+		"es": "Optimizaciones",
+		"ca": "Optimitzacions"
+	},
+	"compute_type_label": {
+		"en": "Compute Type",
+		"es": "Tipo de Cálculo",
+		"ca": "Tipus de Càlcul"
+	},
+	"compute_type_info": {
+		"en": "int8 is fastest and requires less memory. float32 is more accurate (Your device may not support some compute types). ",
+		"es": "int8 es el más rápido y requiere menos memoria. float32 es más preciso (Tu dispositivo puede no soportar algunos tipos de cálculo). ",
+		"ca": "int8 és el més ràpid i requereix menys memòria. float32 és més precís (El teu dispositiu pot no suportar alguns tipus de càlcul). "
+	},
+	"batch_size_label": {
+		"en": "Batch Size",
+		"es": "Tamaño de Lote",
+		"ca": "Mida de Lot"
+	},
+	"batch_size_info": {
+		"en": "Larger batch sizes may be faster but require more memory.",
+		"es": "Tamaños de lote más grandes ṕuede ser más rápido pero requiere más memoria.",
+		"ca": "Mides de lot més grans pot ser més ràpid però requereix més memòria."
+	},
+	"chunk_size_label": {
+		"en": "Chunk Size",
+		"es": "Tamaño de Trozo",
+		"ca": "Mida de Tros"
+	},
+	"chunk_size_info": {
+		"en": "Larger chunk sizes may be faster but require more memory.",
+		"es": "Tamaños de trozo más grandes ṕuede ser más rápido pero requiere más memoria.",
+		"ca": "Mides de tros més grans pot ser més ràpid però requereix més memòria."
+	},
+	"beam_size_label": {
+		"en": "Beam Size",
+		"es": "Tamaño de Haz",
+		"ca": "Mida de Feix"
+	},
+	"beam_size_info": {
+		"en": "Larger beam sizes may be more accurate but require more memory and may decrease speed. ",
+		"es": "Tamaños de haz más grandes puede ser más preciso pero requiere más memoria y puede disminuir la velocidad. ",
+		"ca": "Mides de feix més grans pot ser més precis però requereix més memòria i pot disminuir la velocitat. "
+	},
+	"release_memory_label": {
+		"en": "Release Memory",
+		"es": "Liberar Memoria",
+		"ca": "Alliberar Memòria"
+	},
+	"release_memory_info": {
+		"en": "Release Whisper model from memory before loading alignment model. Then release alignment model. Prevents having both models in memory at the same time.",
+		"es": "Liberar modelo Whisper de la memoria antes de cargar el modelo de alineación. Luego liberar modelo de alineación. Evita tener ambos modelos en memoria al mismo tiempo.",
+		"ca": "Alliberar model Whisper de la memòria abans de carregar el model d'alienació. Llavors alliberar model d'alienació. Evita tenir tots dos models en memòria al mateix temps."
+	},
+	"submit_button": {
+		"en": "Start Transcription",
+		"es": "Comenzar Transcripción",
+		"ca": "Començar Transcripció"
+	},
+	"transcription_textbox": {
+		"en": "Transcription",
+		"es": "Transcripción",
+		"ca": "Transcripció"
+	},
+	"align_textbox": {
+		"en": "Timestamps",
+		"es": "Marcas de Tiempo",
+		"ca": "Marques de Temps"
+	},
+	"time_transcribe_label": {
+		"en": "Transcription Time",
+		"es": "Tiempo de Transcripción",
+		"ca": "Temps de Transcripció"
+	},
+	"time_transcribe_info": {
+		"en": "Including language detection (if Language = \"auto\")",
+		"es": "Incluyendo detección de idioma (si Idioma = \"auto\")",
+		"ca": "Inclou detecció d'idioma (si Idioma = \"auto\")"
+	},
+	"time_align_label": {
+		"en": "Alignment Time",
+		"es": "Tiempo de Alineación",
+		"ca": "Temps d'Alienació"
+	},
+	"release_memory_button": {
+		"en": "Release Models from Memory",
+		"es": "Liberar Modelos de la Memoria",
+		"ca": "Alliberar Models de la Memòria"
+	},
+	"model_select2_label": {
+		"en": "Upload Local Model  or  Download a Model from HuggingFace",
+		"es": "Subir Modelo Local  o  Descargar un Modelo de HuggingFace",
+		"ca": "Pujar Model Local  o  Descarregar un Model de HuggingFace"
+	},
+	"lang_select_label": {
+		"en": "Interface Language",
+		"es": "Idioma de la Interfaz",
+		"ca": "Idioma de la Interfície"
+	},
+	"lang_select_info": {
+		"en": "Select the language of the interface",
+		"es": "Selecciona el idioma de la interfaz",
+		"ca": "Selecciona l'idioma de la interfície"
+	},
+	"apply_changes": {
+		"en": "Apply Changes",
+		"es": "Aplicar Cambios",
+		"ca": "Aplicar Canvis"
+	},
+	"argparse_description": {
+		"en": "Transcribe audio files using Whisper",
+		"es": "Transcribir archivos de audio usando Whisper",
+		"ca": "Transcriure arxius d'àudio utilitzant Whisper"
+	},
+	"autloaunch_help": {
+		"en": "Launch the interface automatically in the default browser",
+		"es": "Lanzar la interfaz automáticamente en el navegador predeterminado",
+		"ca": "Llançar la interfície automàticament en el navegador predeterminat"
+	},
+	"share_help": {
+		"en": "Create a share link to access the interface from another device",
+		"es": "Crear un enlace para compartir y acceder a la interfaz desde otro dispositivo",
+		"ca": "Crear un enllaç per compartir i accedir a la interfície des d'un altre dispositiu"
+	},
+	"creating_interface": {
+		"en": "Creating interface...",
+		"es": "Creando interfaz...",
+		"ca": "Creant interfície..."
+	}
+}
