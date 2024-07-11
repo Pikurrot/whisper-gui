@@ -6,3 +6,4 @@ configs/config.json
 **/__pycache__/
 *test.py
 ruff.toml
+.fuse_hidden*
