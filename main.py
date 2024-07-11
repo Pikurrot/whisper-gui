@@ -17,11 +17,11 @@ import inspect
 import torch
 import time
 import json
+enablePrint()
 from scripts.whisper_model import load_custom_model, LANG_CODES
 from typing import Optional, Tuple, Callable
 from scripts.config_io import read_config_value, write_config_value
-from utils import *  # noqa: F403
-enablePrint()
+from scripts.utils import *  # noqa: F403
 
 # global variables
 ALIGN_LANGS = ["en", "fr", "de", "es", "it", "ja", "zh", "nl", "uk", "pt", "ar", "cs", "ru", "pl", "hu", "fi", "fa", "el", "tr", "da", "he", "vi", "ko", "ur", "te", "hi", "ca", "ml", "no", "nn"]
