@@ -26,7 +26,10 @@ from scripts.utils import *  # noqa: F403
 
 # ensure gpu_support has correct value
 gpu_support, error = read_config_value("gpu_support")
-if error or gpu_support not in (False, "cuda", "rocm"):
+if gpu_support is False:
+	write_config_value("gpu_support", "false")
+	gpu_support = "false"
+if error or gpu_support not in ("false", "cuda", "rocm"):
 	result = subprocess.run(["nvidia-smi"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 	if result.returncode == 0:
 		write_config_value("gpu_support", "cuda")
