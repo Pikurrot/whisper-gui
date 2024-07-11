@@ -173,6 +173,9 @@
 		"en": "When changed, requires the alignment model to reload.",
 		"es": "Al modificarse, requiere recargar el modelo de alineación.",
 		"ca": "En modificar-se, requereix recarregar el model d'alienació.",
+		"de": "Bei Änderung muss das Ausrichtungsmodell neu geladen werden.",
+		"fr": "Lorsqu'il est modifié, nécessite le rechargement du modèle d'alignement.",
+		"it": "Quando cambiato, richiede il ricaricamento del modello di allineamento.",
 		"zh": "更改后，需要重新加载对齐模型。",
 		"ja": "変更されると、アライメントモデルの再読み込みが必要です。"
 	},
@@ -660,5 +663,105 @@
 		"it": "Creazione di una copia dell'audio...",
 		"zh": "正在制作音频副本...",
 		"ja": "音声のコピーを作成しています..."
+	},
+	"obtaining_vad": {
+		"en": "Obtaining VAD segments...",
+		"es": "Obteniendo segmentos VAD...",
+		"ca": "Obtenint segments VAD...",
+		"de": "Erhalte VAD-Segmente...",
+		"fr": "Obtention des segments VAD...",
+		"it": "Ottenimento di segmenti VAD...",
+		"zh": "获取VAD片段...",
+		"ja": "VADセグメントを取得中..."
+	},
+	"merging_vad": {
+		"en": "Merging VAD segments...",
+		"es": "Combinando segmentos VAD...",
+		"ca": "Combinant segments VAD...",
+		"de": "VAD-Segmente zusammenführen...",
+		"fr": "Fusion des segments VAD...",
+		"it": "Unione di segmenti VAD...",
+		"zh": "合并VAD片段...",
+		"ja": "VADセグメントをマージ中..."
+	},
+	"lang_not_specifyed": {
+		"en": "Language not specified. Detecting language...",
+		"es": "Idioma no especificado. Detectando idioma...",
+		"ca": "Idioma no especificat. Detectant idioma...",
+		"de": "Sprache nicht angegeben. Sprache wird erkannt...",
+		"fr": "Langue non spécifiée. Détection de la langue...",
+		"it": "Lingua non specificata. Rilevamento della lingua...",
+		"zh": "未指定语言。正在检测语言...",
+		"ja": "言語が指定されていません。言語を検出中..."
+	},
+	"lang_detected": {
+		"en": "Language detected in the first 30s: {}",
+		"es": "Idioma detectado en los primeros 30s: {}",
+		"ca": "Idioma detectat en els primers 30s: {}",
+		"de": "Sprache in den ersten 30s erkannt: {}",
+		"fr": "Langue détectée dans les 30 premières secondes : {}",
+		"it": "Lingua rilevata nei primi 30s: {}",
+		"zh": "在前30秒检测到的语言:{}",
+		"ja": "最初の30秒で検出された言語:{}"
+	},
+	"transcribing": {
+		"en": "Transcribing (language = {})...",
+		"es": "Transcribiendo (idioma = {})...",
+		"ca": "Transcrivint (idioma = {})...",
+		"de": "Transkribieren (Sprache = {})...",
+		"fr": "Transcription (langue = {})...",
+		"it": "Trascrizione (lingua = {})...",
+		"zh": "转录中（语言 = {})...",
+		"ja": "文字起こし中（言語 = {})..."
+	},
+	"processing_batch": {
+		"en": "Processing batch {}/{}, Progress: {}%...",
+		"es": "Procesando lote {}/{}, Progreso: {}%...",
+		"ca": "Processant lot {}/{}, Progrés: {}%...",
+		"de": "Verarbeite Stapel {}/{}, Fortschritt: {}%...",
+		"fr": "Traitement du lot {}/{}, Progression : {}%...",
+		"it": "Elaborazione batch {}/{}, Avanzamento: {}%...",
+		"zh": "正在处理批次 {}/{}, 进度: {}%...",
+		"ja": "バッチを処理中 {}/{}, 進捗: {}%..."
+	},
+	"error_languages": {
+		"en": "Some languages in {} did not have associated language tokens",
+		"es": "Algunos idiomas en {} no tenían tokens de idioma asociados",
+		"ca": "Alguns idiomes en {} no tenien tokens d'idioma associats",
+		"de": "Einige Sprachen in {} hatten keine zugeordneten Sprach-Token",
+		"fr": "Certaines langues dans {} n'avaient pas de jetons de langue associés",
+		"it": "Alcune lingue in {} non avevano token di lingua associati",
+		"zh": "{} 中的一些语言没有相关的语言标记",
+		"ja": "{} のいくつかの言語には関連する言語トークンがありませんでした"
+	},
+	"unsupported_compute_type": {
+		"en": "Unsupported compute type: {}",
+		"es": "Tipo de cálculo no soportado: {}",
+		"ca": "Tipus de càlcul no suportat: {}",
+		"de": "Nicht unterstützter Berechnungstyp: {}",
+		"fr": "Type de calcul non pris en charge : {}",
+		"it": "Tipo di calcolo non supportato: {}",
+		"zh": "不支持的计算类型：{}",
+		"ja": "サポートされていない計算タイプ：{}"
+	},
+	"downloading_model": {
+		"en": "Downloading model...",
+		"es": "Descargando modelo...",
+		"ca": "Descarregant model...",
+		"de": "Modell wird heruntergeladen...",
+		"fr": "Téléchargement du modèle...",
+		"it": "Scaricamento modello...",
+		"zh": "下载模型...",
+		"ja": "モデルをダウンロード中..."
+	},
+	"loading_vad": {
+		"en": "Loading VAD model...",
+		"es": "Cargando modelo VAD...",
+		"ca": "Carregant model VAD...",
+		"de": "VAD-Modell wird geladen...",
+		"fr": "Chargement du modèle VAD...",
+		"it": "Caricamento modello VAD...",
+		"zh": "加载VAD模型...",
+		"ja": "VADモデルを読み込み中..."
 	}
 }
