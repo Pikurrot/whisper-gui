@@ -622,7 +622,12 @@
 	"saving_transcription": {
 		"en": "Saving transcription to {}...",
 		"es": "Guardando transcripción a {}...",
-		"ca": "Desant transcripció a {}..."
+		"ca": "Desant transcripció a {}...",
+		"de": "Speichere Transkription in {}...",
+		"fr": "Enregistrement de la transcription dans {}...",
+		"it": "Salvataggio della trascrizione in {}...",
+		"zh": "将转录保存到{}...",
+		"ja": "{}に文字起こしを保存しています..."
 	},
 	"saving_align": {
 		"en": "Saving timestamps to {}...",
