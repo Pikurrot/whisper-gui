@@ -8,7 +8,7 @@ import json
 import numpy as np
 from datetime import datetime
 from typing import Any, Optional
-from scripts.config_io import read_config_value
+from scripts.config_io import read_config_value, write_config_value
 
 def reformat_lang_dict(lang_dict: dict[str, dict[str, str]]) -> dict[str, dict[str, str]]:
 	"""
@@ -25,7 +25,11 @@ def reformat_lang_dict(lang_dict: dict[str, dict[str, str]]) -> dict[str, dict[s
 with open("configs/lang.json", "r", encoding="utf-8") as f:
 	LANG_DICT = reformat_lang_dict(json.load(f))
 val, error = read_config_value("language")
-LANG = val if not error else "en"
+if error:
+	write_config_value("language", "en")
+	LANG = "en"
+else:
+	LANG = val
 if LANG not in LANG_DICT:
 	LANG = "en"
 	print(f"WARNING! Language {LANG} not supported for the interface. Using English instead")

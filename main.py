@@ -32,7 +32,11 @@ g_params = {}
 with open("configs/lang.json", "r", encoding="utf-8") as f:
 	LANG_DICT = reformat_lang_dict(json.load(f))
 val, error = read_config_value("language")
-LANG = val if not error else "en"
+if error:
+	write_config_value("language", "en")
+	LANG = "en"
+else:
+	LANG = val
 if LANG not in LANG_DICT:
 	LANG = "en"
 	print(f"WARNING! Language {LANG} not supported for the interface. Using English instead")
