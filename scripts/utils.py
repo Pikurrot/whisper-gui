@@ -7,7 +7,33 @@ import os
 import json
 import numpy as np
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional
+from scripts.config_io import read_config_value, write_config_value
+
+def reformat_lang_dict(lang_dict: dict[str, dict[str, str]]) -> dict[str, dict[str, str]]:
+	"""
+	Reformat the language dictionary to have the language as first keys.
+	"""
+	reformatted_dict = {}
+	for message, translations in lang_dict.items():
+		for lang, text in translations.items():
+			if lang not in reformatted_dict:
+				reformatted_dict[lang] = {}
+			reformatted_dict[lang][message] = text
+	return reformatted_dict
+
+with open("configs/lang.json", "r", encoding="utf-8") as f:
+	LANG_DICT = reformat_lang_dict(json.load(f))
+val, error = read_config_value("language")
+if error:
+	write_config_value("language", "en")
+	LANG = "en"
+else:
+	LANG = val
+if LANG not in LANG_DICT:
+	LANG = "en"
+	print(f"WARNING! Language {LANG} not supported for the interface. Using English instead")
+MSG: dict[str, str] = LANG_DICT[LANG]
 
 def list_models() -> list[str]:
 	"""
@@ -78,7 +104,7 @@ def save_transcription_to_txt(
 		Returns the path to the saved text file.
 	"""
 	text_path = os.path.join(save_dir, name)
-	print(f"Saving transcription to {text_path}...")
+	print(MSG["saving_transcription"].format(text_path))
 	with open(text_path, "w", encoding="utf-8") as f:
 		f.write(text_str)
 	return text_path
@@ -93,7 +119,7 @@ def save_alignments_to_json(
 		Returns the path to the saved JSON file.
 	"""
 	json_path = os.path.join(save_dir, name)
-	print(f"Saving alignments to {json_path}...")
+	print(MSG["saving_align"].format(json_path))
 	with open(json_path, "w", encoding="utf-8") as f:
 		json.dump(alignment_dict, f, indent=4)
 	return json_path
@@ -108,7 +134,7 @@ def save_subtitles_to_srt(
 		Returns the path to the saved SRT file.
 	"""
 	srt_path = os.path.join(save_dir, name)
-	print(f"Saving subtitles to {srt_path}...")
+	print(MSG["saving_subtitles"].format(srt_path))
 	with open(srt_path, "w", encoding="utf-8") as f:
 		for sub in subtitles_list:
 			f.write(f"{sub['number']}\n{sub['start']} --> {sub['end']}\n{sub['text']}\n\n")
@@ -116,7 +142,7 @@ def save_subtitles_to_srt(
 
 def load_and_save_audio(
 		audio_path: str,
-		micro_audio: tuple[int, np.ndarray],
+		micro_audio: Optional[tuple[int, np.ndarray]],
 		save_audio: bool,
 		save_dir: str,
 		preserve_name: bool=False
@@ -126,10 +152,10 @@ def load_and_save_audio(
 		Returns the loaded audio as a tuple of the sample rate and audio data.
 	"""
 	if micro_audio:
-		print("Saving micro audio...")
+		print(MSG["saving_micro"])
 		audio_path = save_audio_to_mp3(micro_audio, save_dir if save_audio else "temp")
 	elif save_audio:
-		print("Making a copy of the audio...")
+		print(MSG["copy_audio"])
 		original_name = os.path.basename(audio_path)
 		shutil.copy(audio_path, os.path.join(save_dir, original_name if preserve_name else "audio.mp3"))
 
