@@ -17,11 +17,25 @@ import inspect
 import torch
 import time
 import json
+import subprocess
 enablePrint()
 from scripts.whisper_model import load_custom_model, LANG_CODES
 from typing import Optional, Tuple, Callable
 from scripts.config_io import read_config_value, write_config_value
 from scripts.utils import *  # noqa: F403
+
+# ensure gpu_support has correct value
+gpu_support, error = read_config_value("gpu_support")
+if error or gpu_support not in (False, "cuda", "rocm"):
+	result = subprocess.run(["nvidia-smi"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+	if result.returncode == 0:
+		write_config_value("gpu_support", "cuda")
+	else:
+		result = subprocess.run("lspci | grep -i 'amdgpu'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		if result.returncode == 0:
+			write_config_value("gpu_support", "rocm")
+		else:
+			write_config_value("gpu_support", "false")
 
 # global variables
 ALIGN_LANGS = ["en", "fr", "de", "es", "it", "ja", "zh", "nl", "uk", "pt", "ar", "cs", "ru", "pl", "hu", "fi", "fa", "el", "tr", "da", "he", "vi", "ko", "ur", "te", "hi", "ca", "ml", "no", "nn"]
