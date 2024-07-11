@@ -615,5 +615,50 @@
 		"it": "Creazione interfaccia...",
 		"zh": "创建界面...",
 		"ja": "インターフェースを作成しています..."
+	},
+	"saving_transcription": {
+		"en": "Saving transcription to {}...",
+		"es": "Guardando transcripción a {}...",
+		"ca": "Desant transcripció a {}..."
+	},
+	"saving_align": {
+		"en": "Saving timestamps to {}...",
+		"es": "Guardando marcas de tiempo a {}...",
+		"ca": "Desant marques de temps a {}...",
+		"de": "Speichere Zeitstempel in {}...",
+		"fr": "Enregistrement des horodatages dans {}...",
+		"it": "Salvataggio dei timestamp in {}...",
+		"zh": "将时间戳保存到{}...",
+		"ja": "{}にタイムスタンプを保存しています..."
+	},
+	"saving_subtitles": {
+		"en": "Saving subtitles to {}...",
+		"es": "Guardando subtítulos a {}...",
+		"ca": "Desant subtítols a {}...",
+		"de": "Speichere Untertitel in {}...",
+		"fr": "Enregistrement des sous-titres dans {}...",
+		"it": "Salvataggio dei sottotitoli in {}...",
+		"zh": "将字幕保存到{}...",
+		"ja": "{}に字幕を保存しています..."
+	},
+	"saving_micro": {
+		"en": "Saving micro audio...",
+		"es": "Guardando audio del micro...",
+		"ca": "Desant àudio del micro...",
+		"de": "Speichere Mikrofon-Audio...",
+		"fr": "Enregistrement de l'audio micro...",
+		"it": "Salvataggio audio micro...",
+		"zh": "保存麦克风音频...",
+		"ja": "マイクの音声を保存しています..."
+	},
+	"copy_audio": {
+		"en": "Making a copy of the audio...",
+		"es": "Haciendo una copia del audio...",
+		"ca": "Fent una còpia de l'àudio...",
+		"de": "Erstelle eine Kopie des Audios...",
+		"fr": "Création d'une copie de l'audio...",
+		"it": "Creazione di una copia dell'audio...",
+		"zh": "正在制作音频副本...",
+		"ja": "音声のコピーを作成しています..."
 	}
 }
