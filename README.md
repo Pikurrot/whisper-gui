@@ -45,6 +45,10 @@ Otherwise, to run manually:
 `conda activate whisperx`  
 `python main.py --autolaunch`
 
+## Docker container
+To run this software in a docker container, visit this [dockerhub project](https://hub.docker.com/r/3x3cut0r/whisper-gui).  
+Thank you [3x3cut0r](https://hub.docker.com/u/3x3cut0r)!
+
 ## Licensing
 This project is primarily distributed under the terms of the MIT License. See the [LICENSE](LICENSE) file for details.
 
