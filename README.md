@@ -45,7 +45,7 @@ Otherwise, to run manually:
 `conda activate whisperx`  
 `python main.py --autolaunch`
 
-## Docker container
+## Docker container (CPU only for now)
 To run this software in a docker container, visit this [dockerhub project](https://hub.docker.com/r/3x3cut0r/whisper-gui).  
 Thank you [3x3cut0r](https://hub.docker.com/u/3x3cut0r)!
 
