@@ -3,18 +3,18 @@ import sys
 
 def blockPrint():
 	sys.stdout = open(os.devnull, 'w')
-	sys.stderr = open(os.devnull, 'w')
+	# sys.stderr = open(os.devnull, 'w')
 def enablePrint():
 	sys.stdout = sys.__stdout__
-	sys.stderr = sys.__stderr__
+	# sys.stderr = sys.__stderr__
 
 blockPrint()
 import gradio as gr
+import torch
 import whisperx
 import gc
 import argparse
 import inspect
-import torch
 import time
 import json
 import subprocess
