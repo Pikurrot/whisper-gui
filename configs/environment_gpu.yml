@@ -6,7 +6,7 @@ dependencies:
   - pip=23.3.1
   - python=3.10.13
   - pip:
-      - ctranslate2>=4.5.0
+      - ctranslate2>=4.0,<=4.4.0
       - faster-whisper>=1.1.1
       - nltk>=3.9.1
       - numpy>=2.0.2
