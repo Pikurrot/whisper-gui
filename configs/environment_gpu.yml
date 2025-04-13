@@ -5,11 +5,16 @@ channels:
 dependencies:
   - pip=23.3.1
   - python=3.10.13
-  - pytorch=2.0.0
-  - pytorch-cuda=11.8
-  - torchaudio=2.0.0
   - pip:
-      - ctranslate2==4.0.0
-      - faster-whisper==1.0.0
-      - gradio==4.37.2
-      - gradio-client==1.0.2
+      - ctranslate2>=4.0,<=4.4.0
+      - faster-whisper>=1.1.1
+      - nltk>=3.9.1
+      - numpy>=2.0.2
+      - onnxruntime==1.19
+      - pandas>=2.2.3
+      - pyannote-audio>=3.3.2
+      - torch>=2.5.1
+      - torchaudio>=2.5.1
+      - transformers>=4.48.0
+      - gradio>=5.25.0
+      - gradio-client>=1.8.0

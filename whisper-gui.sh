@@ -220,16 +220,16 @@ install_deps() {
 			echo "Installing dependencies for CUDA GPU..."
 			DEP_FILE="configs/environment_gpu.yml"
 			echo "Installing PyTorch with CUDA 11.8..."
-			conda install pytorch==2.0.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c nvidia
+			pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu118
 		elif [[ "$GPU_SUPPORT" == "rocm" ]]; then
 			echo "Installing dependencies for ROCm GPU..."
 			DEP_FILE="configs/environment_cpu.yml"
 			echo "Installing PyTorch with ROCm..."
-			pip install torch==2.0.0 torchaudio==2.0.0 --index-url https://download.pytorch.org/whl/rocm6.0
+			pip install torch torchaudio --index-url https://download.pytorch.org/whl/rocm6.2.4
 		else
 			echo "Installing dependencies for CPU..."
 			DEP_FILE="configs/environment_cpu.yml"
-			conda install pytorch==2.0.0 torchaudio==2.0.0 cpuonly -c pytorch
+			pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
 		fi
 	elif [ "$TEMP" == "Darwin" ]; then
 		if [[ "$GPU_SUPPORT" == "rocm" ]]; then
@@ -237,7 +237,7 @@ install_deps() {
 		fi
 		echo "Installing dependencies for macOS..."
 		DEP_FILE="configs/environment_cpu.yml"
-		conda install pytorch::pytorch==2.0.0 torchaudio==2.0.0 -c pytorch
+		pip install torch torchaudio
 	else
 		echo "This is neither Linux nor macOS."
 		exit 1
