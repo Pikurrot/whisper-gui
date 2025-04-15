@@ -29,16 +29,26 @@ gpu_support, error = read_config_value("gpu_support")
 if gpu_support is False:
 	write_config_value("gpu_support", "false")
 	gpu_support = "false"
-if error or gpu_support not in ("false", "cuda", "rocm"):
-	result = subprocess.run(["nvidia-smi"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-	if result.returncode == 0:
-		write_config_value("gpu_support", "cuda")
-	else:
-		result = subprocess.run("lspci | grep -i 'amdgpu'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		if result.returncode == 0:
-			write_config_value("gpu_support", "rocm")
-		else:
+if error or gpu_support not in ("false", "cuda", "rocm", "mps"):
+	# Check for Apple Silicon MPS
+	if torch.backends.mps.is_available():
+		write_config_value("gpu_support", "mps")
+	# Check for NVIDIA GPU
+	elif sys.platform != "darwin":  # Skip nvidia-smi check on macOS
+		try:
+			result = subprocess.run(["nvidia-smi"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+			if result.returncode == 0:
+				write_config_value("gpu_support", "cuda")
+			else:
+				result = subprocess.run("lspci | grep -i 'amdgpu'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+				if result.returncode == 0:
+					write_config_value("gpu_support", "rocm")
+				else:
+					write_config_value("gpu_support", "false")
+		except FileNotFoundError:
 			write_config_value("gpu_support", "false")
+	else:
+		write_config_value("gpu_support", "false")
 
 # global variables
 ALIGN_LANGS = ["en", "fr", "de", "es", "it", "ja", "zh", "nl", "uk", "pt", "ar", "cs", "ru", "pl", "hu", "fi", "fa", "el", "tr", "da", "he", "vi", "ko", "ur", "te", "hi", "ca", "ml", "no", "nn"]
@@ -337,10 +347,10 @@ with gr.Blocks(title="Whisper GUI") as demo:
 			with gr.Column():
 				model_select = gr.Dropdown(whisperx_models, value="base", label=MSG["model_select_label"], info=MSG["change_whisper_reload"])
 				with gr.Group():
-					audio_upload = gr.Audio(sources=["upload"], type="filepath", label=MSG["audio_upload_label"])
+					file_upload = gr.File(label="Upload Audio/Video File", file_types=["audio/*", "video/*"], type="filepath")
 					audio_record = gr.Audio(sources=["microphone"], type="numpy", label=MSG["audio_record_label"])
-					save_audio = gr.Checkbox(value=False, label=MSG["save_audio_label"], info=MSG["save_audio_info"])
-				gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=audio_upload)
+					save_audio = gr.Checkbox(value=False, label="Save extracted audio", info="Save the audio/extracted audio to the output directory")
+				gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=file_upload)
 				with gr.Accordion(label=MSG["advanced_options"], open=False):
 					language_select = gr.Dropdown(whisperx_langs, value = "auto", label=MSG["language_select_label"], info=MSG["language_select_info"]+MSG["change_align_reload"])
 					device_select = gr.Radio(["gpu", "cpu"], value = device, label=MSG["device_select_label"], info=device_message+MSG["change_both_reload"], interactive=device_interactive)
@@ -373,10 +383,10 @@ with gr.Blocks(title="Whisper GUI") as demo:
 				with gr.Group():
 					model_select2 = gr.Dropdown(custom_models, value=None, label=MSG["model_select2_label"], allow_custom_value=True, info=MSG["change_whisper_reload"])
 				with gr.Group():
-					audio_upload2 = gr.Audio(sources=["upload"], type="filepath", label=MSG["audio_upload_label"])
+					file_upload2 = gr.File(label="Upload Audio/Video File", file_types=["audio/*", "video/*"], type="filepath")
 					audio_record2 = gr.Audio(sources=["microphone"], type="numpy", label=MSG["audio_record_label"])
-					save_audio2 = gr.Checkbox(value=False, label=MSG["save_audio_label"], info=MSG["save_audio_info"])
-				gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=audio_upload2)
+					save_audio2 = gr.Checkbox(value=False, label="Save extracted audio", info="Save the audio/extracted audio to the output directory")
+				gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=file_upload2)
 				with gr.Accordion(label=MSG["advanced_options"], open=False):
 					language_select2 = gr.Dropdown(custom_langs, value = "auto", label="Language", info=MSG["language_select_info"]+MSG["change_align_reload"])
 					device_select2 = gr.Radio(["gpu", "cpu"], value = device, label=MSG["device_select_label"], info=device_message+MSG["change_both_reload"], interactive=device_interactive)
@@ -408,11 +418,11 @@ with gr.Blocks(title="Whisper GUI") as demo:
 		apply_button = gr.Button(value=MSG["apply_changes"])
 	
 	submit_button.click(transcribe_whisperx,
-						inputs=[model_select, audio_upload, audio_record, device_select, batch_size_slider, compute_type_select, language_select, chunk_size_slider, beam_size_slider, release_memory_checkbox, save_root, save_audio, save_transcription, save_alignments, save_in_subfolder, preserve_name, alignments_format],
+						inputs=[model_select, file_upload, audio_record, device_select, batch_size_slider, compute_type_select, language_select, chunk_size_slider, beam_size_slider, release_memory_checkbox, save_root, save_audio, save_transcription, save_alignments, save_in_subfolder, preserve_name, alignments_format],
 						outputs=[transcription_output, alignments_output, time_transcribe, time_align])
 	
 	submit_button2.click(transcribe_custom,
-						inputs=[model_select2, audio_upload2, audio_record2, device_select2, batch_size_slider2, compute_type_select2, language_select2, chunk_size_slider2, beam_size_slider2, release_memory_checkbox2, save_root2, save_audio2, save_transcription2, save_alignments2, save_in_subfolder2, preserve_name2, alignments_format2],
+						inputs=[model_select2, file_upload2, audio_record2, device_select2, batch_size_slider2, compute_type_select2, language_select2, chunk_size_slider2, beam_size_slider2, release_memory_checkbox2, save_root2, save_audio2, save_transcription2, save_alignments2, save_in_subfolder2, preserve_name2, alignments_format2],
 						outputs=[transcription_output2, alignments_output2, time_transcribe2, time_align2])
 	
 	release_memory_button.click(release_memory_models)
@@ -430,4 +440,10 @@ if __name__ == "__main__":
 
 	# Launch the interface
 	print(MSG["creating_interface"])
-	demo.launch(inbrowser=args.autolaunch, share=args.share)
+	# When running in Docker, we need to bind to 0.0.0.0
+	is_docker = os.path.exists('/.dockerenv')
+	demo.launch(
+		inbrowser=args.autolaunch,
+		share=args.share,
+		server_name='0.0.0.0' if is_docker else None
+	)

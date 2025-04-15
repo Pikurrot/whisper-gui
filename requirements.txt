@@ -1,0 +1,5 @@
+gradio>=3.50.2
+torch>=2.0.0
+git+https://github.com/m-bain/whisperx.git
+numpy>=1.24.3
+tqdm>=4.65.0 
