@@ -87,11 +87,17 @@ def save_audio_to_mp3(
 	rate, y = audio_tuple
 	if len(y.shape) == 2:
 		y = y.T[0]  # If stereo, take one channel
+	
+	os.makedirs(save_dir, exist_ok=True)
 	audio_path = os.path.join(save_dir, "audio.mp3")
-	wav_path = os.path.join("temp", "temp_audio.wav")
+	wav_path = os.path.join(save_dir, "temp_audio.wav")
+	
 	sf.write(wav_path, y, rate)
-	subprocess.run(["ffmpeg", "-i", wav_path, audio_path])  # Convert WAV to MP3
-	os.remove(wav_path)  # Remove temporary WAV file
+	subprocess.run(["ffmpeg", "-i", wav_path, "-y", audio_path])  # Convert WAV to MP3
+	try:
+		os.remove(wav_path)  # Remove temporary WAV file
+	except:
+		pass  # Ignore cleanup errors
 	return audio_path
 
 def save_transcription_to_txt(
@@ -142,14 +148,14 @@ def save_subtitles_to_srt(
 
 def extract_audio_from_video(
 		video_path: str,
-		temp_dir: str="temp"
+		temp_dir: str
 ) -> str:
 	"""
 	Extract audio from a video file and save it as a temporary MP3.
 	Returns the path to the extracted audio file.
 	"""
 	if not os.path.exists(temp_dir):
-		os.makedirs(temp_dir)
+		os.makedirs(temp_dir, exist_ok=True)
 	
 	# Generate temporary audio file path
 	temp_audio_path = os.path.join(temp_dir, "temp_audio.mp3")
@@ -180,16 +186,20 @@ def load_and_save_audio(
 	Load the audio from the specified path and save it to the specified directory.
 		Returns the loaded audio as a tuple of the sample rate and audio data.
 	"""
+	# Create temp directory if needed
+	temp_dir = os.path.dirname(audio_path) if audio_path else save_dir
+	os.makedirs(temp_dir, exist_ok=True)
+	
 	# Check if input is a video file
 	video_extensions = {'.mp4', '.avi', '.mov', '.mkv', '.webm', '.flv'}
 	is_video = os.path.splitext(audio_path)[1].lower() in video_extensions if audio_path else False
 	
 	if micro_audio:
 		print(MSG["saving_micro"])
-		audio_path = save_audio_to_mp3(micro_audio, save_dir if save_audio else "temp")
+		audio_path = save_audio_to_mp3(micro_audio, save_dir if save_audio else temp_dir)
 	elif is_video:
 		print("Extracting audio from video...")
-		temp_audio_path = extract_audio_from_video(audio_path)
+		temp_audio_path = extract_audio_from_video(audio_path, temp_dir)
 		if save_audio:
 			# Save the extracted audio if requested
 			if preserve_name:
@@ -205,12 +215,6 @@ def load_and_save_audio(
 
 	print("Loading audio...")
 	audio = whisperx.load_audio(audio_path)
-	
-	# Clean up temporary files
-	if micro_audio and not save_audio:
-		os.remove(audio_path)
-	elif is_video and not save_audio:
-		os.remove(audio_path)
 	
 	return audio
 

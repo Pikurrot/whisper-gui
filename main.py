@@ -238,8 +238,9 @@ def _transcribe() -> Tuple[str, str, str, str]:
 	global g_model, g_model_a, g_model_a_metadata, g_params
 	# Create save folder
 	save_dir = None
-	if not os.path.exists("temp"):
-		os.makedirs("temp")
+	temp_dir = os.path.join("temp", str(int(time.time())))  # Use timestamp for temp dir
+	os.makedirs(temp_dir, exist_ok=True)
+	
 	if g_params["save_audio"] or g_params["save_transcription"] or g_params["save_alignments"]:
 		if g_params["save_root"] is not None and g_params["save_root"] != "":
 			save_root = g_params["save_root"]
@@ -250,65 +251,71 @@ def _transcribe() -> Tuple[str, str, str, str]:
 		else:
 			save_dir = save_root
 
-	# Load (and save) audio
-	audio = load_and_save_audio(g_params["audio_path"], g_params["micro_audio"], g_params["save_audio"], save_dir, g_params["preserve_name"])
+	try:
+		# Load (and save) audio
+		audio = load_and_save_audio(g_params["audio_path"], g_params["micro_audio"], g_params["save_audio"], save_dir, g_params["preserve_name"])
 
-	# Transcription
-	if g_params["language"] == "auto": 
-		language = None
-	else:
-		language = g_params["language"]
-	time_transcribe = time.time()
-	print(MSG["starting_transcription"])
-	result = g_model.transcribe(audio, batch_size=g_params["batch_size"], language=language, chunk_size=g_params["chunk_size"], print_progress=True)
-	if "time" in result.keys():
-		time_transcribe = result["time"]
-	else:
-		time_transcribe = time.time() - time_transcribe
-	joined_text = " ".join([segment["text"].strip() for segment in result["segments"]])
-	if g_params["save_transcription"]:
-		if g_params["preserve_name"]:
-			audio_name = os.path.basename(g_params["audio_path"]).split(".")[0]
-			save_name = f"{audio_name}_transcription.txt"
+		# Transcription
+		if g_params["language"] == "auto": 
+			language = None
 		else:
-			save_name = "transcription.txt"
-		save_transcription_to_txt(joined_text, save_dir, save_name)
-
-	if g_params["release_memory"]:
-		release_whisper()
-
-	# Word-level alignment
-	lang_used = result["language"]
-	if lang_used not in ALIGN_LANGS:
-		print(MSG["align_lang_not_supported"].format(lang_used))
-		lang_used = "en"
-	if g_model_a is None:
-		print(MSG["loading_align_model"])
-		g_model_a, g_model_a_metadata = whisperx.load_align_model(language_code=lang_used, device=g_params["device"], model_dir="models/alignment")
-	print(MSG["aligning"])
-	time_align = time.time()
-	aligned_result = whisperx.align(result["segments"], g_model_a, g_model_a_metadata, audio, g_params["device"], return_char_alignments=False)
-	time_align = time.time() - time_align
-	if g_params["save_alignments"]:
-		align_format = g_params["alignments_format"].lower()
-		if g_params["preserve_name"]:
-			audio_name = os.path.basename(g_params["audio_path"]).split(".")[0]
-			save_name = f"{audio_name}_timestamps." + align_format
+			language = g_params["language"]
+		time_transcribe = time.time()
+		print(MSG["starting_transcription"])
+		result = g_model.transcribe(audio, batch_size=g_params["batch_size"], language=language, chunk_size=g_params["chunk_size"], print_progress=True)
+		if "time" in result.keys():
+			time_transcribe = result["time"]
 		else:
-			save_name = "timestamps." + align_format
-		if align_format == "json":
-			save_alignments_to_json(aligned_result, save_dir, save_name)
-		elif align_format == "srt":
-			subtitles = alignments2subtitles(aligned_result["segments"], max_line_length=50)
-			save_subtitles_to_srt(subtitles, save_dir, save_name)
-	if g_params["release_memory"]:
-		release_align()
-	print(MSG["done"])
-	if not os.listdir("temp") and os.path.exists("temp"):
-		# Remove temp folder if empty
-		os.rmdir("temp")
-	# Return the transcription and sentence-level alignments
-	return joined_text, format_alignments(aligned_result), f"{round(time_transcribe, 3)}s", f"{round(time_align, 3)}s"
+			time_transcribe = time.time() - time_transcribe
+		joined_text = " ".join([segment["text"].strip() for segment in result["segments"]])
+		if g_params["save_transcription"]:
+			if g_params["preserve_name"]:
+				audio_name = os.path.basename(g_params["audio_path"]).split(".")[0]
+				save_name = f"{audio_name}_transcription.txt"
+			else:
+				save_name = "transcription.txt"
+			save_transcription_to_txt(joined_text, save_dir, save_name)
+
+		if g_params["release_memory"]:
+			release_whisper()
+
+		# Word-level alignment
+		lang_used = result["language"]
+		if lang_used not in ALIGN_LANGS:
+			print(MSG["align_lang_not_supported"].format(lang_used))
+			lang_used = "en"
+		if g_model_a is None:
+			print(MSG["loading_align_model"])
+			g_model_a, g_model_a_metadata = whisperx.load_align_model(language_code=lang_used, device=g_params["device"], model_dir="models/alignment")
+		print(MSG["aligning"])
+		time_align = time.time()
+		aligned_result = whisperx.align(result["segments"], g_model_a, g_model_a_metadata, audio, g_params["device"], return_char_alignments=False)
+		time_align = time.time() - time_align
+		if g_params["save_alignments"]:
+			align_format = g_params["alignments_format"].lower()
+			if g_params["preserve_name"]:
+				audio_name = os.path.basename(g_params["audio_path"]).split(".")[0]
+				save_name = f"{audio_name}_timestamps." + align_format
+			else:
+				save_name = "timestamps." + align_format
+			if align_format == "json":
+				save_alignments_to_json(aligned_result, save_dir, save_name)
+			elif align_format == "srt":
+				subtitles = alignments2subtitles(aligned_result["segments"], max_line_length=50)
+				save_subtitles_to_srt(subtitles, save_dir, save_name)
+		if g_params["release_memory"]:
+			release_align()
+		print(MSG["done"])
+		
+		return joined_text, format_alignments(aligned_result), f"{round(time_transcribe, 3)}s", f"{round(time_align, 3)}s"
+	finally:
+		# Clean up temp directory
+		try:
+			import shutil
+			if os.path.exists(temp_dir):
+				shutil.rmtree(temp_dir)
+		except Exception as e:
+			print(f"Warning: Could not clean up temp directory: {e}")
 
 
 # Prepare interface data
