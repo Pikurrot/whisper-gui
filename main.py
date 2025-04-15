@@ -347,8 +347,12 @@ with gr.Blocks(title="Whisper GUI") as demo:
 			with gr.Column():
 				model_select = gr.Dropdown(whisperx_models, value="base", label=MSG["model_select_label"], info=MSG["change_whisper_reload"])
 				with gr.Group():
-					file_upload = gr.File(label="Upload Audio/Video File", file_types=["audio/*", "video/*"], type="filepath")
-					audio_record = gr.Audio(sources=["microphone"], type="numpy", label=MSG["audio_record_label"])
+					file_upload = gr.File(
+						label="Upload Audio/Video File",
+						file_types=[".mp3", ".wav", ".m4a", ".mp4", ".avi", ".mov", ".mkv", ".webm"],
+						type="filepath"
+					)
+					audio_record = gr.Audio(sources=["microphone"], type="numpy", label=MSG["audio_record_label"], visible=False)
 					save_audio = gr.Checkbox(value=False, label="Save extracted audio", info="Save the audio/extracted audio to the output directory")
 				gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=file_upload)
 				with gr.Accordion(label=MSG["advanced_options"], open=False):
@@ -383,8 +387,12 @@ with gr.Blocks(title="Whisper GUI") as demo:
 				with gr.Group():
 					model_select2 = gr.Dropdown(custom_models, value=None, label=MSG["model_select2_label"], allow_custom_value=True, info=MSG["change_whisper_reload"])
 				with gr.Group():
-					file_upload2 = gr.File(label="Upload Audio/Video File", file_types=["audio/*", "video/*"], type="filepath")
-					audio_record2 = gr.Audio(sources=["microphone"], type="numpy", label=MSG["audio_record_label"])
+					file_upload2 = gr.File(
+						label="Upload Audio/Video File",
+						file_types=[".mp3", ".wav", ".m4a", ".mp4", ".avi", ".mov", ".mkv", ".webm"],
+						type="filepath"
+					)
+					audio_record2 = gr.Audio(sources=["microphone"], type="numpy", label=MSG["audio_record_label"], visible=False)
 					save_audio2 = gr.Checkbox(value=False, label="Save extracted audio", info="Save the audio/extracted audio to the output directory")
 				gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=file_upload2)
 				with gr.Accordion(label=MSG["advanced_options"], open=False):
