@@ -29,16 +29,26 @@ gpu_support, error = read_config_value("gpu_support")
 if gpu_support is False:
 	write_config_value("gpu_support", "false")
 	gpu_support = "false"
-if error or gpu_support not in ("false", "cuda", "rocm"):
-	result = subprocess.run(["nvidia-smi"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-	if result.returncode == 0:
-		write_config_value("gpu_support", "cuda")
-	else:
-		result = subprocess.run("lspci | grep -i 'amdgpu'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		if result.returncode == 0:
-			write_config_value("gpu_support", "rocm")
-		else:
+if error or gpu_support not in ("false", "cuda", "rocm", "mps"):
+	# Check for Apple Silicon MPS
+	if torch.backends.mps.is_available():
+		write_config_value("gpu_support", "mps")
+	# Check for NVIDIA GPU
+	elif sys.platform != "darwin":  # Skip nvidia-smi check on macOS
+		try:
+			result = subprocess.run(["nvidia-smi"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+			if result.returncode == 0:
+				write_config_value("gpu_support", "cuda")
+			else:
+				result = subprocess.run("lspci | grep -i 'amdgpu'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+				if result.returncode == 0:
+					write_config_value("gpu_support", "rocm")
+				else:
+					write_config_value("gpu_support", "false")
+		except FileNotFoundError:
 			write_config_value("gpu_support", "false")
+	else:
+		write_config_value("gpu_support", "false")
 
 # global variables
 ALIGN_LANGS = ["en", "fr", "de", "es", "it", "ja", "zh", "nl", "uk", "pt", "ar", "cs", "ru", "pl", "hu", "fi", "fa", "el", "tr", "da", "he", "vi", "ko", "ur", "te", "hi", "ca", "ml", "no", "nn"]
@@ -228,8 +238,9 @@ def _transcribe() -> Tuple[str, str, str, str]:
 	global g_model, g_model_a, g_model_a_metadata, g_params
 	# Create save folder
 	save_dir = None
-	if not os.path.exists("temp"):
-		os.makedirs("temp")
+	temp_dir = os.path.join("temp", str(int(time.time())))  # Use timestamp for temp dir
+	os.makedirs(temp_dir, exist_ok=True)
+	
 	if g_params["save_audio"] or g_params["save_transcription"] or g_params["save_alignments"]:
 		if g_params["save_root"] is not None and g_params["save_root"] != "":
 			save_root = g_params["save_root"]
@@ -240,65 +251,71 @@ def _transcribe() -> Tuple[str, str, str, str]:
 		else:
 			save_dir = save_root
 
-	# Load (and save) audio
-	audio = load_and_save_audio(g_params["audio_path"], g_params["micro_audio"], g_params["save_audio"], save_dir, g_params["preserve_name"])
+	try:
+		# Load (and save) audio
+		audio = load_and_save_audio(g_params["audio_path"], g_params["micro_audio"], g_params["save_audio"], save_dir, g_params["preserve_name"])
 
-	# Transcription
-	if g_params["language"] == "auto": 
-		language = None
-	else:
-		language = g_params["language"]
-	time_transcribe = time.time()
-	print(MSG["starting_transcription"])
-	result = g_model.transcribe(audio, batch_size=g_params["batch_size"], language=language, chunk_size=g_params["chunk_size"], print_progress=True)
-	if "time" in result.keys():
-		time_transcribe = result["time"]
-	else:
-		time_transcribe = time.time() - time_transcribe
-	joined_text = " ".join([segment["text"].strip() for segment in result["segments"]])
-	if g_params["save_transcription"]:
-		if g_params["preserve_name"]:
-			audio_name = os.path.basename(g_params["audio_path"]).split(".")[0]
-			save_name = f"{audio_name}_transcription.txt"
+		# Transcription
+		if g_params["language"] == "auto": 
+			language = None
 		else:
-			save_name = "transcription.txt"
-		save_transcription_to_txt(joined_text, save_dir, save_name)
-
-	if g_params["release_memory"]:
-		release_whisper()
-
-	# Word-level alignment
-	lang_used = result["language"]
-	if lang_used not in ALIGN_LANGS:
-		print(MSG["align_lang_not_supported"].format(lang_used))
-		lang_used = "en"
-	if g_model_a is None:
-		print(MSG["loading_align_model"])
-		g_model_a, g_model_a_metadata = whisperx.load_align_model(language_code=lang_used, device=g_params["device"], model_dir="models/alignment")
-	print(MSG["aligning"])
-	time_align = time.time()
-	aligned_result = whisperx.align(result["segments"], g_model_a, g_model_a_metadata, audio, g_params["device"], return_char_alignments=False)
-	time_align = time.time() - time_align
-	if g_params["save_alignments"]:
-		align_format = g_params["alignments_format"].lower()
-		if g_params["preserve_name"]:
-			audio_name = os.path.basename(g_params["audio_path"]).split(".")[0]
-			save_name = f"{audio_name}_timestamps." + align_format
+			language = g_params["language"]
+		time_transcribe = time.time()
+		print(MSG["starting_transcription"])
+		result = g_model.transcribe(audio, batch_size=g_params["batch_size"], language=language, chunk_size=g_params["chunk_size"], print_progress=True)
+		if "time" in result.keys():
+			time_transcribe = result["time"]
 		else:
-			save_name = "timestamps." + align_format
-		if align_format == "json":
-			save_alignments_to_json(aligned_result, save_dir, save_name)
-		elif align_format == "srt":
-			subtitles = alignments2subtitles(aligned_result["segments"], max_line_length=50)
-			save_subtitles_to_srt(subtitles, save_dir, save_name)
-	if g_params["release_memory"]:
-		release_align()
-	print(MSG["done"])
-	if not os.listdir("temp") and os.path.exists("temp"):
-		# Remove temp folder if empty
-		os.rmdir("temp")
-	# Return the transcription and sentence-level alignments
-	return joined_text, format_alignments(aligned_result), f"{round(time_transcribe, 3)}s", f"{round(time_align, 3)}s"
+			time_transcribe = time.time() - time_transcribe
+		joined_text = " ".join([segment["text"].strip() for segment in result["segments"]])
+		if g_params["save_transcription"]:
+			if g_params["preserve_name"]:
+				audio_name = os.path.basename(g_params["audio_path"]).split(".")[0]
+				save_name = f"{audio_name}_transcription.txt"
+			else:
+				save_name = "transcription.txt"
+			save_transcription_to_txt(joined_text, save_dir, save_name)
+
+		if g_params["release_memory"]:
+			release_whisper()
+
+		# Word-level alignment
+		lang_used = result["language"]
+		if lang_used not in ALIGN_LANGS:
+			print(MSG["align_lang_not_supported"].format(lang_used))
+			lang_used = "en"
+		if g_model_a is None:
+			print(MSG["loading_align_model"])
+			g_model_a, g_model_a_metadata = whisperx.load_align_model(language_code=lang_used, device=g_params["device"], model_dir="models/alignment")
+		print(MSG["aligning"])
+		time_align = time.time()
+		aligned_result = whisperx.align(result["segments"], g_model_a, g_model_a_metadata, audio, g_params["device"], return_char_alignments=False)
+		time_align = time.time() - time_align
+		if g_params["save_alignments"]:
+			align_format = g_params["alignments_format"].lower()
+			if g_params["preserve_name"]:
+				audio_name = os.path.basename(g_params["audio_path"]).split(".")[0]
+				save_name = f"{audio_name}_timestamps." + align_format
+			else:
+				save_name = "timestamps." + align_format
+			if align_format == "json":
+				save_alignments_to_json(aligned_result, save_dir, save_name)
+			elif align_format == "srt":
+				subtitles = alignments2subtitles(aligned_result["segments"], max_line_length=50)
+				save_subtitles_to_srt(subtitles, save_dir, save_name)
+		if g_params["release_memory"]:
+			release_align()
+		print(MSG["done"])
+		
+		return joined_text, format_alignments(aligned_result), f"{round(time_transcribe, 3)}s", f"{round(time_align, 3)}s"
+	finally:
+		# Clean up temp directory
+		try:
+			import shutil
+			if os.path.exists(temp_dir):
+				shutil.rmtree(temp_dir)
+		except Exception as e:
+			print(f"Warning: Could not clean up temp directory: {e}")
 
 
 # Prepare interface data
@@ -337,10 +354,14 @@ with gr.Blocks(title="Whisper GUI") as demo:
 			with gr.Column():
 				model_select = gr.Dropdown(whisperx_models, value="base", label=MSG["model_select_label"], info=MSG["change_whisper_reload"])
 				with gr.Group():
-					audio_upload = gr.Audio(sources=["upload"], type="filepath", label=MSG["audio_upload_label"])
-					audio_record = gr.Audio(sources=["microphone"], type="numpy", label=MSG["audio_record_label"])
-					save_audio = gr.Checkbox(value=False, label=MSG["save_audio_label"], info=MSG["save_audio_info"])
-				gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=audio_upload)
+					file_upload = gr.File(
+						label="Upload Audio/Video File",
+						file_types=[".mp3", ".wav", ".m4a", ".mp4", ".avi", ".mov", ".mkv", ".webm"],
+						type="filepath"
+					)
+					audio_record = gr.Audio(sources=["microphone"], type="numpy", label=MSG["audio_record_label"], visible=False)
+					save_audio = gr.Checkbox(value=False, label="Save extracted audio", info="Save the audio/extracted audio to the output directory")
+				gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=file_upload)
 				with gr.Accordion(label=MSG["advanced_options"], open=False):
 					language_select = gr.Dropdown(whisperx_langs, value = "auto", label=MSG["language_select_label"], info=MSG["language_select_info"]+MSG["change_align_reload"])
 					device_select = gr.Radio(["gpu", "cpu"], value = device, label=MSG["device_select_label"], info=device_message+MSG["change_both_reload"], interactive=device_interactive)
@@ -373,10 +394,14 @@ with gr.Blocks(title="Whisper GUI") as demo:
 				with gr.Group():
 					model_select2 = gr.Dropdown(custom_models, value=None, label=MSG["model_select2_label"], allow_custom_value=True, info=MSG["change_whisper_reload"])
 				with gr.Group():
-					audio_upload2 = gr.Audio(sources=["upload"], type="filepath", label=MSG["audio_upload_label"])
-					audio_record2 = gr.Audio(sources=["microphone"], type="numpy", label=MSG["audio_record_label"])
-					save_audio2 = gr.Checkbox(value=False, label=MSG["save_audio_label"], info=MSG["save_audio_info"])
-				gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=audio_upload2)
+					file_upload2 = gr.File(
+						label="Upload Audio/Video File",
+						file_types=[".mp3", ".wav", ".m4a", ".mp4", ".avi", ".mov", ".mkv", ".webm"],
+						type="filepath"
+					)
+					audio_record2 = gr.Audio(sources=["microphone"], type="numpy", label=MSG["audio_record_label"], visible=False)
+					save_audio2 = gr.Checkbox(value=False, label="Save extracted audio", info="Save the audio/extracted audio to the output directory")
+				gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=file_upload2)
 				with gr.Accordion(label=MSG["advanced_options"], open=False):
 					language_select2 = gr.Dropdown(custom_langs, value = "auto", label="Language", info=MSG["language_select_info"]+MSG["change_align_reload"])
 					device_select2 = gr.Radio(["gpu", "cpu"], value = device, label=MSG["device_select_label"], info=device_message+MSG["change_both_reload"], interactive=device_interactive)
@@ -408,11 +433,11 @@ with gr.Blocks(title="Whisper GUI") as demo:
 		apply_button = gr.Button(value=MSG["apply_changes"])
 	
 	submit_button.click(transcribe_whisperx,
-						inputs=[model_select, audio_upload, audio_record, device_select, batch_size_slider, compute_type_select, language_select, chunk_size_slider, beam_size_slider, release_memory_checkbox, save_root, save_audio, save_transcription, save_alignments, save_in_subfolder, preserve_name, alignments_format],
+						inputs=[model_select, file_upload, audio_record, device_select, batch_size_slider, compute_type_select, language_select, chunk_size_slider, beam_size_slider, release_memory_checkbox, save_root, save_audio, save_transcription, save_alignments, save_in_subfolder, preserve_name, alignments_format],
 						outputs=[transcription_output, alignments_output, time_transcribe, time_align])
 	
 	submit_button2.click(transcribe_custom,
-						inputs=[model_select2, audio_upload2, audio_record2, device_select2, batch_size_slider2, compute_type_select2, language_select2, chunk_size_slider2, beam_size_slider2, release_memory_checkbox2, save_root2, save_audio2, save_transcription2, save_alignments2, save_in_subfolder2, preserve_name2, alignments_format2],
+						inputs=[model_select2, file_upload2, audio_record2, device_select2, batch_size_slider2, compute_type_select2, language_select2, chunk_size_slider2, beam_size_slider2, release_memory_checkbox2, save_root2, save_audio2, save_transcription2, save_alignments2, save_in_subfolder2, preserve_name2, alignments_format2],
 						outputs=[transcription_output2, alignments_output2, time_transcribe2, time_align2])
 	
 	release_memory_button.click(release_memory_models)
@@ -430,4 +455,10 @@ if __name__ == "__main__":
 
 	# Launch the interface
 	print(MSG["creating_interface"])
-	demo.launch(inbrowser=args.autolaunch, share=args.share)
+	# When running in Docker, we need to bind to 0.0.0.0
+	is_docker = os.path.exists('/.dockerenv')
+	demo.launch(
+		inbrowser=args.autolaunch,
+		share=args.share,
+		server_name='0.0.0.0' if is_docker else None
+	)
