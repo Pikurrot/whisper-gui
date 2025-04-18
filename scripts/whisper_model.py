@@ -33,7 +33,10 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import torch
 import whisperx
-from whisperx.vads.pyannote import VoiceActivitySegmentation
+try:
+	from whisperx.vad import VoiceActivitySegmentation
+except ModuleNotFoundError:
+	from whisperx.vads.pyannote import VoiceActivitySegmentation
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
 import os
 import time
