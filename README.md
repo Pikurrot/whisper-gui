@@ -3,6 +3,10 @@ A simple GUI made with `gradio` to use Whisper.
 
 ![whisper-gui-img](https://github.com/Pikurrot/Pikurrot/blob/main/images/whisper-gui/interface_screenshot.png?raw=true)
 
+## ⚠️ Important Note
+This software may have some compatibility issues now. I plan to completely fix them soon, and release an integrated package for more stability.  
+I also plan to introduce some new features soon, like speaker diarization and mass transcription. This GUI is going to become something bigger. Stay tuned.
+
 ## Requirements
 - [Anaconda](https://docs.anaconda.com/free/anaconda/install/) or [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/) installed and `conda` added to PATH.
 - `git` installed and added to PATH. See [instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
