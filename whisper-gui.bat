@@ -113,20 +113,25 @@ goto activate_env
 
 :: Read environment name from config file
 :read_env_name
-for /f "delims=" %%a in ('call scripts\config_read.bat "env_name"') do set ENV_NAME=%%a
-set TEMP=%errorlevel%
-if %TEMP% EQU 1 (
+call scripts\config_read.bat "env_name" > temp_env_name.txt 2>nul
+if %errorlevel% EQU 1 (
+	del temp_env_name.txt >nul 2>&1
 	echo Failed to read config file.
 	goto cleanup
 )
-if %TEMP% EQU 2 (
+if %errorlevel% EQU 2 (
+	del temp_env_name.txt >nul 2>&1
 	echo Config file does not contain "env_name" key.
 	goto list_envs
 )
-if %TEMP% EQU 3 (
+if %errorlevel% EQU 3 (
+	del temp_env_name.txt >nul 2>&1
 	echo "env_name" key is null in config file.
 	goto list_envs
 )
+set /p ENV_NAME=<temp_env_name.txt
+del temp_env_name.txt >nul 2>&1
+echo Using saved environment: !ENV_NAME!
 set TEMP="skip"
 goto activate_env
 
@@ -157,24 +162,25 @@ goto check_gpu
 :: Check if GPU support is enabled
 :check_gpu
 echo Checking GPU support...
-for /f "delims=" %%a in ('call scripts\config_read.bat "gpu_support"') do (
-	set GPU_SUPPORT=%%a
-	set TEMP=!errorlevel!
-)
-if %TEMP% EQU 0 (
-	goto install_deps
-)
-if %TEMP% EQU 1 (
+call scripts\config_read.bat "gpu_support" > temp_gpu_support.txt 2>nul
+if %errorlevel% EQU 1 (
+	del temp_gpu_support.txt >nul 2>&1
 	echo Failed to read config file.
 	goto cleanup
 )
-if %TEMP% EQU 2 (
+if %errorlevel% EQU 2 (
+	del temp_gpu_support.txt >nul 2>&1
 	echo Config file does not contain "gpu_support" key.
+	goto test_gpu
 )
-if %TEMP% EQU 3 (
+if %errorlevel% EQU 3 (
+	del temp_gpu_support.txt >nul 2>&1
 	echo "gpu_support" key is null in config file.
+	goto test_gpu
 )
-goto test_gpu
+set /p GPU_SUPPORT=<temp_gpu_support.txt
+del temp_gpu_support.txt >nul 2>&1
+goto install_deps
 
 :test_gpu
 echo Testing if GPU is available...
