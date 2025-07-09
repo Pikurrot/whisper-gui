@@ -18,6 +18,7 @@ import inspect
 import time
 import json
 import subprocess
+from pathlib import Path
 enablePrint()
 from scripts.whisper_model import load_custom_model, LANG_CODES
 from typing import Optional, Tuple, Callable
@@ -56,7 +57,13 @@ g_model = None
 g_model_a = None
 g_model_a_metadata = None
 g_params = {}
-with open("configs/lang.json", "r", encoding="utf-8") as f:
+if getattr(sys, "frozen", False): # running from a PyInstaller bundle
+	base = Path(sys._MEIPASS)
+else:
+	base = Path(__file__).resolve().parent
+lang_path = base / "configs" / "lang.json"
+example_path = base / "examples" / "coffe_break_example.mp3"
+with lang_path.open("r", encoding="utf-8") as f:
 	LANG_DICT = reformat_lang_dict(json.load(f))
 val, error = read_config_value("language")
 if error:
@@ -361,7 +368,7 @@ with gr.Blocks(title="Whisper GUI") as demo:
 					)
 					audio_record = gr.Audio(sources=["microphone"], type="numpy", label=MSG["audio_record_label"], visible=False)
 					save_audio = gr.Checkbox(value=False, label="Save extracted audio", info="Save the audio/extracted audio to the output directory")
-				gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=file_upload)
+				gr.Examples(examples=[str(example_path)], inputs=file_upload)
 				with gr.Accordion(label=MSG["advanced_options"], open=False):
 					language_select = gr.Dropdown(whisperx_langs, value = "auto", label=MSG["language_select_label"], info=MSG["language_select_info"]+MSG["change_align_reload"])
 					device_select = gr.Radio(["gpu", "cpu"], value = device, label=MSG["device_select_label"], info=device_message+MSG["change_both_reload"], interactive=device_interactive)
@@ -401,7 +408,7 @@ with gr.Blocks(title="Whisper GUI") as demo:
 					)
 					audio_record2 = gr.Audio(sources=["microphone"], type="numpy", label=MSG["audio_record_label"], visible=False)
 					save_audio2 = gr.Checkbox(value=False, label="Save extracted audio", info="Save the audio/extracted audio to the output directory")
-				gr.Examples(examples=["examples/coffe_break_example.mp3"], inputs=file_upload2)
+				gr.Examples(examples=[str(example_path)], inputs=file_upload2)
 				with gr.Accordion(label=MSG["advanced_options"], open=False):
 					language_select2 = gr.Dropdown(custom_langs, value = "auto", label="Language", info=MSG["language_select_info"]+MSG["change_align_reload"])
 					device_select2 = gr.Radio(["gpu", "cpu"], value = device, label=MSG["device_select_label"], info=device_message+MSG["change_both_reload"], interactive=device_interactive)

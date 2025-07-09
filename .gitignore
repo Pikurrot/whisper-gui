@@ -7,3 +7,8 @@ configs/config.json
 *test.py
 ruff.toml
 .fuse_hidden*
+**/build/
+**/dist/
+**/*.spec
+**/*.AppImage
+builder/WhisperGUI.AppDir/usr/bin/

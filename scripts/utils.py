@@ -4,10 +4,12 @@ import shutil
 import soundfile as sf
 import re
 import os
+import sys
 import json
 import numpy as np
 from datetime import datetime
 from typing import Any, Optional
+from pathlib import Path
 from scripts.config_io import read_config_value, write_config_value
 
 def reformat_lang_dict(lang_dict: dict[str, dict[str, str]]) -> dict[str, dict[str, str]]:
@@ -22,7 +24,12 @@ def reformat_lang_dict(lang_dict: dict[str, dict[str, str]]) -> dict[str, dict[s
 			reformatted_dict[lang][message] = text
 	return reformatted_dict
 
-with open("configs/lang.json", "r", encoding="utf-8") as f:
+if getattr(sys, "frozen", False): # running from a PyInstaller bundle
+	base = Path(sys._MEIPASS)
+else:
+	base = Path(__file__).resolve().parent.parent
+lang_path = base / "configs" / "lang.json"
+with lang_path.open("r", encoding="utf-8") as f:
 	LANG_DICT = reformat_lang_dict(json.load(f))
 val, error = read_config_value("language")
 if error:
@@ -96,7 +103,7 @@ def save_audio_to_mp3(
 	subprocess.run(["ffmpeg", "-i", wav_path, "-y", audio_path])  # Convert WAV to MP3
 	try:
 		os.remove(wav_path)  # Remove temporary WAV file
-	except:
+	except: # noqa: E722
 		pass  # Ignore cleanup errors
 	return audio_path
 
