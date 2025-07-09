@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=WhisperGUI-cpu
+Exec=whisper-gui-cpu-linux
+Icon=icon_256x256
+Categories=AudioVideo;

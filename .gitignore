@@ -11,4 +11,4 @@ ruff.toml
 **/dist/
 **/*.spec
 **/*.AppImage
-builder/WhisperGUI.AppDir/usr/bin/
+builder/*.AppDir/usr/bin/
