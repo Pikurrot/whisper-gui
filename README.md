@@ -45,6 +45,11 @@ Your transcriptions will be saved by default in the `outputs` folder of the repo
 > **Not yet available**: macOS and AMD GPU builds. Use the alternative installation methods.
 
 ## 🛠️ Alternative Installation Methods
+### Requirements
+- [Anaconda](https://docs.anaconda.com/free/anaconda/install/) or [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/) installed and `conda` added to PATH.
+- `git` installed and added to PATH. See [instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+- `ffmpeg` installed and added to PATH. See instructions for [Windows](https://phoenixnap.com/kb/ffmpeg-windows), [Linux](https://phoenixnap.com/kb/install-ffmpeg-ubuntu) or [macOS](https://phoenixnap.com/kb/ffmpeg-mac).
+
 ### 1. Interactive Wizard (stable)
 In **Windows**, run the `whisper-gui.bat` file.  
 In **Linux / macOS** run the `whisper-gui.sh` file.  
