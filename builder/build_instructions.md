@@ -138,3 +138,19 @@ mkdir -p WhisperGUI-cpu.AppDir/usr/bin
 mv dist/whisper-gui-cpu-linux WhisperGUI-cpu.AppDir/usr/bin/
 ARCH=x86_64 appimagetool WhisperGUI-cpu.AppDir
 ```
+
+## Compress
+Move the executable files to `builder/`.  
+Then compress each.
+- CUDA Windows executable:
+```bash
+7z a -mx=0 -v1900m \
+	whisper-gui-cuda-win64.7z \
+	whisper-gui-cuda-win64.exe
+```
+- Cuda Linux AppImage:
+```bash
+7z a -mx=0 -v1900m \
+    whisper-gui-cuda-x86_64.7z \
+    WhisperGUI-cuda-x86_64.AppImage
+```

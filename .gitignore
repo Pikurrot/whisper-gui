@@ -14,5 +14,5 @@ ruff.toml
 builder/*.AppDir/usr/bin/
 **/*exe
 **/*.zst
-**/*.7z
+**/*.7z**
 **/*.zip
