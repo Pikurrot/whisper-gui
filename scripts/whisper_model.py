@@ -33,21 +33,28 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import torch
 import whisperx
-try:
-	from whisperx.vad import VoiceActivitySegmentation
-except ModuleNotFoundError:
-	from whisperx.vads.pyannote import VoiceActivitySegmentation
+# try:
+# 	from whisperx.vad import VoiceActivitySegmentation
+# except ModuleNotFoundError:
+# 	from whisperx.vads.pyannote import VoiceActivitySegmentation
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
 import os
+import sys
 import time
 from typing import List, Optional, Collection, Dict, Any, Union
 import numpy as np
+from pathlib import Path
 from scripts.config_io import read_config_value, write_config_value
 from scripts.utils import *  # noqa: F403
 
 SAMPLE_RATE = 16000
 LANG_CODES = {"english": "en", "spanish": "es", "french": "fr", "german": "de", "italian": "it", "catalan": "ca", "chinese": "zh", "japanese": "ja", "portuguese": "pt", "arabic": "ar", "afrikaans": "af", "albanian": "sq", "amharic": "am", "armenian": "hy", "assamese": "as", "azerbaijani": "az", "bashkir": "ba", "basque": "eu", "belarusian": "be", "bengali": "bn", "bosnian": "bs", "breton": "br", "bulgarian": "bg", "burmese": "my", "castilian": "es", "croatian": "hr", "czech": "cs", "danish": "da", "dutch": "nl", "estonian": "et", "faroese": "fo", "finnish": "fi", "flemish": "nl", "galician": "gl", "georgian": "ka", "greek": "el", "gujarati": "gu", "haitian": "ht", "haitian creole": "ht", "hausa": "ha", "hebrew": "he", "hindi": "hi", "hungarian": "hu", "icelandic": "is", "indonesian": "id", "javanese": "jv", "kannada": "kn", "kazakh": "kk", "korean": "ko", "lao": "lo", "latin": "la", "latvian": "lv", "letzeburgesch": "lb", "lingala": "ln", "lithuanian": "lt", "luxembourgish": "lb", "macedonian": "mk", "malagasy": "mg", "malay": "ms", "malayalam": "ml", "maltese": "mt", "maori": "mi", "marathi": "mr", "moldavian": "ro", "moldovan": "ro", "mongolian": "mn", "nepali": "ne", "norwegian": "no", "occitan": "oc", "panjabi": "pa", "pashto": "ps", "persian": "fa", "polish": "pl", "punjabi": "pa", "pushto": "ps", "romanian": "ro", "russian": "ru", "sanskrit": "sa", "serbian": "sr", "shona": "sn", "sindhi": "sd", "sinhala": "si", "sinhalese": "si", "slovak": "sk", "slovenian": "sl", "somali": "so", "sundanese": "su", "swahili": "sw", "swedish": "sv", "tagalog": "tl", "tajik": "tg", "tamil": "ta", "tatar": "tt", "telugu": "te", "thai": "th", "tibetan": "bo", "turkish": "tr", "turkmen": "tk", "ukrainian": "uk", "urdu": "ur", "uzbek": "uz", "valencian": "ca", "vietnamese": "vi", "welsh": "cy", "yiddish": "yi", "yoruba": "yo"}
-with open("configs/lang.json", "r", encoding="utf-8") as f:
+if getattr(sys, "frozen", False): # running from a PyInstaller bundle
+	base = Path(sys._MEIPASS)
+else:
+	base = Path(__file__).resolve().parent.parent
+lang_path = base / "configs" / "lang.json"
+with lang_path.open("r", encoding="utf-8") as f:
 	LANG_DICT = reformat_lang_dict(json.load(f))
 val, error = read_config_value("language")
 if error:
@@ -65,7 +72,7 @@ class CustomWhisper():
 			self,
 			model: WhisperForConditionalGeneration,
 			processor: WhisperProcessor,
-			vad: VoiceActivitySegmentation,
+			vad: Any,#VoiceActivitySegmentation,
 			vad_params: Dict[str, Any],
 			device: str,
 			compute_type: torch.dtype,
@@ -237,7 +244,7 @@ def load_custom_model(
 		compute_type: str = "float32",
 		beam_size: int = 5,
 		download_root: str = "models/custom",
-		vad_model: Optional[VoiceActivitySegmentation] = None,
+		vad_model: Optional[Any] = None, # VoiceActivitySegmentation
 		vad_options: Optional[Dict[str, Any]] = None
 ):
 	"""

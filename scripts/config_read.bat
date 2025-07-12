@@ -1,39 +1,45 @@
 @echo off
-setlocal enabledelayedexpansion
+:: Make sure the file exists – *this* is the only case that should be "read error"
+if not exist "%CONFIG_FILE%" exit /b 1
 
-:: Check if a key was provided
+:: Read the line containing the keyedelayedexpansion
+
+:: Exit if no key was provided
+if "%~1"=="" exit /b 1
+
+set "KEY=%~1"
+set "VALUE="
+set "CONFIG_FILE=configs\config.json"
+
+:: Make sure the file exists – *this* is the only case that should be "read error"
+if not exist "%CONFIG_FILE%" exit /b 1tlocal enabledelayedexpansion
+
+:: Exit if no key was provided
 if "%~1"=="" exit 1
 
-:: Initialize variables
-set KEY=%~1
-set VALUE=
+set "KEY=%~1"
+set "VALUE="
+set "CONFIG_FILE=configs\config.json"
 
-:: Read the line containing the key from config.json
-for /f "tokens=2 delims=:," %%a in ('type configs\config.json ^| findstr /C:"\"%KEY%\""') do (
-	set line=%%a
-	:: Trim whitespace and quotes
-	for /f "tokens=*" %%b in ("!line!") do set VALUE=%%~b
-)
+:: Make sure the file exists – *this* is the only case that should be “read error”
+if not exist "%CONFIG_FILE%" exit 1
 
-if %errorlevel% GEQ 1 (
-	:: Couldn't read file
-	exit 1
-)
-
-:: Check if VALUE was set
-if not defined VALUE (
-	:: Key not found
-	exit 2
-)
-if "!VALUE!" EQU "" (
-	:: Key not found
-	exit 2
-)
-if "!VALUE!"=="null" (
-	:: Key found but value is null
-	exit 3
+:: Read the line containing the key
+::  – redirect stderr so a “not found” search doesn’t set ERRORLEVEL
+for /f "tokens=2 delims=:," %%a in ('
+    type "%CONFIG_FILE%" ^| findstr /C:"\"%KEY%\"" 2^>nul
+') do (
+    set "line=%%a"
+    for /f "tokens=*" %%b in ("!line!") do set "VALUE=%%~b"
 )
 
-:: Output the value and exit
+:: --- DO **NOT** test ERRORLEVEL here ---
+::       (missing key is **not** an I/O error)
+
+:: Handle the possible outcomes
+if not defined VALUE      exit /b 2    :: key not present
+if "!VALUE!"==""          exit /b 2
+if "!VALUE!"=="null"      exit /b 3    :: key present but null
+
 echo !VALUE!
-exit 0
+exit /b 0

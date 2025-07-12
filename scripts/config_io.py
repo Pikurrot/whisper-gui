@@ -1,7 +1,13 @@
 import json
 import os
+import sys
+from pathlib import Path
 
-CONFIG_PATH = os.path.join("configs", "config.json")
+if getattr(sys, "frozen", False): # running from a PyInstaller bundle
+	base = Path(sys._MEIPASS)
+else:
+	base = Path(__file__).resolve().parent.parent
+CONFIG_PATH = base / "configs" / "config.json"
 
 def read_config_value(key):
 
