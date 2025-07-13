@@ -30,6 +30,9 @@
 ![Whisper-GUI screenshot](github/interface_screenshot.png)
 
 ## 🚀 Quick start (Binaries - recommended)
+### Requirements
+- `ffmpeg` installed and added to PATH. See instructions for [Windows](https://phoenixnap.com/kb/ffmpeg-windows) or [Linux](https://phoenixnap.com/kb/install-ffmpeg-ubuntu).
+
 Download the corresponding binary files from the [**Releases**](https://github.com/Pikurrot/whisper-gui/releases) page.
 | OS                | Variant  | Download                                 | Extra prerequisite                                                                        | How to run                                                                                                                      |
 | ----------------- | -------- | ---------------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
