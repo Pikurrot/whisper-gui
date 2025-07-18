@@ -29,7 +29,9 @@
 ---
 ![Whisper-GUI screenshot](github/interface_screenshot.png)
 
-## 🚀 Quick start (Binaries - recommended)
+## 🚀 Quick start (Binaries - recommended for most devices)
+> Before starting: you may face incompatibility issues with this method if your GPU is very new (e.g. RTX 50 series). I am working on it. In the meanwhile feel free to try alternative installation methods which may be more stable for different devices.
+
 ### Requirements
 - `ffmpeg` installed and added to PATH. See instructions for [Windows](https://phoenixnap.com/kb/ffmpeg-windows) or [Linux](https://phoenixnap.com/kb/install-ffmpeg-ubuntu).
 
