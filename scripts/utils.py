@@ -71,7 +71,7 @@ def create_save_folder(save_root: str) -> str:
 	# Determine the highest counter already used in folder names
 	highest_counter = -1
 	for existing_folder in os.listdir(date_dir):
-		match = re.match("(\d+)", existing_folder)
+		match = re.match(r"(\d+)", existing_folder)
 		if match:
 			highest_counter = max(highest_counter, int(match.group(1)))
 	

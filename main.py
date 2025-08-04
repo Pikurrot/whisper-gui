@@ -27,6 +27,7 @@ from scripts.utils import *  # noqa: F403
 
 # ensure gpu_support has correct value
 gpu_support, error = read_config_value("gpu_support")
+gpu_support = os.getenv("GPU_SUPPORT", gpu_support)
 if gpu_support is False:
 	write_config_value("gpu_support", "false")
 	gpu_support = "false"
@@ -259,6 +260,8 @@ def _transcribe() -> Tuple[str, str, str, str]:
 			save_dir = save_root
 
 	try:
+		if not g_params["audio_path"]:
+			raise Exception("No audio provided")
 		# Load (and save) audio
 		audio = load_and_save_audio(g_params["audio_path"], g_params["micro_audio"], g_params["save_audio"], save_dir, g_params["preserve_name"])
 
@@ -366,7 +369,7 @@ with gr.Blocks(title="Whisper GUI") as demo:
 						file_types=[".mp3", ".wav", ".m4a", ".mp4", ".avi", ".mov", ".mkv", ".webm"],
 						type="filepath"
 					)
-					audio_record = gr.Audio(sources=["microphone"], type="numpy", label=MSG["audio_record_label"], visible=False)
+					audio_record = gr.Audio(sources=["microphone"], type="numpy", label=MSG["audio_record_label"])
 					save_audio = gr.Checkbox(value=False, label="Save extracted audio", info="Save the audio/extracted audio to the output directory")
 				gr.Examples(examples=[str(example_path)], inputs=file_upload)
 				with gr.Accordion(label=MSG["advanced_options"], open=False):

@@ -32,14 +32,12 @@ def read_config_value(key):
 		return None, 4  # Other errors
 
 def write_config_value(key, value):
-
-	# Check if file exists
-	if not os.path.exists(CONFIG_PATH):
-		return 1  # File does not exist
-
 	try:
-		with open(CONFIG_PATH, "r") as file:
-			config = json.load(file)
+		if not os.path.exists(CONFIG_PATH):
+			config = {}
+		else:
+			with open(CONFIG_PATH, "r") as file:
+				config = json.load(file)
 
 		config[key] = value
 
