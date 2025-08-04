@@ -2,16 +2,14 @@ version: '3.8'
 
 services:
   whisper-gui:
+    # image: 3x3cut0r/whisper-gui:latest
     build: .
     ports:
       - "7860:7860"
     volumes:
       - ./models:/app/models  # Persist downloaded models
       - ./outputs:/app/outputs  # Store output files
-      - ./configs:/app/configs  # Configuration files
-      - ./temp:/app/temp  # Temporary files
     environment:
       - PYTHONUNBUFFERED=1
-    platform: linux/arm64  # Specify platform for M1/M2/M3 Macs
     user: "${UID:-1000}:${GID:-1000}"  # Run as current user
-    init: true  # Proper signal handling 
+    init: true  # Proper signal handling

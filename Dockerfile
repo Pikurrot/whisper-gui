@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.12-slim
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -23,7 +23,7 @@ RUN mkdir -p models outputs configs temp .cache && \
     chmod -R 777 models outputs configs temp .cache
 
 # Set cache directory environment variables
-ENV TRANSFORMERS_CACHE=/app/.cache
+ENV HF_HOME=/app/.cache
 ENV HF_HOME=/app/.cache
 ENV XDG_CACHE_HOME=/app/.cache
 ENV MPLCONFIGDIR=/app/.cache
